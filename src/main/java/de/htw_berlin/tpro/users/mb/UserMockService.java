@@ -1,15 +1,42 @@
-package de.htw_berlin.tpro.users.model;
+package de.htw_berlin.tpro.users.mb;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserList implements Serializable {
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+
+import de.htw_berlin.tpro.users.model.Context;
+import de.htw_berlin.tpro.users.model.Permission;
+import de.htw_berlin.tpro.users.model.User;
+
+@Startup
+@Singleton
+public class UserMockService implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private ArrayList<User> users;
 	
-	public UserList() {
-		super();
+	public UserMockService() {
+		users = new ArrayList<User>();
+	}
+	
+	public User getUser(String username, String password) {
+		for (User user: users) {
+			if (!user.getUsername().equals(username))
+				continue;
+			if (!user.getPassword().equals(password))
+				break;
+			return user;
+		}
+		return null;
+	}
+	
+	@PostConstruct
+	void initMockUsers() {
+		System.out.println(" - - - - - - - - I n i t   m o "
+				+ "c k   u s e r s - - - - - - - - - ");
 		users = new ArrayList<User>();
 		
 		User pluginInstaller = new User();
@@ -67,12 +94,4 @@ public class UserList implements Serializable {
 		users.add(serviceConsumer2);
 	}
 
-	public ArrayList<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(ArrayList<User> users) {
-		this.users = users;
-	}
-	
 }
