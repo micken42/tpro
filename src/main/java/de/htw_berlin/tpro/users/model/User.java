@@ -3,14 +3,39 @@ package de.htw_berlin.tpro.users.model;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+/*@Access(AccessType.FIELD)
+@Table(name="User")*/
+@NamedQueries({
+    @NamedQuery(name = "User.findAll",
+            query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findByUsername",
+            query = "SELECT u FROM User u WHERE u.username = :username"),
+    @NamedQuery(name = "User.getAllUsernames",
+            query = "SELECT u.username FROM User u") })
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private Integer id; // will be generated later on
-	private String username;
-	private String password;
+	@Id
+	@GeneratedValue
+	private @Getter @Setter Integer id; // will be generated later on
+
+	private @Getter @Setter String username;
+	private @Getter @Setter String password;
 	
-	private HashMap<String, Permission> permissions;
+	private @Getter @Setter HashMap<String, Permission> permissions;
 	
 	public User(String username, String password, HashMap<String, Permission> permissions) {
 		this.username = username;
@@ -20,34 +45,6 @@ public class User implements Serializable {
 	
 	public User() {
 		this("", "", new HashMap<String, Permission>());
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public HashMap<String, Permission> getPermissions() {
-		return permissions;
-	}
-	public void setPermissions(HashMap<String, Permission> permissions) {
-		this.permissions = permissions;
 	}
 	
 	public boolean isPermittedInContext(String permissionName, String contextName) {

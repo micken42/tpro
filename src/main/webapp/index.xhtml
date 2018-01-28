@@ -31,6 +31,7 @@
 						id="password" 
 						value="#{credentialsMB.password}"/>
 					<p:commandButton value="Anmelden" action="#{loginMB.login}" process="loginForm" update="loginForm" rendered="#{!loginMB.loggedIn}"/>
+					<p:commandButton value="Registrieren" action="#{loginMB.signUp}" process="loginForm" update="loginForm" rendered="#{!loginMB.loggedIn}"/>
 				</p:panelGrid>
 				<p:commandButton value="Abmelden" action="#{loginMB.logout}" process="loginForm" update="loginForm" rendered="#{loginMB.loggedIn}"/>
 			</h:form>

@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.users.mb;
+package de.htw_berlin.tpro.users.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-
 import de.htw_berlin.tpro.users.model.Context;
 import de.htw_berlin.tpro.users.model.Permission;
 import de.htw_berlin.tpro.users.model.User;
 
 @Startup
 @Singleton
-public class UserMockService implements Serializable {
+public class UserMockService implements UserService, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private ArrayList<User> users;

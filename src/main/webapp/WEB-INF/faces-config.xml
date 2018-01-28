@@ -2,24 +2,17 @@
 <faces-config version="2.2"
         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+        http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
 	<application>
-		<message-bundle>resources.application</message-bundle>
-		<locale-config>
-			<default-locale>en</default-locale>
-		</locale-config>
+		<message-bundle>de.htw_berlin.tpro.messages_de</message-bundle>
 	</application>
-
-<!-- application>
-    <message-bundle>vvskMessages_de</message-bundle>
-</application-->
-
-<navigation-rule>
-	<from-view-id>/index.xhtml</from-view-id>
-	<navigation-case>
-        <from-outcome>success</from-outcome>
-        <to-view-id>/pluginApp.xhtml</to-view-id>
-    </navigation-case>
-</navigation-rule>
-
+	
+	<navigation-rule>
+		<from-view-id>/index.xhtml</from-view-id>
+		<navigation-case>
+	        <from-outcome>success</from-outcome>
+	        <to-view-id>/pluginApp.xhtml</to-view-id>
+	    </navigation-case>
+	</navigation-rule>
 </faces-config>
