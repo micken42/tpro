@@ -1,0 +1,29 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"	
+	xmlns:p="http://primefaces.org/ui">	
+<f:view contentType="text/html">  
+<h:head>
+	<f:facet name="first">
+		<title>TPro | Dashboard</title>
+	</f:facet>
+</h:head>
+<h:body>
+	<p:layout fullPage="true" rendered="#{loginMB.loggedIn}">
+		<p:layoutUnit position="center">
+			<h1>Benutzer-Dashboard</h1>
+			<p>Als Benutzer können Sie alle Plugins sehen, auf die Sie Zugriff haben und welche Art von Zugriff Sie haben, sprich ob sie Dienstanbieter oder Dienstkonsument sind ...</p>
+			<h2>Meine Plugins</h2>
+			<h:outputText/>
+			<h2>Mein Account</h2>
+			<h:form>
+				<p:commandButton value="Abmelden" ajax="false" action="#{loginMB.logout}"/>
+			</h:form>
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+</f:view>
+</html>
