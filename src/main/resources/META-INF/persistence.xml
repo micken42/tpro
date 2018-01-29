@@ -3,12 +3,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
-	<persistence-unit name="tpro" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="user_management" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		<class>de.htw_berlin.tpro.users.model.User</class> 
+		<class>de.htw_berlin.tpro.user_management.model.User</class> 
+		<class>de.htw_berlin.tpro.user_management.model.Permission</class> 
+		<class>de.htw_berlin.tpro.user_management.model.Context</class> 
 		<properties>
 			<!-- Configuring JDBC properties -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/tpro" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/tpro_user_management" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="299Uj773z6xLq338" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
@@ -23,9 +25,10 @@
 			<property name="hibernate.c3p0.timeout" value="500" />
 			<property name="hibernate.c3p0.max_statements" value="50" />
 			<property name="hibernate.c3p0.idle_test_period" value="2000" />
-			
-<!-- 			<property name="hibernate.archive.autodetection" value="class, hbm*" /> -->
-<!-- 			<property name="packagesToScan" value="de.htw_berlin.tpro" />	 -->
 		</properties>
 	</persistence-unit>
 </persistence>
+
+<!-- additional properties that may be be useful one day -->
+<!-- <property name="hibernate.archive.autodetection" value="class, hbm*" /> -->
+<!-- <property name="packagesToScan" value="de.htw_berlin.tpro" /> -->

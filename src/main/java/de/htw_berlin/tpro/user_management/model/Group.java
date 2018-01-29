@@ -1,13 +1,15 @@
-package de.htw_berlin.tpro.users.model;
+package de.htw_berlin.tpro.user_management.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
-public class Permission implements Serializable {
+public class Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
 	private String name;
-	private Context context;
+	
+	private HashMap<String, User> users;
 	
 	public Integer getId() {
 		return id;
@@ -21,11 +23,10 @@ public class Permission implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Context getContext() {
-		return context;
+	public HashMap<String, User> getUsers() {
+		return users;
 	}
-	public void setContext(Context context) {
-		this.context = context;
+	public void setUsers(HashMap<String, User> users) {
+		this.users = users;
 	}
-	
 }

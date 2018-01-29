@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.users.mb;
+package de.htw_berlin.tpro.view;
 
 import java.io.Serializable;
 

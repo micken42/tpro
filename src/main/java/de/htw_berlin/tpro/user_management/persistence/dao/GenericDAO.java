@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.users.service;
+package de.htw_berlin.tpro.user_management.persistence.dao;
 
 import java.io.Serializable;
 import java.util.*;
@@ -6,10 +6,11 @@ import java.util.*;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaQuery;
  
-abstract class GenericDAO<T> implements Serializable {
+public abstract class GenericDAO<T> implements Serializable {
     private static final long serialVersionUID = 1L;
  
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("tpro");
+    private static final EntityManagerFactory emf = 
+    		Persistence.createEntityManagerFactory("user_management");
     private EntityManager em;
  
     private Class<T> entityClass;
