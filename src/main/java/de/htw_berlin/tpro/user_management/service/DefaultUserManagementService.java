@@ -4,8 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import de.htw_berlin.tpro.user_management.model.Context;
@@ -18,21 +17,20 @@ import de.htw_berlin.tpro.user_management.persistence.facade.DefaultUserFacade;
 import de.htw_berlin.tpro.user_management.persistence.facade.PermissionFacade;
 import de.htw_berlin.tpro.user_management.persistence.facade.UserFacade;
 
-@Singleton
-@Startup
-@DefaultUserManagement
+@ApplicationScoped
+@DefaultUserManagement 
 public class DefaultUserManagementService implements UserManagementService {
 
 	private static final long serialVersionUID = 1L;
 
 	@Inject @DefaultUserFacade
-	private UserFacade userFacade;
+	UserFacade userFacade;
 
 	@Inject @DefaultPermissionFacade
-	private PermissionFacade permissionFacade;
+	PermissionFacade permissionFacade;
 
 	@Inject @DefaultContextFacade
-	private ContextFacade contextFacade;
+	ContextFacade contextFacade;
 	
 	@Override
 	public User login(String username, String password) {

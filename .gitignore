@@ -46,3 +46,4 @@ target/
 hs_err_pid*
 /src/main/webapp/WEB-INF/.faces-config.xml.jsfdia
 /src/main/java/resources/application.properties
+/deploy.sh

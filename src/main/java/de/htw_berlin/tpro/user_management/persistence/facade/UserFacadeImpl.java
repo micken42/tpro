@@ -2,19 +2,23 @@ package de.htw_berlin.tpro.user_management.persistence.facade;
 
 import java.util.List;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 import de.htw_berlin.tpro.user_management.model.User;
+import de.htw_berlin.tpro.user_management.persistence.dao.DefaultUserDAO;
 import de.htw_berlin.tpro.user_management.persistence.dao.GenericDAO;
-import de.htw_berlin.tpro.user_management.persistence.dao.UserDAO;
 
+@DefaultUserFacade
+@Dependent
 public class UserFacadeImpl implements UserFacade {
 
 	private static final long serialVersionUID = 1L;
 	
 	// TODO: WHY IS THE INJECTION NOT WORKING ???
-	//		 @Inject @DefaultUserDAO
-	private GenericDAO<User> userDAO = new UserDAO();
+	@Inject @DefaultUserDAO
+	GenericDAO<User> userDAO;
 	
 	@Override
 	public void updateAllUsers(List<User> users) {

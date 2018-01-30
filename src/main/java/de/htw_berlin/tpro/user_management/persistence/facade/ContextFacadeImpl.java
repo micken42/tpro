@@ -2,19 +2,22 @@ package de.htw_berlin.tpro.user_management.persistence.facade;
 
 import java.util.List;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 import de.htw_berlin.tpro.user_management.model.Context;
+import de.htw_berlin.tpro.user_management.persistence.dao.DefaultContextDAO;
 import de.htw_berlin.tpro.user_management.persistence.dao.GenericDAO;
-import de.htw_berlin.tpro.user_management.persistence.dao.ContextDAO;
 
+@Dependent
+@DefaultContextFacade
 public class ContextFacadeImpl implements ContextFacade {
 
 	private static final long serialVersionUID = 1L;
 	
-	// TODO: WHY IS THE INJECTION NOT WORKING ???
-	//		 @Inject @DefaultContextDAO
-	private GenericDAO<Context> contextDAO = new ContextDAO();
+	@Inject @DefaultContextDAO
+	GenericDAO<Context> contextDAO;
 	
 	@Override
 	public void updateAllContexts(List<Context> contexts) {

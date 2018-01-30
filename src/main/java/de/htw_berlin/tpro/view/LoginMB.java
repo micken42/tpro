@@ -16,14 +16,13 @@ import de.htw_berlin.tpro.user_management.service.UserManagementService;
 public class LoginMB implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	// TODO: WHY IS THE SAME INJECTION WORKING IN THIS SESSION SCOPED BEAN ???
-	// 	     @Inject @DefaultUserFacade
-	//		 private UserFacadeImpl ufi;
+	//@Inject @DefaultUserFacade
+	//UserFacadeImpl ufi;
 	
 	@Inject
-    private CredentialsMB credentials;
+    CredentialsMB credentials;
 	@Inject @DefaultUserManagement
-	private UserManagementService userService;
+	UserManagementService userService;
 
     private User currentUser;
     
