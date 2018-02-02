@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Named
 @RequestScoped
-public class CredentialsMB implements Serializable {
+public class Credentials implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Getter @Setter
 	private String username;

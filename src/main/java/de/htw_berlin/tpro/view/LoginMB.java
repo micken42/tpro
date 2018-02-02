@@ -20,7 +20,7 @@ public class LoginMB implements Serializable {
 	//UserFacadeImpl ufi;
 	
 	@Inject
-    CredentialsMB credentials;
+    Credentials credentials;
 	@Inject @DefaultUserManagement
 	UserManagementService userService;
 

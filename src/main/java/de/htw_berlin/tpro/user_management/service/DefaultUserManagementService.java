@@ -52,8 +52,8 @@ public class DefaultUserManagementService implements UserManagementService {
 	@Override
 	public boolean userIsAuthorized(User user, String permission, String context) {
 		for (Permission perm : user.getPermissions()) {
-			if (perm.getContext().getName().contentEquals(context) 
-					&& perm.getName().contentEquals(permission))
+			if (perm.getContext().getName().equals(context) 
+					&& perm.getName().equals(permission))
 				return true;
 		}
 		return false;

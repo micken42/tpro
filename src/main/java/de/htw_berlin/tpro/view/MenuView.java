@@ -1,10 +1,7 @@
 package de.htw_berlin.tpro.view;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
@@ -13,8 +10,7 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
-import de.htw_berlin.tpro.users.annotation.LoggedIn;
-import de.htw_berlin.tpro.users.model.User;
+import de.htw_berlin.tpro.user_management.model.User;
  
 @Named
 public class MenuView {
