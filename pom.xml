@@ -89,7 +89,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- PrimeFaces dependencies -->
+		<!-- PrimeFaces & OmniFaces dependencies -->
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
@@ -99,6 +99,11 @@
 			<groupId>org.primefaces.themes</groupId>
 			<artifactId>all-themes</artifactId>
 			<version>1.0.10</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.omnifaces</groupId>
+		    <artifactId>omnifaces</artifactId>
+		    <version>3.0</version>
 		</dependency>
 
 		<!-- Logger -->

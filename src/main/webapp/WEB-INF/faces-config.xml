@@ -6,6 +6,7 @@
         http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
 	<application>
 		<message-bundle>de.htw_berlin.tpro.messages_de</message-bundle>
+		<resource-handler>org.omnifaces.resourcehandler.UnmappedResourceHandler</resource-handler>
 	</application>
 	
 	<navigation-rule>
