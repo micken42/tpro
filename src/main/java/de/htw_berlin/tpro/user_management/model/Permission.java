@@ -2,10 +2,11 @@ package de.htw_berlin.tpro.user_management.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -32,13 +33,17 @@ public class Permission implements Serializable {
 	@NotNull
 	private @Getter @Setter String name;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	private @Getter @Setter Context context;
 
 	public Permission(String name, Context context) {
 		super();
 		this.name = name;
 		this.context = context;
+	}
+
+	public Permission(String name) {
+		this(name, new Context());
 	}
 	
 	public Permission() {

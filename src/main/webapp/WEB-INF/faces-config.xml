@@ -14,25 +14,25 @@
 		<navigation-case>
 			<from-action>#{loginMB.login}</from-action>
 	        <from-outcome>user</from-outcome>
-	        <to-view-id>/user/userDashboard.xhtml</to-view-id>
+	        <to-view-id>/user/dashboard.xhtml</to-view-id>
 	        <redirect />
 	    </navigation-case>
 		<navigation-case>
 			<from-action>#{loginMB.login}</from-action>
 	        <from-outcome>admin</from-outcome>
-	        <to-view-id>/admin/adminDashboard.xhtml</to-view-id>
+	        <to-view-id>/admin/dashboard.xhtml</to-view-id>
 	        <redirect />
 	    </navigation-case>
 		<navigation-case>
 			<from-action>#{loginMB.signUp}</from-action>
 	        <from-outcome>success</from-outcome>
-	        <to-view-id>/user/userDashboard.xhtml</to-view-id>
+	        <to-view-id>/user/dashboard.xhtml</to-view-id>
 	        <redirect />
 	    </navigation-case>
 	</navigation-rule>
 	
 	<navigation-rule>
-		<from-view-id>/user/userDashboard.xhtml</from-view-id>
+		<from-view-id>/user/dashboard.xhtml</from-view-id>
 		<navigation-case>
 			<from-action>#{loginMB.logout}</from-action>
 	        <from-outcome>success</from-outcome>
@@ -42,7 +42,7 @@
 	</navigation-rule>
 	
 	<navigation-rule>
-		<from-view-id>/admin/adminDashboard.xhtml</from-view-id>
+		<from-view-id>/admin/dashboard.xhtml</from-view-id>
 		<navigation-case>
 			<from-action>#{loginMB.logout}</from-action>
 	        <from-outcome>success</from-outcome>

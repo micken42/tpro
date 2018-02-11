@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -31,11 +34,18 @@ public class User implements Serializable {
 	private @Getter @Setter Integer id;
 
 	@NotNull
-	private @Getter @Setter String username;
+	private @Getter @Setter String prename;
+	@NotNull
+	private @Getter @Setter String surname;
+	@NotNull
+	private @Getter @Setter String email;
 	@NotNull
 	private @Getter @Setter String password;
+	@NotNull
+	private @Getter @Setter String username;
 	
-	@OneToMany
+	@ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name="User_Permission", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="permission_id"))
 	private @Getter @Setter Set<Permission> permissions;
 	
 	public User(String username, String password, Set<Permission> permissions) {
@@ -50,6 +60,10 @@ public class User implements Serializable {
 	
 	public User() {
 		this("", "", new HashSet<Permission>());
+	}
+	
+	public void addPermission(Permission permission) {
+		permissions.add(permission);
 	}
 
 }

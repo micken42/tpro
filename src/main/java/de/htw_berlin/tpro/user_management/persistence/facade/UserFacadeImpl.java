@@ -16,7 +16,6 @@ public class UserFacadeImpl implements UserFacade {
 
 	private static final long serialVersionUID = 1L;
 	
-	// TODO: WHY IS THE INJECTION NOT WORKING ???
 	@Inject @DefaultUserDAO
 	GenericDAO<User> userDAO;
 	

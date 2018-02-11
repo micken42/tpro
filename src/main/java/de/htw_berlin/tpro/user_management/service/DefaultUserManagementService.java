@@ -41,11 +41,10 @@ public class DefaultUserManagementService implements UserManagementService {
 	}
 
 	@Override
-	public User signUp(String username, String password) {
-		Set<Permission> initialPerms = new HashSet<Permission>();
-		initialPerms.add(permissionFacade.getPermissionByPermissionAndContextName("user", "tpro"));
-		User user = new User(username, password, initialPerms);
+	public User signUp(User user) {
 		userFacade.saveUser(user);
+		user.addPermission(permissionFacade.getPermissionByPermissionAndContextName("user", "tpro"));
+		userFacade.updateUser(user);
 		return user;
 	}
 
@@ -67,6 +66,12 @@ public class DefaultUserManagementService implements UserManagementService {
 		// create dummy users 
 		User admin = new User("admin", "admin");
 		User user = new User("user", "user");
+		admin.setEmail("admin@tpro.de");
+		user.setEmail("user@tpro.de");
+		admin.setPrename("Maximilian");
+		admin.setSurname("Mustemann");
+		user.setPrename("Maxime");
+		user.setSurname("Musterfrau");
 		/*User pluginInstaller = new User("Plugininstallateur", "1234");
 		User serviceProvider1 = new User("Dienstanbieter1", "1234");
 		User serviceProvider2 = new User("Dienstanbieter2", "1234");
@@ -75,12 +80,8 @@ public class DefaultUserManagementService implements UserManagementService {
 		
 		// create and save global dummy context and permissions
 		Context tproContext = new Context("tpro");
-		Permission tproAdminPermission = new Permission("admin", tproContext);
-		Permission tproUserPermission = new Permission("user", tproContext);
-		HashSet<Permission> contextPerms = new HashSet<Permission>();
-		contextPerms.add(tproUserPermission);
-		contextPerms.add(tproAdminPermission);
-		tproContext.setPermissions(contextPerms);
+		tproContext.addPermission(new Permission("admin"));
+		tproContext.addPermission(new Permission("user"));
 		contextFacade.saveContext(tproContext);
 
 		// add dummy permissions and (with) contexts for plugin mechanism
@@ -99,17 +100,17 @@ public class DefaultUserManagementService implements UserManagementService {
                 .collect(Collectors.toList()).get(0); 
 		tproAdminPermission = perms.stream().filter(perm -> perm.getName().equals("admin"))
                 .collect(Collectors.toList()).get(0);*/
-		
-		HashSet<Permission> userPerms = new HashSet<Permission>();
-		HashSet<Permission> adminPerms = new HashSet<Permission>();
-		adminPerms.add(permissionFacade.getPermissionByPermissionAndContextName("admin", "tpro"));
-		userPerms.add(permissionFacade.getPermissionByPermissionAndContextName("user", "tpro"));
-		user.setPermissions(userPerms);
-		admin.setPermissions(adminPerms);
-		
+				
 		// add dummy users with permissions
 		userFacade.saveUser(admin);
 		userFacade.saveUser(user);
+		
+		admin.addPermission(permissionFacade.getPermissionByPermissionAndContextName("admin", "tpro"));
+		user.addPermission(permissionFacade.getPermissionByPermissionAndContextName("user", "tpro"));
+
+		userFacade.updateUser(admin);
+		userFacade.updateUser(user);
+		
 		/*userFacade.saveUser(pluginInstaller);
 		userFacade.saveUser(serviceProvider1);
 		userFacade.saveUser(serviceProvider2);

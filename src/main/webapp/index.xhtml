@@ -1,44 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"	
-	xmlns:p="http://primefaces.org/ui">	
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ui="http://java.sun.com/jsf/facelets">	
 <f:view contentType="text/html">  
-<h:head>
-	<f:facet name="first">
-		<!-- h:outputStylesheet library="css" name="style.css" /-->
-		<title>TPro</title>
-	</f:facet>
-</h:head>
-<h:body>
-	<p:layout fullPage="true">
-		<p:layoutUnit position="center">
-			<h1> TPro Login </h1>
-			<h:form id="loginForm">
-				<p:panelGrid columns="2" rendered="#{!loginMB.loggedIn}">
-					<p:outputLabel 
-						for="username" 
-						value="Benutzername:"/>
-					<p:inputText 
-						id="username" 
-						value="#{credentialsMB.username}"/>
-					<p:outputLabel 
-						for="password" 
-						value="Passwort:"/>
-					<p:password 
-						id="password" 
-						value="#{credentialsMB.password}"/>
-					<p:commandButton value="Anmelden" ajax="false" action="#{loginMB.login}" process="loginForm" update="loginForm" rendered="#{!loginMB.loggedIn}"/>
-					<p:commandButton disabled="true" value="Registrieren" ajax="false" action="#{loginMB.signUp}" process="loginForm" update="loginForm" rendered="#{!loginMB.loggedIn}"/>
-				</p:panelGrid>
-				<p:commandButton value="Abmelden" ajax="false" action="#{loginMB.logout}" process="loginForm" update="loginForm" rendered="#{loginMB.loggedIn}"/>
-			</h:form>
-		</p:layoutUnit>
-	</p:layout>
-
-	<!-- p:link outcome="pluginApp" value="Go To TPro" /-->
-</h:body>
+  <ui:composition template="template/basicLayout.xhtml">
+    <ui:define name="additional-head-content">
+        <title>TPro | Welcome</title>
+    </ui:define>
+    
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <ui:define name="content">
+	    <div class="jumbotron">
+	       <div class="container">
+	        <h1>Teaching Promoter (TPro)</h1>
+	        <p>Eine modulare responsive Webanwendung zur unterstüzung innovativer Hochschullehre.</p> 
+	        <p>Die Idee ist es Lehrenden und Studierenden der HTW Berlin eine Web-Anwendung zur Verfügung 
+	        zu stellen, welche durch ihre unterschiedlichen Dienste, die sie bereitstellt, dabei hilft 
+	        die Lehre an der Hochschule "besser" gestalten zu können. Dabei soll außer- dem ein besonders 
+	        großer Wert auf die Erweiterbarkeit der Anwendung gelegt werden, sodass Studierende in den 
+	        kommenden Semestern die Möglichkeit haben im Rahmen von Projekt-, Bachelor- oder Masterarbeiten 
+	        die Anwendung um verschiendenste Dienste zu erweitern.</p>
+	        </div>    
+	  	  </div>
+	  	  <div class="container">
+		      <div class="row">
+		        <div class="col-md-12">
+		        <h1>Registrieren</h1>
+    			  <p:messages id="messages" showDetail="true" autoUpdate="true" />
+		          <h:form id="signUpForm" class="row" rendered="#{!loginMB.loggedIn}">
+				    <div class="form-row">
+					  <div class="form-group col-md-6">
+					    <p:outputLabel for="prename" value="Vorname:"/>
+					    <p:inputText id="prename" class="form-control" value="#{credentials.prename}" placeholder="Vorname" required="true"/>
+					  </div>
+					  <div class="form-group col-md-6">
+					    <p:outputLabel for="surname" value="Nachname:"/>
+					    <p:inputText id="surname" class="form-control" value="#{credentials.surname}" placeholder="Nachname" required="true"/>
+					  </div>
+					</div>
+				    <div class="form-row">
+						<div class="form-group col-md-6">
+						  <p:outputLabel for="username" value="Benutzername:"/>
+						    <p:inputText id="username" class="form-control" value="#{credentials.username}" placeholder="Benutzername" required="true"/>
+						</div>
+						<div class="form-group col-md-6">
+						  <p:outputLabel for="email" value="Email-Adresse:"/>
+						    <p:inputText type="email" id="email" class="form-control" value="#{credentials.email}" placeholder="Email-Adresse" required="true"/>
+						</div>
+					</div>
+				    <div class="form-row">
+						<div class="form-group col-md-6">
+						  <p:outputLabel for="password" value="Passwort:"/>
+						    <p:password id="password" class="form-control" match="confirm-password" value="#{credentials.password}" placeholder="Passwort" required="true"/>
+						</div>
+						
+						<div class="form-group col-md-6">
+						  <p:outputLabel for="confirm-password" value="Passwort wiederholen:"/>
+						    <p:password id="confirm-password" class="form-control" value="#{credentials.password}" placeholder="Passwort wiederholen" required="true"/>
+						</div>
+					</div>
+					<div class="form-group col-md-12"> 
+					    	<p:commandButton class="btn btn-lg btn-primary form-control" value="Registrieren" ajax="true" action="#{loginMB.signUp}" process="signUpForm" update="signUpForm" rendered="#{!loginMB.loggedIn}"/>
+					</div>
+				  </h:form>
+		        </div>
+		      </div>
+	  	  </div>
+    </ui:define>  
+  </ui:composition> 
 </f:view>
 </html>

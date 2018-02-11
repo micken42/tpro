@@ -1,10 +1,12 @@
 package de.htw_berlin.tpro.user_management.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -34,16 +36,25 @@ public class Context implements Serializable {
 	@NotNull
 	private @Getter @Setter String name;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="context", cascade=CascadeType.ALL, orphanRemoval=true)
 	private @Getter @Setter Set<Permission> permissions;
 	
-	public Context(String name) {
-		super();
+	public Context(String name, Set<Permission> permissions) {
 		this.name = name;
+		this.permissions = permissions;
 	}
-
+	
+	public Context(String name) {
+		this(name, new HashSet<Permission>());
+	}
+	
 	public Context() {
-		this("");
+		this("", new HashSet<Permission>());
+	}
+	
+	public void addPermission(Permission permission) {
+		permission.setContext(this);
+		permissions.add(permission);
 	}
 	
 }

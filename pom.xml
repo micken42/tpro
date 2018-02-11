@@ -57,11 +57,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.weld.servlet</groupId>
-			<artifactId>weld-servlet</artifactId>
-			<version>2.4.6.Final</version>
+		    <groupId>org.jboss.weld.servlet</groupId>
+		    <artifactId>weld-servlet-shaded</artifactId>
+		    <version>3.0.2.Final</version>
 		</dependency>
-
+		
 		<!-- Hibernate (JPA) -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -72,6 +72,11 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>5.2.12.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+		    <version>5.4.1.Final</version>
 		</dependency>
 
 		<!-- Database dependencies -->
@@ -97,13 +102,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
-			<artifactId>all-themes</artifactId>
+			<artifactId>bootstrap</artifactId>
 			<version>1.0.10</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.omnifaces</groupId>
 		    <artifactId>omnifaces</artifactId>
-		    <version>3.0</version>
+		    <version>2.6.8</version>
 		</dependency>
 
 		<!-- Logger -->

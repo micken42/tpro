@@ -16,9 +16,6 @@ import de.htw_berlin.tpro.user_management.service.UserManagementService;
 public class LoginMB implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	//@Inject @DefaultUserFacade
-	//UserFacadeImpl ufi;
-	
 	@Inject
     Credentials credentials;
 	@Inject @DefaultUserManagement
@@ -34,7 +31,11 @@ public class LoginMB implements Serializable {
 	}
     
 	public String signUp() {
-		currentUser = userService.signUp(credentials.getUsername(),credentials.getPassword());
+		User newUser = new User(credentials.getUsername(), credentials.getPassword());
+		newUser.setPrename(credentials.getPrename());
+		newUser.setSurname(credentials.getSurname());
+		newUser.setEmail(credentials.getEmail());
+		currentUser = userService.signUp(newUser);
 	    // TODO Message "successfully signed up!"
 		return (currentUser != null) ? "success" :  null;
 	}
