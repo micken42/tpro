@@ -22,12 +22,13 @@ public class ContextDAOProducerTest {
     		.addClass(GenericDAO.class)
     		.addClass(ContextDAO.class)
     		.addClass(ContextDAOProducer.class)
+    		.addClass(DefaultContextDAO.class)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
             .addAsResource("META-INF/test-data.sql", "META-INF/test-data.sql");
     }
 
-    @Inject
+    @Inject @DefaultContextDAO
     GenericDAO<Context> contextDAO;
 
     @Test

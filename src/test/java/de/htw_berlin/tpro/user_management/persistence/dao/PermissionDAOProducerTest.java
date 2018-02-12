@@ -28,7 +28,7 @@ public class PermissionDAOProducerTest {
             .addAsResource("META-INF/test-data.sql", "META-INF/test-data.sql");
     }
 
-    @Inject
+    @Inject @DefaultPermissionDAO
     GenericDAO<Permission> permissionDAO;
 
     @Test

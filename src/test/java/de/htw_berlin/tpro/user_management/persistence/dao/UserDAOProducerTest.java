@@ -27,7 +27,7 @@ public class UserDAOProducerTest {
             .addAsResource("META-INF/test-data.sql", "META-INF/test-data.sql");
     }
 
-    @Inject
+    @Inject @DefaultUserDAO
     GenericDAO<User> userDAO;
 
     @Test
