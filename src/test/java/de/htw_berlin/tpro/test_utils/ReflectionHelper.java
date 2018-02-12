@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.test.utils.jpa;
+package de.htw_berlin.tpro.test_utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

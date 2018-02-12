@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.htw_berlin.tpro.test.utils.jpa.AssertAnnotations;
-import de.htw_berlin.tpro.test.utils.jpa.ReflectionHelper;;
+import de.htw_berlin.tpro.test_utils.AssertAnnotations;
+import de.htw_berlin.tpro.test_utils.ReflectionHelper;;
 
 /**
  * @author Michael Baumert
