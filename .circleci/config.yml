@@ -1,0 +1,31 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk-browsers
+      - image: circleci/mysql:5.7.21
+
+    working_directory: ~/tpro-core
+
+
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: tpro-core-{{ checksum "pom.xml" }}
+      
+      - run: mvn dependency:go-offline
+      
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: tpro-core-{{ checksum "pom.xml" }}
+      
+      - run: mvn install
+      
+      - store_test_results:
+          path: target/surefire-reports
+      
+      - store_artifacts:
+          path: target/tpro.war
