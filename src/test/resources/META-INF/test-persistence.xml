@@ -11,8 +11,8 @@
 		<properties>
 			<!-- Configuring JDBC properties -->
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/test_tpro_user_management" />
-			<property name="javax.persistence.jdbc.user" value="root" />
-			<property name="javax.persistence.jdbc.password" value="299Uj773z6xLq338" />
+			<property name="javax.persistence.jdbc.user" value="tpro" />
+			<property name="javax.persistence.jdbc.password" value="tpro" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			
 			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
