@@ -25,7 +25,7 @@ jobs:
       MAVEN_OPTS: -Xmx3200m
     
     steps:
-      - mysql -utpro -ptpro -e 'CREATE DATABASE test_tpro_user_management'
+      - run: mysql -utpro -ptpro -e 'CREATE DATABASE test_tpro_user_management'
 
       - checkout
 
