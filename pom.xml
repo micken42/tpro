@@ -156,7 +156,7 @@
 	</profiles-->
 
 	<build>
-		<finalName>tpro</finalName>
+		<finalName>${artifactId}-${version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

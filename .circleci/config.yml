@@ -52,4 +52,4 @@ jobs:
           path: target/surefire-reports
       
       - store_artifacts:
-          path: target/tpro.war
+          path: target/*.war
