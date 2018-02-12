@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.user_management.persistence.facade;
+package de.htw_berlin.tpro.user_management.persistence.dao;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -13,4 +13,4 @@ import javax.inject.Qualifier;
 @Retention(RUNTIME)
 @Target({ TYPE, FIELD, METHOD })
 @Qualifier
-public @interface DefaultUserFacade {}
+public @interface DefaultPermissionFacade {}

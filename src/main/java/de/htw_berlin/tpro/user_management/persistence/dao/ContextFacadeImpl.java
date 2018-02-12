@@ -1,14 +1,13 @@
-package de.htw_berlin.tpro.user_management.persistence.facade;
+package de.htw_berlin.tpro.user_management.persistence.dao;
 
 import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 
 import de.htw_berlin.tpro.user_management.model.Context;
-import de.htw_berlin.tpro.user_management.persistence.dao.DefaultContextDAO;
-import de.htw_berlin.tpro.user_management.persistence.dao.GenericDAO;
 
 @Dependent
 @DefaultContextFacade
@@ -28,14 +27,18 @@ public class ContextFacadeImpl implements ContextFacade {
 	}
 	
 	@Override
-	public void updateContext(Context context) {
+	public void updateContext(Context context) throws PersistenceException {
+		if (getContextByName(context.getName()) != null)
+			throw new PersistenceException();
 		contextDAO.beginTransaction();
 		contextDAO.update(context);
 		contextDAO.commitAndCloseTransaction();
 	}
 	
 	@Override
-	public void saveContext(Context context) {
+	public void saveContext(Context context) throws PersistenceException {
+		if (getContextByName(context.getName()) != null)
+			throw new PersistenceException();
 		contextDAO.beginTransaction();
 		contextDAO.save(context);
 		contextDAO.commitAndCloseTransaction();
@@ -76,6 +79,14 @@ public class ContextFacadeImpl implements ContextFacade {
 		}
 		contextDAO.closeTransaction();
 		return names;
+	}
+
+	@Override
+	public void deleteContext(Context context) {
+		Integer id = context.getId();
+		contextDAO.beginTransaction();
+		contextDAO.delete(id, Context.class);;
+		contextDAO.commitAndCloseTransaction();
 	}
 	
 }

@@ -17,8 +17,14 @@
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
+			
+			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
+			
+			<!-- Import dev data -->
+			<property name="javax.persistence.sql-load-script-source" value="META-INF/dev-data.sql"/>
+			
 			<!-- Configuring Connection Pool -->
 			<property name="hibernate.c3p0.min_size" value="5" />
 			<property name="hibernate.c3p0.max_size" value="20" />

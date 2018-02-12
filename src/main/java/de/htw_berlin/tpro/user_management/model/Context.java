@@ -5,9 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -30,10 +31,12 @@ public class Context implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
 	private @Getter @Setter Integer id;
 	
 	@NotNull
+	@Column(unique=true)
 	private @Getter @Setter String name;
 	
 	@OneToMany(mappedBy="context", cascade=CascadeType.ALL, orphanRemoval=true)

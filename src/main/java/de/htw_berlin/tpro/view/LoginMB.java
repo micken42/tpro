@@ -26,7 +26,7 @@ public class LoginMB implements Serializable {
 	public String login() {
 		currentUser = userService.login(credentials.getUsername(), credentials.getPassword());
 		if (currentUser != null)
-			return (isAdmin()) ? "admin" : "user";
+			return (isLoggedInAsAdmin()) ? "admin" : "user";
 		return null;
 	}
     
@@ -49,7 +49,7 @@ public class LoginMB implements Serializable {
        return currentUser != null;
     }
     
-    public boolean isAdmin() {
+    public boolean isLoggedInAsAdmin() {
     	return userService.userIsAuthorized(currentUser, "admin", "tpro");
     }
     

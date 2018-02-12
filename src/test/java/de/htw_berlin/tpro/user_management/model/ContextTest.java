@@ -1,5 +1,6 @@
 package de.htw_berlin.tpro.user_management.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -63,9 +64,9 @@ public class ContextTest {
 	@Test
 	public void contextFieldsShouldBeAnnotated() {
 		AssertAnnotations.assertField(
-				Context.class, "id", Id.class, GeneratedValue.class);
+				Context.class, "id", Id.class, GeneratedValue.class, Column.class);
 		AssertAnnotations.assertField(
-				Context.class, "name", NotNull.class);
+				Context.class, "name", NotNull.class, Column.class);
 		AssertAnnotations.assertField(
 				Context.class, "permissions", OneToMany.class);
 	}

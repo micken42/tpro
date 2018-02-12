@@ -49,12 +49,12 @@
 	              <p:password id="password" value="#{credentials.password}" placeholder="Passwort" class="form-control"/>
 	            </div>
 	            <div class="form-group">
-	              <p:commandButton class="btn btn-lg btn-success" value="Anmelden" ajax="false" action="#{loginMB.login}" process="loginForm" update="loginForm" rendered="#{!loginMB.loggedIn}"/>
+	              <p:commandButton class="btn btn-success form-control" value="Anmelden" ajax="true" action="#{loginMB.login}" process="loginForm" update="loginForm" rendered="#{!loginMB.loggedIn}"/>
 	            </div>
 	          </h:form>
-			  <h:form class="navbar-form navbar-right" rendered="#{loginMB.loggedIn}">
+			  <h:form id="logoutForm" class="navbar-form navbar-right" rendered="#{loginMB.loggedIn}">
 	            <div class="form-group">
-				  <p:commandButton class="btn btn-lg btn-default" value="Abmelden" ajax="false" action="#{loginMB.logout}"/>
+				  <p:commandButton class="btn btn-default form-control" value="Abmelden" ajax="false" action="#{loginMB.logout}"/>
 			    </div>
 			  </h:form>
 	        </div><!--/.nav-collapse -->

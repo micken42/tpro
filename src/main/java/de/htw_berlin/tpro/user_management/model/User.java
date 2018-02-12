@@ -5,8 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -30,7 +32,8 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
 	private @Getter @Setter Integer id;
 
 	@NotNull
@@ -38,10 +41,12 @@ public class User implements Serializable {
 	@NotNull
 	private @Getter @Setter String surname;
 	@NotNull
+	@Column(unique=true)
 	private @Getter @Setter String email;
 	@NotNull
 	private @Getter @Setter String password;
 	@NotNull
+	@Column(unique=true)
 	private @Getter @Setter String username;
 	
 	@ManyToMany(cascade = CascadeType.PERSIST)

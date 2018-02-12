@@ -20,7 +20,7 @@ public abstract class GenericDAO<T> implements Serializable {
     }
  
     public EntityManager getEntityManager() {
-    	return em;
+    	return (em != null) ? em : emf.createEntityManager();
     }
     
     public void beginTransaction() {

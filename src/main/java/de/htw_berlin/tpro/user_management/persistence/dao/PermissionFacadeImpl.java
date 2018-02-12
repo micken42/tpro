@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.user_management.persistence.facade;
+package de.htw_berlin.tpro.user_management.persistence.dao;
 
 import java.util.List;
 

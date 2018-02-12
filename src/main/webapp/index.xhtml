@@ -27,12 +27,13 @@
 	        die Anwendung um verschiendenste Dienste zu erweitern.</p>
 	        </div>    
 	  	  </div>
-	  	  <div class="container">
+	  	  <ui:fragment rendered="#{!loginMB.loggedIn}">
+	  	    <div class="container">
 		      <div class="row">
 		        <div class="col-md-12">
 		        <h1>Registrieren</h1>
     			  <p:messages id="messages" showDetail="true" autoUpdate="true" />
-		          <h:form id="signUpForm" class="row" rendered="#{!loginMB.loggedIn}">
+		          <h:form id="signUpForm" class="row">
 				    <div class="form-row">
 					  <div class="form-group col-md-6">
 					    <p:outputLabel for="prename" value="Vorname:"/>
@@ -65,12 +66,14 @@
 						</div>
 					</div>
 					<div class="form-group col-md-12"> 
-					    	<p:commandButton class="btn btn-lg btn-primary form-control" value="Registrieren" ajax="true" action="#{loginMB.signUp}" process="signUpForm" update="signUpForm" rendered="#{!loginMB.loggedIn}"/>
+					   <p:commandButton class="btn btn-lg btn-primary form-control" value="Registrieren" ajax="true" action="#{loginMB.signUp}" process="signUpForm" update="signUpForm"/>
 					</div>
 				  </h:form>
 		        </div>
 		      </div>
-	  	  </div>
+	  	    </div>
+	  	  </ui:fragment>
+	  	  
     </ui:define>  
   </ui:composition> 
 </f:view>

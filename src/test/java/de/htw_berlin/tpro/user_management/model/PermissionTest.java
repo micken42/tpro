@@ -1,5 +1,6 @@
 package de.htw_berlin.tpro.user_management.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -64,7 +65,7 @@ public class PermissionTest {
 	@Test
 	public void permissionFieldsShouldBeAnnotated() {
 		AssertAnnotations.assertField(
-				Permission.class, "id", Id.class, GeneratedValue.class);
+				Permission.class, "id", Id.class, GeneratedValue.class, Column.class);
 		AssertAnnotations.assertField(
 				Permission.class, "name", NotNull.class);
 		AssertAnnotations.assertField(

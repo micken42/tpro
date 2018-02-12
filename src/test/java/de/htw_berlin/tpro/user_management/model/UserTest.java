@@ -1,11 +1,13 @@
 package de.htw_berlin.tpro.user_management.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.junit.Assert;
@@ -63,13 +65,13 @@ public class UserTest {
 	@Test
 	public void userFieldsShouldBeAnnotated() {
 		AssertAnnotations.assertField(
-				User.class, "id", Id.class, GeneratedValue.class);
+				User.class, "id", Id.class, GeneratedValue.class, Column.class);
 		AssertAnnotations.assertField(
-				User.class, "username", NotNull.class);
+				User.class, "username", NotNull.class, Column.class);
 		AssertAnnotations.assertField(
 				User.class, "password", NotNull.class);
 		AssertAnnotations.assertField(
-				User.class, "permissions", OneToMany.class);
+				User.class, "permissions", ManyToMany.class, JoinTable.class);
 	}
 
 }
