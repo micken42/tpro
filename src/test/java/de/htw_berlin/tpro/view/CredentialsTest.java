@@ -29,10 +29,8 @@ public class CredentialsTest {
     Credentials credentials;
 
     @Test
-    public void should_create_credentials() {
+    public void shouldCreateCredentials() {
         Assert.assertNotEquals(null, credentials);
-        Assert.assertEquals("hello", credentials.hello());
-        logger.info(credentials.hello());
     }
     
 }
