@@ -28,8 +28,7 @@ jobs:
       - run:
           # Add a password to the `ubuntu` user, since Postgres is configured to
           # always ask for a password without sudo, and fails without one.
-          command: sudo cat /ect/passwd
-          command: sudo -u mysqld mysql -utpro -ptpro -e 'CREATE DATABASE test_tpro_user_management;'
+          command: mysql -utpro -ptpro -e 'CREATE DATABASE test_tpro_user_management;'
 
       - checkout
 
