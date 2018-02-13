@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
@@ -54,22 +53,29 @@ public class User implements Serializable {
 	@NotNull
 	private @Getter @Setter String password;
 	
-	@ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="User_Permission", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="permission_id"))
 	private @Getter @Setter Set<Permission> permissions;
-	
-	public User(String username, String password, Set<Permission> permissions) {
+
+	public User(String prename, String surname,  String email, String username, String password, Set<Permission> permissions) {
 		this.username = username;
 		this.password = password;
 		this.permissions = permissions;
+		this.prename = prename;
+		this.surname = surname;
+		this.email = email;
+	}
+	
+	public User(String prename, String surname, String username, String password) {
+		this("", "", username + "@mail.de",username, password, new HashSet<Permission>());
 	}
 	
 	public User(String username, String password) {
-		this(username, password, new HashSet<Permission>());
+		this("", "", username + "@mail.de",username, password, new HashSet<Permission>());
 	}
 	
 	public User() {
-		this("", "", new HashSet<Permission>());
+		this("", "", "" + "@mail.de", "", "", new HashSet<Permission>());
 	}
 	
 	public void addPermission(Permission permission) {

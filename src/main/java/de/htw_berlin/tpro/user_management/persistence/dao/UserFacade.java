@@ -18,5 +18,7 @@ public interface UserFacade extends Serializable {
 	public User getUserByUsername(String username);
 
 	public List<String> getAllUsernames();
+
+	public void deleteUser(User user);
 		
 }

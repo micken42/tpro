@@ -1,11 +1,14 @@
 package de.htw_berlin.tpro.user_management.persistence.dao;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
+import de.htw_berlin.tpro.user_management.model.Permission;
 import de.htw_berlin.tpro.user_management.model.User;
 
 @Dependent
@@ -27,23 +30,47 @@ public class UserFacadeImpl implements UserFacade {
 	
 	@Override
 	public void updateUser(User user) {
-		userDAO.beginTransaction();
-		userDAO.update(user);
-		userDAO.commitAndCloseTransaction();
+		try {
+			userDAO.beginTransaction();
+
+			userDAO.update(user);
+
+			userDAO.commit();
+		} catch (Exception e) {
+			EntityTransaction txn = userDAO.getEntityManager().getTransaction();
+			if (txn != null && txn.isActive())
+				userDAO.rollback();
+			throw e;
+			// handle the underlying error
+		} finally {
+			userDAO.closeTransaction();
+		}
 	}
 	
 	@Override
 	public void saveUser(User user) {
-		userDAO.beginTransaction();
-		userDAO.save(user);
-		userDAO.commitAndCloseTransaction();
+		try {
+			userDAO.beginTransaction();
+
+			userDAO.save(user);
+
+			userDAO.commit();
+		} catch (Exception e) {
+			EntityTransaction txn = userDAO.getEntityManager().getTransaction();
+			if (txn != null && txn.isActive())
+				userDAO.rollback();
+			throw e;
+			// handle the underlying error
+		} finally {
+			userDAO.closeTransaction();
+		}
 	}
 	
 	@Override
 	public List<User> getAllUsers() {
 		userDAO.beginTransaction();
 		List<User> users = userDAO.findAll();
-		userDAO.closeTransaction();
+		userDAO.commitAndCloseTransaction();
 		return users;
 	}
 
@@ -57,7 +84,7 @@ public class UserFacadeImpl implements UserFacade {
 		} catch (NoResultException e) {
 			user = null;
 		}
-		userDAO.closeTransaction();
+		userDAO.commitAndCloseTransaction();
 		return user;
 	}
 	
@@ -72,8 +99,33 @@ public class UserFacadeImpl implements UserFacade {
 		} catch (NoResultException e) {
 			usernames = null;
 		}
-		userDAO.closeTransaction();
+		userDAO.commitAndCloseTransaction();
 		return usernames;
+	}
+
+	@Override
+	public void deleteUser(User user) {
+		if (getUserByUsername(user.getUsername()) != null) {
+			user.setPermissions(new HashSet<Permission>());;
+			updateUser(user);
+		}
+
+		Integer id = user.getId();
+		try {
+			userDAO.beginTransaction();
+
+			userDAO.delete(id, User.class);
+
+			userDAO.commit();
+		} catch (Exception e) {
+			EntityTransaction txn = userDAO.getEntityManager().getTransaction();
+			if (txn != null && txn.isActive())
+				userDAO.rollback();
+			throw e;
+			// handle the underlying error
+		} finally {
+			userDAO.closeTransaction();
+		}
 	}
 	
 }
