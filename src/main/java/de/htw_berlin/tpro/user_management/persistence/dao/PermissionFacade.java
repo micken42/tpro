@@ -15,6 +15,10 @@ public interface PermissionFacade extends Serializable {
 	
 	public List<Permission> getAllPermissions();
 	
+	public List<Permission> getPermissionsByContextName(String context);
+
 	public Permission getPermissionByPermissionAndContextName(String name, String context);
+
+	public void deletePermission(Permission permission);
 		
 }

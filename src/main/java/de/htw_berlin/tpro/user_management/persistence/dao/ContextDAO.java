@@ -9,5 +9,4 @@ public class ContextDAO extends GenericDAO<Context> {
 	public ContextDAO() {
 		super(Context.class);
 	}
-
 }

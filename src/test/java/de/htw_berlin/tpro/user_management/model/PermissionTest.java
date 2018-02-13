@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.validation.constraints.NotNull;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,7 +30,7 @@ public class PermissionTest {
 				ReflectionHelper.getClassAnnotation(Permission.class, NamedQueries.class).value();
 		NamedQuery findAll = null; 
 		NamedQuery findByPermissionAndContextName = null;
-		NamedQuery findByName = null;
+		NamedQuery findByContextName = null;
 		// initialize each NamedQuery
 		for (NamedQuery query : queries) {
 			switch (query.name()) {
@@ -41,8 +40,8 @@ public class PermissionTest {
 			case "Permission.findByPermissionAndContextName":
 				findByPermissionAndContextName = query;
 				break;
-			case "Permission.findByName":
-				findByName = query;
+			case "Permission.findByContextName":
+				findByContextName = query;
 				break;
 			default:
 				continue;
@@ -56,7 +55,7 @@ public class PermissionTest {
 					findByPermissionAndContextName.query(), 
 					"SELECT p FROM Permission p WHERE p.name = :name and p.context.name = :context");
 			Assert.assertEquals(
-					findByName.query(), "SELECT p.name FROM Permission p");
+					findByContextName.query(), "SELECT p FROM Permission p WHERE p.context.name = :context");
 		} catch (NullPointerException e) {
 			throw new AssertionError(e);
 		}
@@ -67,7 +66,7 @@ public class PermissionTest {
 		AssertAnnotations.assertField(
 				Permission.class, "id", Id.class, GeneratedValue.class, Column.class);
 		AssertAnnotations.assertField(
-				Permission.class, "name", NotNull.class);
+				Permission.class, "name", Column.class);
 		AssertAnnotations.assertField(
 				Permission.class, "context", ManyToOne.class);
 	}

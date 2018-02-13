@@ -67,7 +67,7 @@ public class UserTest {
 		AssertAnnotations.assertField(
 				User.class, "id", Id.class, GeneratedValue.class, Column.class);
 		AssertAnnotations.assertField(
-				User.class, "username", NotNull.class, Column.class);
+				User.class, "username", Column.class);
 		AssertAnnotations.assertField(
 				User.class, "password", NotNull.class);
 		AssertAnnotations.assertField(

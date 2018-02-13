@@ -8,38 +8,28 @@ import javax.persistence.PersistenceException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Permission;
-import de.htw_berlin.tpro.user_management.persistence.dao.ContextDAO;
-import de.htw_berlin.tpro.user_management.persistence.dao.ContextDAOProducer;
-import de.htw_berlin.tpro.user_management.persistence.dao.ContextFacade;
-import de.htw_berlin.tpro.user_management.persistence.dao.ContextFacadeImpl;
-import de.htw_berlin.tpro.user_management.persistence.dao.DefaultContextFacade;
-import de.htw_berlin.tpro.user_management.persistence.dao.GenericDAO;
 
 @RunWith(Arquillian.class)
 public class ContextFacadeTest {
 
 	@Deployment
 	public static JavaArchive createDeployment() {
-	    return ShrinkWrap.create(JavaArchive.class)
+    	return DeploymentHelper.createDefaultDeployment()
 			.addClasses(GenericDAO.class, ContextDAO.class, ContextDAOProducer.class)
-	    	.addClasses(ContextFacade.class, ContextFacadeImpl.class, DefaultContextFacade.class)
-	        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-	        .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-	        .addAsResource("META-INF/test-data.sql", "META-INF/test-data.sql");
+	    	.addClasses(ContextFacade.class, ContextFacadeImpl.class, DefaultContextFacade.class);
 	}
 	
 	@Inject @DefaultContextFacade
 	ContextFacade contextFacade;
-	
+
 	@Test
 	public void defaultContextFacadeShouldBeInjected() {
 		Assert.assertNotEquals(null, contextFacade);
@@ -52,6 +42,15 @@ public class ContextFacadeTest {
 		boolean moreThanZeroContexts = contexts.size() > 0;
 		
 		Assert.assertTrue(moreThanZeroContexts);	
+	}
+	
+	@Test 
+	public void getAllContextsNamesShouldReturnContextNames() {
+		ArrayList<String> contextNames = (ArrayList<String>) contextFacade.getAllNames();
+		
+		boolean moreThanZeroContextNames = contextNames.size() > 0;
+		
+		Assert.assertTrue(moreThanZeroContextNames);	
 	}
 	
 	@Test 
@@ -105,10 +104,11 @@ public class ContextFacadeTest {
 		if (abraham != null) {
 			abraham.setName("Lincoln");
 			contextFacade.updateContext(abraham);
-			contextFacade.getContextByName("Lincoln");
 		}
+		abraham = contextFacade.getContextByName("Abraham");
 		Context lincoln = contextFacade.getContextByName("Lincoln");
 		
+		Assert.assertEquals(null, abraham);
 		Assert.assertNotEquals(null, lincoln);
 	}
 	
@@ -127,7 +127,7 @@ public class ContextFacadeTest {
 		
 		Context renamedContext = contextFacade.getContextByName("oldName");
 		renamedContext.setName("tpro");
-		contextFacade.saveContext(renamedContext);
+		contextFacade.updateContext(renamedContext);
 	}
 	
 	@Test
@@ -143,23 +143,10 @@ public class ContextFacadeTest {
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void deleteAnUnknownContextShouldFail() {
+	public void deleteAnUnknownNotPersistedContextShouldFail() {
 		Context context = new Context("unknown");
 		context.setId(9000);
 		contextFacade.deleteContext(context);
 	}
 	
 }
-
-
-//public void updateAllContexts(List<Context> contexts);
-//
-//public void updateContext(Context context);
-//
-//public void saveContext(Context context);
-//
-//public List<Context> getAllContexts();
-//
-//public Context getContextByName(String name);
-//
-//public List<String> getAllNames();

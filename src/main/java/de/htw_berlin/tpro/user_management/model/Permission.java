@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +20,8 @@ import lombok.Setter;
             query = "SELECT p FROM Permission p"),
     @NamedQuery(name = "Permission.findByPermissionAndContextName",
             query = "SELECT p FROM Permission p WHERE p.name = :name and p.context.name = :context"),
-    @NamedQuery(name = "Permission.findByName",
-            query = "SELECT p.name FROM Permission p") })
+    @NamedQuery(name = "Permission.findByContextName",
+            query = "SELECT p FROM Permission p WHERE p.context.name = :context") })
 public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -31,7 +30,7 @@ public class Permission implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
 	private @Getter @Setter Integer id;
 	
-	@NotNull
+	@Column(unique=true, nullable=false)
 	private @Getter @Setter String name;
 	
 	@ManyToOne

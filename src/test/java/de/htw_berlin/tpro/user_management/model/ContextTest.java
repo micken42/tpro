@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -66,7 +65,7 @@ public class ContextTest {
 		AssertAnnotations.assertField(
 				Context.class, "id", Id.class, GeneratedValue.class, Column.class);
 		AssertAnnotations.assertField(
-				Context.class, "name", NotNull.class, Column.class);
+				Context.class, "name", Column.class);
 		AssertAnnotations.assertField(
 				Context.class, "permissions", OneToMany.class);
 	}

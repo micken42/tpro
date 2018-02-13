@@ -7,13 +7,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,11 +36,11 @@ public class Context implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
 	private @Getter @Setter Integer id;
 	
-	@NotNull
-	@Column(unique=true)
+	@Column(unique=true, nullable=false)
 	private @Getter @Setter String name;
 	
-	@OneToMany(mappedBy="context", cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="context", fetch=FetchType.EAGER, // Could also define a namedEntityGraph
+			cascade=CascadeType.ALL, orphanRemoval=true)
 	private @Getter @Setter Set<Permission> permissions;
 	
 	public Context(String name, Set<Permission> permissions) {
@@ -58,6 +59,15 @@ public class Context implements Serializable {
 	public void addPermission(Permission permission) {
 		permission.setContext(this);
 		permissions.add(permission);
+	}
+	
+	public void removePermission(Permission permission) throws EntityNotFoundException {
+		if (permissions.contains(permission)) {
+			permission.setContext(null);
+			permissions.remove(permission);
+		} else {
+			throw new EntityNotFoundException();
+		}
 	}
 	
 }

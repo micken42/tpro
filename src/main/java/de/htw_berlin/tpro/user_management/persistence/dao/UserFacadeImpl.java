@@ -7,11 +7,9 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 import de.htw_berlin.tpro.user_management.model.User;
-import de.htw_berlin.tpro.user_management.persistence.dao.DefaultUserDAO;
-import de.htw_berlin.tpro.user_management.persistence.dao.GenericDAO;
 
-@DefaultUserFacade
 @Dependent
+@DefaultUserFacade
 public class UserFacadeImpl implements UserFacade {
 
 	private static final long serialVersionUID = 1L;

@@ -1,16 +1,16 @@
 package de.htw_berlin.tpro.user_management.persistence.dao;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.user_management.model.Context;
 
 @RunWith(Arquillian.class)
@@ -18,13 +18,8 @@ public class ContextDAOProducerTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-    		.addClass(GenericDAO.class)
-    		.addClass(ContextDAO.class)
-    		.addClass(ContextDAOProducer.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-            .addAsResource("META-INF/test-data.sql", "META-INF/test-data.sql");
+    	return DeploymentHelper.createDefaultDeployment()
+    			.addClasses(GenericDAO.class, ContextDAO.class, ContextDAOProducer.class);
     }
 
     @Inject @DefaultContextDAO
@@ -37,6 +32,10 @@ public class ContextDAOProducerTest {
 
     @Test
 	public void producedContextDAOInstanceShouldBeAbleToCreateEntityManagerInstance() {
-		Assert.assertNotEquals(null, contextDAO.getEntityManager());
+    	contextDAO.beginTransaction();
+    	EntityManager em = contextDAO.getEntityManager();
+		Assert.assertNotEquals(null, em);
+
+    	contextDAO.closeTransaction();
     }
 }
