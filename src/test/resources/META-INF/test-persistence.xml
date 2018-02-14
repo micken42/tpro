@@ -8,28 +8,23 @@
 		<class>de.htw_berlin.tpro.user_management.model.User</class> 
 		<class>de.htw_berlin.tpro.user_management.model.Permission</class> 
 		<class>de.htw_berlin.tpro.user_management.model.Context</class> 
+		<class>de.htw_berlin.tpro.user_management.model.Group</class> 
 		<properties>
 			<!-- Configuring JDBC properties -->
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/test_tpro_user_management" />
 			<property name="javax.persistence.jdbc.user" value="tpro" />
 			<property name="javax.persistence.jdbc.password" value="tpro" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			
+			      
 			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-<!-- 			<property name="hibernate.hbm2ddl.auto" value="update" /> -->
-      
-<!-- 			<property name="javax.persistence.schema-generation.create-source" value="script"/> -->
-<!-- 			<property name="javax.persistence.schema-generation.create-script-source" value="META-INF/create.sql"/> -->
+			<property name="javax.persistence.schema-generation.create-source" value="script"/>
+			<property name="javax.persistence.schema-generation.create-script-source" value="META-INF/create.sql"/>
+			<property name="javax.persistence.schema-generation.drop-source" value="script"/>
+			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/>
+			<property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
 			
-<!-- 			<property name="javax.persistence.schema-generation.drop-source" value="script"/> -->
-<!-- 			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/> -->
-			
-			<!-- Import test data -->
-			<property name="javax.persistence.sql-load-script-source" value="META-INF/test-data.sql"/>
-			
-<!-- 			<property name="hibernate.show_sql" value="true" /> -->
-<!-- 			<property name="hibernate.format_sql" value="true" /> -->
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
 			

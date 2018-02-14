@@ -20,5 +20,7 @@ public interface UserFacade extends Serializable {
 	public List<String> getAllUsernames();
 
 	public void deleteUser(User user);
+
+	public List<User> getUsersByPermissionAndContextName(String permission, String context);
 		
 }

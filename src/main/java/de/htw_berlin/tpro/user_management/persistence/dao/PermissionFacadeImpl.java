@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 
 import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.User;
 
 @Dependent
 @DefaultPermissionFacade
@@ -24,9 +25,8 @@ public class PermissionFacadeImpl implements PermissionFacade {
 	@Inject @DefaultContextFacade
 	ContextFacade contextFacade;
 	
-//	TODO: Permissions löschen, die Benutzern zugewiesen sind
-//	@Inject @DefaultUserFacade
-//	UserFacade userFacade;
+	@Inject @DefaultUserFacade
+	UserFacade userFacade;
 
 	@Override
 	public void updateAllPermissions(List<Permission> permissions) {
@@ -138,8 +138,28 @@ public class PermissionFacadeImpl implements PermissionFacade {
 	@Override
 	public void deletePermission(Permission permission) {
 		Context permissionContext = permission.getContext();
+		ArrayList<User> linkedUsers = 
+				(ArrayList<User>) getUsersPermissionIsAssignedTo(permission);
+		if (linkedUsers != null) {
+			deletePermissionFromUsers(permission, linkedUsers);
+		}
 		permissionContext.removePermission(permission);
 		contextFacade.updateContext(permissionContext);
+	}
+	
+	private List<User> getUsersPermissionIsAssignedTo(Permission permission) {
+		String permissionName = permission.getName();
+		String contextName = permission.getContext().getName();
+		
+		ArrayList<User> users = 
+				(ArrayList<User>) userFacade.getUsersByPermissionAndContextName(permissionName, contextName);
+		
+		return users;
+	}
+	
+	private void deletePermissionFromUsers(Permission permission, List<User> users) {
+	    users.forEach(user -> user.removePermission(permission));
+	    userFacade.updateAllUsers(users);
 	}
 	
 }

@@ -2,6 +2,7 @@ package de.htw_berlin.tpro.user_management.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -68,6 +69,48 @@ public class ContextTest {
 				Context.class, "name", Column.class);
 		AssertAnnotations.assertField(
 				Context.class, "permissions", OneToMany.class);
+	}
+	
+	@Test
+	public void addPermissionToContext() {
+		Context context = new Context("htwBerlin");
+		Permission studentPermission = new Permission("student");
+	
+		context.addPermission(studentPermission);
+		boolean permissionHasBeenAdded = false;
+		for (Permission permission : context.getPermissions()) {
+			if (permission.getName().equals("student"))
+				permissionHasBeenAdded = true;
+		}
+		
+		Assert.assertTrue(permissionHasBeenAdded);
+	}
+	
+	@Test
+	public void removePermissionFromContext() {
+		Context context = new Context("htwBerlin");
+		Permission studentPermission = new Permission("student");
+		context.addPermission(studentPermission);
+		int initialNumberOfPermissions = context.getPermissions().size();
+		
+		context.removePermission(studentPermission);
+		int actualNumberOfPermissions = context.getPermissions().size();
+		boolean permissionHasBeenDeleted = 
+				(initialNumberOfPermissions > actualNumberOfPermissions) ? true : false;
+		
+		Assert.assertTrue(permissionHasBeenDeleted);
+	}
+	
+	@Test(expected=EntityNotFoundException.class)
+	public void removeNonExistingPermissionFromContextShouldFail() {
+		Context context = new Context("htwBerlin");
+		Permission studentPermission = new Permission("student");
+		studentPermission.setId(1);
+		context.addPermission(studentPermission);
+		
+		Permission permissionToBeDeleted = new Permission("unknown");
+		permissionToBeDeleted.setId(2);
+		context.removePermission(permissionToBeDeleted);
 	}
 
 }

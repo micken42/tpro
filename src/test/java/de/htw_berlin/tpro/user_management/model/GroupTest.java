@@ -2,14 +2,12 @@ package de.htw_berlin.tpro.user_management.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.validation.constraints.NotNull;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,35 +18,39 @@ import de.htw_berlin.tpro.test_utils.ReflectionHelper;;
 /**
  * @author Michael Baumert
  */
-public class UserTest {
+public class GroupTest {
 	@Test
-	public void userTypeShouldBeAnnotated() {
-		AssertAnnotations.assertType(User.class, Entity.class, NamedQueries.class);
+	public void groupTypeShouldBeAnnotated() {
+		AssertAnnotations.assertType(Group.class, Entity.class, NamedQueries.class);
 	}
 
 	@Test
-	public void userTypeAnnotatedNamedQueriesShouldBeDefined() {
+	public void groupTypeAnnotatedNamedQueriesShouldBeDefined() {
 		// build
 		NamedQuery queries[] = 
-				ReflectionHelper.getClassAnnotation(User.class, NamedQueries.class).value();
+				ReflectionHelper.getClassAnnotation(Group.class, NamedQueries.class).value();
 		NamedQuery findAll = null; 
-		NamedQuery findByUsername = null;
-		NamedQuery findAllUsernames = null;
+		NamedQuery findByName = null;
+		NamedQuery findAllNames = null;
 		NamedQuery findAllByPermissionAndContextName = null;
+		NamedQuery findAllByUsername = null;
 		// initialize each NamedQuery
 		for (NamedQuery query : queries) {
 			switch (query.name()) {
-			case "User.findAll":
+			case "Group.findAll":
 				findAll = query;
 				break;
-			case "User.findByUsername":
-				findByUsername = query;
+			case "Group.findByName":
+				findByName = query;
 				break;
-			case "User.findAllUsernames":
-				findAllUsernames = query;
+			case "Group.findAllNames":
+				findAllNames = query;
 				break;
-			case "User.findAllByPermissionAndContextName":
+			case "Group.findAllByPermissionAndContextName":
 				findAllByPermissionAndContextName = query;
+				break;
+			case "Group.findAllByUsername":
+				findAllByUsername = query;
 				break;
 			default:
 				continue;
@@ -57,69 +59,64 @@ public class UserTest {
 		// check
 		try {
 			Assert.assertEquals(
-					findAll.query(), "SELECT u FROM User u");
+					findAll.query(), "SELECT g FROM Group g");
 			Assert.assertEquals(
-					findByUsername.query(), "SELECT u FROM User u WHERE u.username = :username");
+					findByName.query(), "SELECT g FROM Group g WHERE g.name = :name");
 			Assert.assertEquals(
-					findAllUsernames.query(), "SELECT u.username FROM User u");
+					findAllNames.query(), "SELECT g.name FROM Group g");
 			Assert.assertEquals(
-					findAllByPermissionAndContextName.query(), "SELECT u FROM User u JOIN u.permissions p "
+					findAllByPermissionAndContextName.query(), "SELECT g FROM Group g JOIN g.permissions p "
 		    				                                 + "WHERE p.name = :permission and p.context.name = :context");
+			Assert.assertEquals(
+					findAllByUsername.query(), "SELECT g FROM Group g JOIN g.users u WHERE u.username = :username");
 		} catch (NullPointerException e) {
 			throw new AssertionError(e);
 		}
 	}
 
 	@Test
-	public void userFieldsShouldBeAnnotated() {
+	public void groupFieldsShouldBeAnnotated() {
 		AssertAnnotations.assertField(
-				User.class, "id", Id.class, GeneratedValue.class, Column.class);
+				Group.class, "id", Id.class, GeneratedValue.class, Column.class);
 		AssertAnnotations.assertField(
-				User.class, "username", Column.class);
+				Group.class, "name", Column.class);
 		AssertAnnotations.assertField(
-				User.class, "password", NotNull.class);
+				Group.class, "permissions", ManyToMany.class, JoinTable.class);
 		AssertAnnotations.assertField(
-				User.class, "prename", NotNull.class);
-		AssertAnnotations.assertField(
-				User.class, "surname", NotNull.class);
-		AssertAnnotations.assertField(
-				User.class, "email", Column.class);
-		AssertAnnotations.assertField(
-				User.class, "permissions", ManyToMany.class, JoinTable.class);
-		AssertAnnotations.assertField(
-				User.class, "groups", ManyToMany.class);
+				Group.class, "users", ManyToMany.class, JoinTable.class);
 	}
 	
 	@Test
-	public void addGroupToUser() {
-		User user = new User("aiStudent", "password");
-		Group fb4Group = new Group("fb4");
+	public void addUserToGroup() {
+		Group group = new Group("fb4");
+		User studentUser = new User("aiStudent", "password");
 	
-		user.addGroup(fb4Group);
-		boolean groupHasBeenAdded = false;
-		for (Group group : user.getGroups()) {
-			if (group.getName().equals("fb4"))
-				groupHasBeenAdded = true;
+		group.addUser(studentUser);
+		boolean userHasBeenAdded = false;
+		for (User user : group.getUsers()) {
+			if (user.getUsername().equals("aiStudent"))
+				userHasBeenAdded = true;
 		}
 		
-		Assert.assertTrue(groupHasBeenAdded);
+		Assert.assertTrue(userHasBeenAdded);
 	}
 	
 	@Test
-	public void removeGroupFromUser() {
-		User user = new User("aiStudent", "password");
-		Group fb4Group = new Group("fb4");
-		user.addGroup(fb4Group);
-		int initialNumberOfGroups = user.getGroups().size();
+	public void removeUserFromGroup() {
+		Group group = new Group("fb4");
+		User studentUser = new User("aiStudent", "password");
+		group.addUser(studentUser);
+		int initialNumberOfGroups = group.getUsers().size();
 		
-		user.removeGroup(fb4Group);
-		int actualNumberOfGroups = user.getGroups().size();
-		boolean groupHasBeenDeleted = 
+		group.removeUser(studentUser);
+		int actualNumberOfGroups = group.getUsers().size();
+		boolean userHasBeenDeleted = 
 				(initialNumberOfGroups > actualNumberOfGroups) ? true : false;
 		
-		Assert.assertTrue(groupHasBeenDeleted);
+		Assert.assertTrue(userHasBeenDeleted);
 	}
 	
+	/* TODO: Tests anpassen
 	@Test(expected=EntityNotFoundException.class)
 	public void removeNonExistingGroupFromUserShouldFail() {
 		User user = new User("aiStudent", "password");
@@ -227,5 +224,5 @@ public class UserTest {
 				(user.getMatchingUserPermission(notExistingPermission) == null) ? true : false;
 		
 		Assert.assertTrue(permissionDoesNotMatchUsersPermission);
-	}
+	}*/
 }

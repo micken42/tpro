@@ -127,5 +127,23 @@ public class UserFacadeImpl implements UserFacade {
 			userDAO.closeTransaction();
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersByPermissionAndContextName(String permission, String context) {
+		userDAO.beginTransaction();
+		List<User> users;
+		try {
+			users = userDAO.getEntityManager()
+					.createNamedQuery("User.findAllByPermissionAndContextName")
+					.setParameter("permission", permission)
+					.setParameter("context", context)
+					.getResultList();
+		} catch (NoResultException e) {
+			users = null;
+		}
+		userDAO.commitAndCloseTransaction();
+		return users;
+	}
 	
 }

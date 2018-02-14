@@ -9,11 +9,14 @@ import javax.persistence.PersistenceException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.htw_berlin.tpro.test_utils.DeploymentHelper;
+import de.htw_berlin.tpro.test_utils.PersistenceHelper;
 import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Permission;
 
@@ -30,6 +33,25 @@ public class ContextFacadeTest {
 	@Inject @DefaultContextFacade
 	ContextFacade contextFacade;
 
+	@Before
+	public void initTestData() {
+		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"tpro\")");
+		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (2, \"plugin\")");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"admin\", 1)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (2, \"user\", 1)");
+	}
+	
+	@After
+	public void clearTestData() {
+		PersistenceHelper.execute("DELETE FROM User_Permission");
+		PersistenceHelper.execute("DELETE FROM Group_Permission");
+		PersistenceHelper.execute("DELETE FROM Group_User");
+		PersistenceHelper.execute("DELETE FROM User");		
+		PersistenceHelper.execute("DELETE FROM `Group`");
+		PersistenceHelper.execute("DELETE FROM Permission");
+		PersistenceHelper.execute("DELETE FROM Context");
+	}
+	
 	@Test
 	public void defaultContextFacadeShouldBeInjected() {
 		Assert.assertNotEquals(null, contextFacade);
@@ -81,7 +103,7 @@ public class ContextFacadeTest {
 	}
 	
 	@Test
-	public void saveNewContextWithOnePermissionShouldPersistBothPermissionAndContext() {
+	public void saveNewContextWithANewPermissionShouldPersistBothPermissionAndContext() {
 		Context context = new Context("newContext");
 		context.addPermission(new Permission("newPermission"));
 		contextFacade.saveContext(context);
@@ -95,49 +117,37 @@ public class ContextFacadeTest {
 	}
 	
 	@Test 
-	public void renamePersistedContextAbrahamToContextLincoln() {
-		Context context = new Context("Abraham");
-		context.addPermission(new Permission("president"));
-		contextFacade.saveContext(context);
-		
-		Context abraham = contextFacade.getContextByName("Abraham");
-		if (abraham != null) {
-			abraham.setName("Lincoln");
-			contextFacade.updateContext(abraham);
+	public void renamePersistedContextTProToTProApp() {
+		Context contextOld = contextFacade.getContextByName("tpro");
+		if (contextOld != null) {
+			contextOld.setName("tproApp");
+			contextFacade.updateContext(contextOld);
 		}
-		abraham = contextFacade.getContextByName("Abraham");
-		Context lincoln = contextFacade.getContextByName("Lincoln");
+		contextOld = contextFacade.getContextByName("tpro");
+		Context contextNew = contextFacade.getContextByName("tproApp");
 		
-		Assert.assertEquals(null, abraham);
-		Assert.assertNotEquals(null, lincoln);
+		Assert.assertEquals(null, contextOld);
+		Assert.assertNotEquals(null, contextNew);
 	}
 	
 	@Test(expected=PersistenceException.class)
 	public void persistContextWithSameNameTwiceShouldFail() {
-		Context context = new Context("Duplicate");
-		contextFacade.saveContext(context);
-		Context duplicate = new Context("Duplicate");
+		Context duplicate = new Context("tpro");
 		contextFacade.saveContext(duplicate);
 	}
 	
 	@Test(expected=PersistenceException.class)
 	public void renameContextToAnAlreadyExistingContextNameShouldFail() {
-		Context context = new Context("oldName");
-		contextFacade.saveContext(context);
-		
-		Context renamedContext = contextFacade.getContextByName("oldName");
-		renamedContext.setName("tpro");
+		Context renamedContext = contextFacade.getContextByName("tpro");
+		renamedContext.setName("plugin");
 		contextFacade.updateContext(renamedContext);
 	}
 	
 	@Test
 	public void deleteAnExistingContext() {
-		Context context = new Context("toBeDeleted");
-		contextFacade.saveContext(context);
-		
-		context = contextFacade.getContextByName("toBeDeleted");
+		Context context = contextFacade.getContextByName("plugin");
 		contextFacade.deleteContext(context);
-		boolean noContextFound = (contextFacade.getContextByName("toBeDeleted") == null);
+		boolean noContextFound = (contextFacade.getContextByName("plugin") == null);
 		
 		Assert.assertTrue(noContextFound);
 	}

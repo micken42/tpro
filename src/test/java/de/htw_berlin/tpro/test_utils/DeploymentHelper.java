@@ -10,6 +10,7 @@ public class DeploymentHelper {
 	    return ShrinkWrap.create(JavaArchive.class)
 	        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 	        .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-	        .addAsResource("META-INF/test-data.sql", "META-INF/test-data.sql");
+	        .addAsResource("META-INF/create.sql", "META-INF/create.sql")
+	        .addAsResource("META-INF/create.sql", "META-INF/drop.sql");
 	}
 }
