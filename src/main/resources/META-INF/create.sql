@@ -4,7 +4,6 @@ create table Context (
     primary key (id)
 ) engine=InnoDB;
 
-
 create table `Group` (
     id integer not null auto_increment,
     name varchar(255) not null,
