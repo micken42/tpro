@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
@@ -151,11 +152,13 @@ public class GroupFacadeImpl implements GroupFacade {
 	}
 	
 	@Override
-	public void deleteGroup(Group group) {
-		if (getGroupByName(group.getName()) != null) {
-			group.setPermissions(new HashSet<Permission>());;
-			updateGroup(group);
-		}
+	public void deleteGroupByName(String name) {
+		Group group = getGroupByName(name);
+		if (group == null) throw new EntityNotFoundException();
+		
+		group.setPermissions(new HashSet<Permission>());
+		group.getUsers().forEach(user -> group.removeUser(user));
+		updateGroup(group);
 		
 		Integer id = group.getId();
 		try {
@@ -178,7 +181,7 @@ public class GroupFacadeImpl implements GroupFacade {
 	@Override
 	public void deleteAllGroups() {
 		List<Group> groups = getAllGroups();
-		groups.forEach(group -> deleteGroup(group));
+		groups.forEach(group -> deleteGroupByName(group.getName()));
 	}
 
 }

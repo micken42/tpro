@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
@@ -51,7 +50,7 @@ public class Group implements Serializable {
     @JoinTable(name="Group_Permission", joinColumns=@JoinColumn(name="group_id"), inverseJoinColumns=@JoinColumn(name="permission_id"))
 	private @Getter @Setter Set<Permission> permissions;
 	
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="Group_User", joinColumns=@JoinColumn(name="group_id"), inverseJoinColumns=@JoinColumn(name="user_id"))
 	private @Getter @Setter Set<User> users;
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
@@ -123,7 +124,10 @@ public class ContextFacadeImpl implements ContextFacade {
 	}
 
 	@Override
-	public void deleteContext(Context context) {
+	public void deleteContextByName(String name) {
+		Context context = getContextByName(name);
+		if (context == null) throw new EntityNotFoundException();
+		
 		Integer id = context.getId();
 		try {
 			contextDAO.beginTransaction();
@@ -145,7 +149,7 @@ public class ContextFacadeImpl implements ContextFacade {
 	@Override
 	public void deleteAllContexts() {
 		List<Context> contexts = getAllContexts();
-		contexts.forEach(context -> deleteContext(context));
+		contexts.forEach(context -> deleteContextByName(context.getName()));
 	}
 
 }

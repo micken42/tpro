@@ -23,7 +23,7 @@ public interface UserFacade extends Serializable {
 
 	public List<User> getUsersByGroupName(String name);
 	
-	public void deleteUser(User user);
+	public void deleteUserByUsername(String username);
 
 	public void deleteAllUsers();
 		

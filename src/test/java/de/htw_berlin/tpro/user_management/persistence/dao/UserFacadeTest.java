@@ -213,8 +213,7 @@ public class UserFacadeTest  {
 	
 	@Test
 	public void deleteAnExistingUser() {
-		User user = userFacade.getUserByUsername("abraham");
-		userFacade.deleteUser(user);
+		userFacade.deleteUserByUsername("abraham");
 		boolean noUserFound = (userFacade.getUserByUsername("abraham") == null);
 		
 		Assert.assertTrue(noUserFound);
@@ -222,9 +221,7 @@ public class UserFacadeTest  {
 	
 	@Test(expected=EntityNotFoundException.class)
 	public void deleteAnUnknownNotPersistedUserShouldFail() {
-		User user = new User("unknown", "password");
-		user.setId(9000);
-		userFacade.deleteUser(user);
+		userFacade.deleteUserByUsername("unknown");
 	}
 	
 	@Test

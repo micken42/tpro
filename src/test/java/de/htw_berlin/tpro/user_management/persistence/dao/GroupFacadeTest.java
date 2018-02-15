@@ -212,8 +212,7 @@ public class GroupFacadeTest  {
 	
 	@Test
 	public void deleteAnExistingGroup() {
-		Group group = groupFacade.getGroupByName("htw");
-		groupFacade.deleteGroup(group);
+		groupFacade.deleteGroupByName("htw");
 		boolean noGroupFound = (groupFacade.getGroupByName("htw") == null);
 		
 		Assert.assertTrue(noGroupFound);
@@ -221,8 +220,7 @@ public class GroupFacadeTest  {
 	
 	@Test
 	public void deleteAnExistingGroupWithPermissionsAndUsers() {
-		Group group = groupFacade.getGroupByName("admins");
-		groupFacade.deleteGroup(group);
+		groupFacade.deleteGroupByName("admins");
 		boolean noGroupFound = (groupFacade.getGroupByName("admins") == null);
 		
 		Assert.assertTrue(noGroupFound);
@@ -230,9 +228,7 @@ public class GroupFacadeTest  {
 	
 	@Test(expected=EntityNotFoundException.class)
 	public void deleteAnUnknownNotPersistedGroupShouldFail() {
-		Group group = new Group("unknown");
-		group.setId(9000);
-		groupFacade.deleteGroup(group);
+		groupFacade.deleteGroupByName("unknown");
 	}
 	
 	@Test

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
@@ -115,31 +116,6 @@ public class UserFacadeImpl implements UserFacade {
 		return usernames;
 	}
 
-	@Override
-	public void deleteUser(User user) {
-		if (getUserByUsername(user.getUsername()) != null) {
-			user.setPermissions(new HashSet<Permission>());;
-			updateUser(user);
-		}
-
-		Integer id = user.getId();
-		try {
-			userDAO.beginTransaction();
-
-			userDAO.delete(id, User.class);
-
-			userDAO.commit();
-		} catch (Exception e) {
-			EntityTransaction txn = userDAO.getEntityManager().getTransaction();
-			if (txn != null && txn.isActive())
-				userDAO.rollback();
-			throw e;
-			// handle the underlying error
-		} finally {
-			userDAO.closeTransaction();
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsersByGroupName(String name) {
@@ -174,10 +150,37 @@ public class UserFacadeImpl implements UserFacade {
 		userDAO.commitAndCloseTransaction();
 		return users;
 	}
+	
+	@Override
+	public void deleteUserByUsername(String username) {
+		User user = getUserByUsername(username);
+		if (user == null) throw new EntityNotFoundException();
+
+		user.setPermissions(new HashSet<Permission>());
+		user.getGroups().forEach(group -> user.removeGroup(group));
+		updateUser(user);
+		
+		Integer id = user.getId();
+		try {
+			userDAO.beginTransaction();
+			
+			userDAO.delete(id, User.class);
+			
+			userDAO.commit();
+		} catch (Exception e) {
+			EntityTransaction txn = userDAO.getEntityManager().getTransaction();
+			if (txn != null && txn.isActive())
+				userDAO.rollback();
+			throw e;
+			// handle the underlying error
+		} finally {
+			userDAO.closeTransaction();
+		}
+	}
 
 	@Override
 	public void deleteAllUsers() {
 		List<User> users = getAllUsers();
-		users.forEach(user -> deleteUser(user));
+		users.forEach(user -> deleteUserByUsername(user.getUsername()));
 	}
 }

@@ -23,7 +23,7 @@ public interface GroupFacade extends Serializable {
 	
 	public List<Group> getGroupsByUsername(String username);
 
-	public void deleteGroup(Group group);
+	public void deleteGroupByName(String name);
 
 	public void deleteAllGroups();
 		

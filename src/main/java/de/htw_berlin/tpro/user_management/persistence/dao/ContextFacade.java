@@ -19,7 +19,7 @@ public interface ContextFacade extends Serializable {
 
 	public List<String> getAllNames();
 	
-	public void deleteContext(Context context);
+	public void deleteContextByName(String name);
 
 	public void deleteAllContexts();
 		

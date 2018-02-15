@@ -157,8 +157,7 @@ public class ContextFacadeTest {
 	
 	@Test
 	public void deleteAnExistingContext() {
-		Context context = contextFacade.getContextByName("plugin");
-		contextFacade.deleteContext(context);
+		contextFacade.deleteContextByName("plugin");
 		boolean noContextFound = (contextFacade.getContextByName("plugin") == null);
 		
 		Assert.assertTrue(noContextFound);
@@ -166,9 +165,7 @@ public class ContextFacadeTest {
 	
 	@Test(expected=EntityNotFoundException.class)
 	public void deleteAnUnknownNotPersistedContextShouldFail() {
-		Context context = new Context("unknown");
-		context.setId(9000);
-		contextFacade.deleteContext(context);
+		contextFacade.deleteContextByName("unknown");
 	}
 	
 	@Test
