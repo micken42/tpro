@@ -177,10 +177,7 @@ public class UserFacadeImpl implements UserFacade {
 
 	@Override
 	public void deleteAllUsers() {
-		userDAO.beginTransaction();
-		List<User> users = userDAO.findAll();
-		users.forEach(user -> userDAO.delete(user.getId(), User.class));
-		userDAO.flush();
-		userDAO.commitAndCloseTransaction();
+		List<User> users = getAllUsers();
+		users.forEach(user -> deleteUser(user));
 	}
 }

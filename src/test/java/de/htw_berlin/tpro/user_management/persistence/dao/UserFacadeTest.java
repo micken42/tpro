@@ -26,12 +26,7 @@ public class UserFacadeTest  {
 	@Deployment
 	public static JavaArchive createDeployment() {
     	return DeploymentHelper.createDefaultDeployment()
-			.addClasses(GenericDAO.class, UserDAO.class, UserDAOProducer.class)
-			.addClasses(UserFacade.class, UserFacadeImpl.class, DefaultUserFacade.class)
-	    	.addClasses(PermissionDAO.class, PermissionDAOProducer.class)
-			.addClasses(PermissionFacade.class, PermissionFacadeImpl.class, DefaultPermissionFacade.class)
-	    	.addClasses(ContextDAO.class, ContextDAOProducer.class)
-			.addClasses(ContextFacade.class, ContextFacadeImpl.class, DefaultContextFacade.class);
+    			.addPackage("de.htw_berlin.tpro.user_management.persistence.dao");
 	}
 	
 	@Inject @DefaultUserFacade

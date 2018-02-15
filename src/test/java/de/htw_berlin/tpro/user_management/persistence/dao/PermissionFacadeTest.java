@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.test_utils.PersistenceHelper;
+import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Permission;
 
 @RunWith(Arquillian.class)
@@ -25,28 +26,28 @@ public class PermissionFacadeTest {
 	@Deployment
 	public static JavaArchive createDeployment() {
     	return DeploymentHelper.createDefaultDeployment()
-			.addClasses(GenericDAO.class, PermissionDAO.class, PermissionDAOProducer.class)
-			.addClasses(ContextDAO.class, ContextDAOProducer.class)
-			.addClasses(UserDAO.class, UserDAOProducer.class)
-			.addClasses(PermissionFacade.class, PermissionFacadeImpl.class, DefaultPermissionFacade.class)
-			.addClasses(ContextFacade.class, ContextFacadeImpl.class, DefaultContextFacade.class)
-			.addClasses(UserFacade.class, UserFacadeImpl.class, DefaultUserFacade.class);
+    			.addPackage("de.htw_berlin.tpro.user_management.persistence.dao");
 	}
 	
 	@Inject @DefaultPermissionFacade
 	PermissionFacade permissionFacade;
 	
+	@Inject @DefaultContextFacade
+	ContextFacade contextFacade;
+	
 	@Before
 	public void initTestData() {
-		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (2, \"Uni\")");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (3, \"Teacher\", 2)");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (4, \"Student\", 2)");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (5, \"Guest\", 2)");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (6, \"Caretaker\", 2)");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (7, \"Unnecessary\", 2)");
+		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (1, \"htw\")");
+		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"Uni\")");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"Teacher\", 1)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (2, \"Student\", 1)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (3, \"Guest\", 1)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (4, \"Caretaker\", 1)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (5, \"Unnecessary\", 1)");
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
-				+ "VALUES (3, \"Lisa\", \"Musterfrau\", \"lisa\", \"musterlisa@tpro.de\", \"lisa\")");
-		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (3, 6)");
+				+ "VALUES (1, \"Lisa\", \"Musterfrau\", \"lisa\", \"musterlisa@tpro.de\", \"lisa\")");
+		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (1, 4)");
+		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (1, 4)");
 	}
 	
 	@After
@@ -99,6 +100,23 @@ public class PermissionFacadeTest {
 	}
 	
 	@Test 
+	public void renameAllPersistedPermissions() {
+		ArrayList<Permission> permissions = (ArrayList<Permission>) permissionFacade.getAllPermissions();
+		for(Permission permission : permissions) {
+			permission.setName(permission.getName() + permission.getId());
+			permissionFacade.updatePermission(permission);
+		}
+		permissions = (ArrayList<Permission>) permissionFacade.getAllPermissions();
+		boolean permissionsAreRenamed = false;
+		for(Permission permission : permissions) {
+			if (permission.getName().equals("Teacher1")) 
+				permissionsAreRenamed = true;
+		}
+		
+		Assert.assertTrue(permissionsAreRenamed);
+	}
+	
+	@Test 
 	public void renamePersistedPermissionTeacherFromContextUniToPermissionProfessor() {
 		Permission teacher = permissionFacade.getPermissionByPermissionAndContextName("Teacher", "Uni");
 		
@@ -129,9 +147,37 @@ public class PermissionFacadeTest {
 	}
 	
 	@Test
+	public void persistPermissionPresidentWithinContextUni() {
+		Context context = contextFacade.getContextByName("Uni");
+		Permission permission = new Permission("President");
+		permission.setContext(context);
+		
+		permissionFacade.savePermission(permission);
+		boolean permissionWasSaved = 
+				(permissionFacade.getPermissionByPermissionAndContextName("President", "Uni") != null);
+		
+		Assert.assertTrue(permissionWasSaved);
+	}
+	
+	@Test(expected=PersistenceException.class)
+	public void persistPermissionPresidentWithNoContextShouldFail() {
+		Permission permission = new Permission("President");
+		
+		permissionFacade.savePermission(permission);
+	}
+	
+	@Test(expected=PersistenceException.class)
+	public void persistPermissionPresidentWithNotExistingContextShouldFail() {
+		Context context = new Context("unknown");
+		Permission permission = new Permission("Admin");
+		permission.setContext(context);
+		
+		permissionFacade.savePermission(permission);
+	}
+	
+	@Test
 	public void deleteAnExistingPermission() {
-		Permission permission = permissionFacade.getPermissionByPermissionAndContextName("Unnecessary", "Uni");
-		permissionFacade.deletePermission(permission);
+		permissionFacade.deletePermissionByPermissionAndContextName("Unnecessary", "Uni");
 		boolean noPermissionFound = 
 				(permissionFacade.getPermissionByPermissionAndContextName("Unnecessary", "Uni") == null);
 		
@@ -140,8 +186,7 @@ public class PermissionFacadeTest {
 	
 	@Test
 	public void deleteAnExistingPermissionWhichIsAssignedToAnUser() {
-		Permission permission = permissionFacade.getPermissionByPermissionAndContextName("Caretaker", "Uni");
-		permissionFacade.deletePermission(permission);
+		permissionFacade.deletePermissionByPermissionAndContextName("Caretaker", "Uni");
 		boolean noPermissionFound = 
 				(permissionFacade.getPermissionByPermissionAndContextName("Caretaker", "Uni") == null);
 		
@@ -150,9 +195,15 @@ public class PermissionFacadeTest {
 	
 	@Test(expected=EntityNotFoundException.class)
 	public void deleteAnUnknownNotPersistedPermissionShouldFail() {
-		Permission permission = new Permission("unknown");
-		permission.setId(9000);
-		permissionFacade.deletePermission(permission);
+		permissionFacade.deletePermissionByPermissionAndContextName("unknown", "Uni");
+	}
+	
+	@Test
+	public void deleteAllPermissions() {
+		permissionFacade.deleteAllPermissions();
+		boolean noGroupsFound = (permissionFacade.getAllPermissions().size() == 0);
+		
+		Assert.assertTrue(noGroupsFound);
 	}
 	
 }

@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import de.htw_berlin.tpro.user_management.model.Context;
+import de.htw_berlin.tpro.user_management.model.Group;
 import de.htw_berlin.tpro.user_management.model.Permission;
 import de.htw_berlin.tpro.user_management.model.User;
 
@@ -27,6 +29,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
 	
 	@Inject @DefaultUserFacade
 	UserFacade userFacade;
+	
+	@Inject @DefaultGroupFacade
+	GroupFacade groupFacade;
 
 	@Override
 	public void updateAllPermissions(List<Permission> permissions) {
@@ -52,9 +57,7 @@ public class PermissionFacadeImpl implements PermissionFacade {
 
 	@Override
 	public void updatePermission(Permission permission) throws PersistenceException {
-		Permission existingPermission = 
-				getPermissionByPermissionAndContextName(permission.getName(), permission.getContext().getName());
-		if (existingPermission != null) throw new PersistenceException();
+		if (!permissionCanBeSaved(permission)) throw new PersistenceException();
 		
 		try {
 			permissionDAO.beginTransaction();
@@ -74,16 +77,29 @@ public class PermissionFacadeImpl implements PermissionFacade {
 			permissionDAO.closeTransaction();
 		}
 	}
-
+	
 	@Override
 	public void savePermission(Permission permission) throws PersistenceException {
-		Context permissionContext = permission.getContext();
-		Permission existingPermission = 
-				getPermissionByPermissionAndContextName(permission.getName(), permissionContext.getName());
-		if (existingPermission != null) throw new PersistenceException();
+		if (!permissionCanBeSaved(permission)) throw new PersistenceException();
 		
+		Context permissionContext = permission.getContext();
 		permissionContext.addPermission(permission);
 		contextFacade.updateContext(permissionContext);
+	}
+	
+	private boolean permissionCanBeSaved(Permission permission) {
+		if (permission == null) 
+			return false;
+		
+		if (permission.getContext().getId() == null) 
+			return false;
+
+		Permission existingPermission = 
+				getPermissionByPermissionAndContextName(permission.getName(), permission.getContext().getName());
+		if (existingPermission != null)
+			return false;
+		
+		return true;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -93,7 +109,7 @@ public class PermissionFacadeImpl implements PermissionFacade {
 		ArrayList<Permission> permissions;
 		try {
 			permissions = (ArrayList<Permission>) permissionDAO.getEntityManager()
-					.createNamedQuery("Context.findAll").getResultList();
+					.createNamedQuery("Permission.findAll").getResultList();
 		} catch (NoResultException e) {
 			permissions = null;
 		}
@@ -135,19 +151,26 @@ public class PermissionFacadeImpl implements PermissionFacade {
 		return permission;
 	}
 
-	@Override
-	public void deletePermission(Permission permission) {
-		Context permissionContext = permission.getContext();
-		ArrayList<User> linkedUsers = 
-				(ArrayList<User>) getUsersPermissionIsAssignedTo(permission);
-		if (linkedUsers != null) {
+	@Override // TODO: DeleteBy in andere Facades übernehmen und Tests anpassen
+	public void deletePermissionByPermissionAndContextName(String name, String context) {
+		Permission permission = getPermissionByPermissionAndContextName(name, context);
+		if (permission != null) {
+			Context permissionContext = permission.getContext();
+			ArrayList<User> linkedUsers = getUsersPermissionIsAssignedTo(permission);
+			ArrayList<Group> linkedGroups = getGroupsPermissionIsAssignedTo(permission);
+			
 			deletePermissionFromUsers(permission, linkedUsers);
+			deletePermissionFromGroups(permission, linkedGroups);
+			
+			permissionContext.removePermission(permission);
+			// delete permission by updating context
+			contextFacade.updateContext(permissionContext);
+		} else {
+			throw new EntityNotFoundException();
 		}
-		permissionContext.removePermission(permission);
-		contextFacade.updateContext(permissionContext);
 	}
 	
-	private List<User> getUsersPermissionIsAssignedTo(Permission permission) {
+	private ArrayList<User> getUsersPermissionIsAssignedTo(Permission permission) {
 		String permissionName = permission.getName();
 		String contextName = permission.getContext().getName();
 		
@@ -157,9 +180,37 @@ public class PermissionFacadeImpl implements PermissionFacade {
 		return users;
 	}
 	
+	private ArrayList<Group> getGroupsPermissionIsAssignedTo(Permission permission) {
+		String permissionName = permission.getName();
+		String contextName = permission.getContext().getName();
+		
+		ArrayList<Group> groups = 
+				(ArrayList<Group>) groupFacade.getGroupsByPermissionAndContextName(permissionName, contextName);
+		
+		return groups;
+	}
+	
 	private void deletePermissionFromUsers(Permission permission, List<User> users) {
-	    users.forEach(user -> user.removePermission(permission));
-	    userFacade.updateAllUsers(users);
+	    if (users.size() > 0) {
+	    	users.forEach(user -> user.removePermission(permission));
+		    userFacade.updateAllUsers(users);
+	    }
+	}
+	
+	private void deletePermissionFromGroups(Permission permission, List<Group> groups) {
+		if (groups.size() > 0) {
+			groups.forEach(group -> group.removePermission(permission));
+			groupFacade.updateAllGroups(groups);
+		}
+	}
+	
+	@Override
+	public void deleteAllPermissions() {
+		List<Permission> permissions = getAllPermissions();
+		permissions.forEach(permission -> {
+			String contextName = permission.getContext().getName();
+			deletePermissionByPermissionAndContextName(permission.getName(), contextName);
+		});
 	}
 	
 }

@@ -177,11 +177,8 @@ public class GroupFacadeImpl implements GroupFacade {
 
 	@Override
 	public void deleteAllGroups() {
-		groupDAO.beginTransaction();
-		List<Group> groups = groupDAO.findAll();
-		groups.forEach(group -> groupDAO.delete(group.getId(), Group.class));
-		groupDAO.flush();
-		groupDAO.commitAndCloseTransaction();
+		List<Group> groups = getAllGroups();
+		groups.forEach(group -> deleteGroup(group));
 	}
 
 }

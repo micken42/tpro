@@ -19,6 +19,8 @@ public interface PermissionFacade extends Serializable {
 
 	public Permission getPermissionByPermissionAndContextName(String name, String context);
 
-	public void deletePermission(Permission permission);
+	public void deletePermissionByPermissionAndContextName(String name, String context);
+
+	public void deleteAllPermissions();
 		
 }
