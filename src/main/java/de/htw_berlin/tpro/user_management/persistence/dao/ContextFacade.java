@@ -3,8 +3,6 @@ package de.htw_berlin.tpro.user_management.persistence.dao;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import de.htw_berlin.tpro.user_management.model.Context;
 
 public interface ContextFacade extends Serializable {
@@ -22,5 +20,7 @@ public interface ContextFacade extends Serializable {
 	public List<String> getAllNames();
 	
 	public void deleteContext(Context context);
+
+	public void deleteAllContexts();
 		
 }

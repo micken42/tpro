@@ -2,12 +2,14 @@ package de.htw_berlin.tpro.user_management.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +23,7 @@ import de.htw_berlin.tpro.test_utils.ReflectionHelper;;
 public class GroupTest {
 	@Test
 	public void groupTypeShouldBeAnnotated() {
-		AssertAnnotations.assertType(Group.class, Entity.class, NamedQueries.class);
+		AssertAnnotations.assertType(Group.class, Entity.class, Table.class, NamedQueries.class);
 	}
 
 	@Test
@@ -116,55 +118,56 @@ public class GroupTest {
 		Assert.assertTrue(userHasBeenDeleted);
 	}
 	
-	/* TODO: Tests anpassen
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNonExistingGroupFromUserShouldFail() {
-		User user = new User("aiStudent", "password");
-		Group fb4Group = new Group("fb4");
-		fb4Group.setId(1);
-		user.addGroup(fb4Group);
+	public void removeNotExistingUserFromGroupShouldFail() {
+		Group group = new Group("fb4");
+		User studentUser = new User("aiStudent", "password");
+		studentUser.setId(1);
+		group.addUser(studentUser);
 		
-		Group groupToBeDeleted = new Group("unknown");
-		groupToBeDeleted.setId(2);
-		user.removeGroup(groupToBeDeleted);
+		User userToBeDeleted = new User("unknown", "password");
+		userToBeDeleted.setId(2);
+		group.removeUser(userToBeDeleted);
 	}
 	
 	@Test
-	public void existingGroupShouldMatchUsersGroup() {
-		User user = new User("aiStudent", "password");
-		Group fb4Group = new Group("fb4");
-		fb4Group.setId(1);
+	public void existingUserShouldMatchGroupsUser() {
+		Group group = new Group("fb4");
+		User studentUser = new User("aiStudent", "password");
+		studentUser.setId(1);
 	
-		user.addGroup(fb4Group);
-		boolean groupMatchesUsersGroups = 
-				(user.getMatchingGroup(fb4Group) != null) ? true : false;
+		group.addUser(studentUser);
+		boolean userMatchesGroupsUser = 
+				(group.getMatchingUser(studentUser) != null) ? true : false;
 		
-		Assert.assertTrue(groupMatchesUsersGroups);
+		Assert.assertTrue(userMatchesGroupsUser);
+	}
+	
+	
+	
+	@Test
+	public void notExistingUserShouldNotMatchGroupsUser() {
+		Group group = new Group("fb4");
+		User studentUser = new User("aiStudent", "password");
+		studentUser.setId(1);
+	
+		User notExistingUser = new User("unknown", "password");
+		notExistingUser.setId(2);
+		group.addUser(studentUser);
+		boolean userDoesNotMatchGroupsUser = 
+				(group.getMatchingUser(notExistingUser) == null) ? true : false;
+		
+		Assert.assertTrue(userDoesNotMatchGroupsUser);
 	}
 	
 	@Test
-	public void notExistingGroupShouldNotMatchUsersGroup() {
-		User user = new User("aiStudent", "password");
-		Group fb4Group = new Group("fb4");
-		fb4Group.setId(1);
-	
-		Group notExistingGroup = new Group("unknown");
-		notExistingGroup.setId(2);
-		user.addGroup(fb4Group);
-		boolean groupDoesNotMatchUsersGroups = 
-				(user.getMatchingGroup(notExistingGroup) == null) ? true : false;
-		
-		Assert.assertTrue(groupDoesNotMatchUsersGroups);
-	}
-	
-	@Test
-	public void addPermissionToUser() {
-		User user = new User("aiStudent", "password");
+	public void addPermissionToGroup() {
+		Group group = new Group("fb4");
 		Permission studentPermission = new Permission("student");
 	
-		user.addPermission(studentPermission);
+		group.addPermission(studentPermission);
 		boolean permissionHasBeenAdded = false;
-		for (Permission permission : user.getPermissions()) {
+		for (Permission permission : group.getPermissions()) {
 			if (permission.getName().equals("student"))
 				permissionHasBeenAdded = true;
 		}
@@ -173,14 +176,14 @@ public class GroupTest {
 	}
 	
 	@Test
-	public void removePermissionFromUser() {
-		User user = new User("aiStudent", "password");
+	public void removePermissionFromGroup() {
+		Group group = new Group("fb4");
 		Permission studentPermission = new Permission("student");
-		user.addPermission(studentPermission);
-		int initialNumberOfPermissions = user.getPermissions().size();
+		group.addPermission(studentPermission);
+		int initialNumberOfPermissions = group.getPermissions().size();
 		
-		user.removePermission(studentPermission);
-		int actualNumberOfPermissions = user.getPermissions().size();
+		group.removePermission(studentPermission);
+		int actualNumberOfPermissions = group.getPermissions().size();
 		boolean permissionHasBeenDeleted = 
 				(initialNumberOfPermissions > actualNumberOfPermissions) ? true : false;
 		
@@ -188,41 +191,41 @@ public class GroupTest {
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNonExistingPermissionFromUserShouldFail() {
-		User user = new User("aiStudent", "password");
+	public void removeNotExistingPermissionFromGroupShouldFail() {
+		Group group = new Group("fb4");
 		Permission studentPermission = new Permission("student");
 		studentPermission.setId(1);
-		user.addPermission(studentPermission);
+		group.addPermission(studentPermission);
 		
 		Permission permissionToBeDeleted = new Permission("unknown");
 		permissionToBeDeleted.setId(2);
-		user.removePermission(permissionToBeDeleted);
+		group.removePermission(permissionToBeDeleted);
 	}
 
 	@Test
-	public void permissionShouldMatchUsersPermission() {
-		User user = new User("aiStudent", "password");
+	public void permissionShouldMatchGroupsPermission() {
+		Group group = new Group("fb4");
 		Permission studentPermission = new Permission("student");
 		studentPermission.setId(1);
 	
-		user.addPermission(studentPermission);
+		group.addPermission(studentPermission);
 		boolean permissionMatchesUsersPermission = 
-				(user.getMatchingUserPermission(studentPermission) != null) ? true : false;
+				(group.getMatchingGroupPermission(studentPermission) != null) ? true : false;
 		
 		Assert.assertTrue(permissionMatchesUsersPermission);
 	}
 	
 	@Test
-	public void notExistingPermissionShouldNotMatchUsersPermission() {
-		User user = new User("aiStudent", "password");
+	public void notExistingPermissionShouldNotMatchGroupsPermission() {
+		Group group = new Group("fb4");
 		Permission studentPermission = new Permission("student");
 		studentPermission.setId(1);
 	
 		Permission notExistingPermission = new Permission("unknown");
-		user.addPermission(studentPermission);
+		group.addPermission(studentPermission);
 		boolean permissionDoesNotMatchUsersPermission = 
-				(user.getMatchingUserPermission(notExistingPermission) == null) ? true : false;
+				(group.getMatchingGroupPermission(notExistingPermission) == null) ? true : false;
 		
 		Assert.assertTrue(permissionDoesNotMatchUsersPermission);
-	}*/
+	}
 }

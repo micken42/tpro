@@ -29,6 +29,8 @@ import lombok.Setter;
             query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = "User.findAllUsernames",
     		query = "SELECT u.username FROM User u"),
+	@NamedQuery(name = "Group.findAllByGroupName",
+			query = "SELECT u FROM User u JOIN u.groups g WHERE g.name = :name"),
     @NamedQuery(name = "User.findAllByPermissionAndContextName",
     		query = "SELECT u FROM User u JOIN u.permissions p "
     			  + "WHERE p.name = :permission and p.context.name = :context")})
@@ -60,8 +62,7 @@ public class User implements Serializable {
     @JoinTable(name="User_Permission", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="permission_id"))
 	private @Getter @Setter Set<Permission> permissions;
 	
-	// TODO: FetchType.EAGER !!!
-	@ManyToMany(fetch=FetchType.LAZY, mappedBy="users")
+	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users")
 	private @Getter @Setter Set<Group> groups;
 
 	public User(String prename, String surname,  String email, String username, String password, Set<Permission> permissions, Set<Group> groups) {

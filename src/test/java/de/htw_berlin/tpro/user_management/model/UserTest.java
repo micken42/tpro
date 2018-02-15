@@ -121,7 +121,7 @@ public class UserTest {
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNonExistingGroupFromUserShouldFail() {
+	public void removeNotExistingGroupFromUserShouldFail() {
 		User user = new User("aiStudent", "password");
 		Group fb4Group = new Group("fb4");
 		fb4Group.setId(1);
@@ -191,7 +191,7 @@ public class UserTest {
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNonExistingPermissionFromUserShouldFail() {
+	public void removeNotExistingPermissionFromUserShouldFail() {
 		User user = new User("aiStudent", "password");
 		Permission studentPermission = new Permission("student");
 		studentPermission.setId(1);

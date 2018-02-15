@@ -142,4 +142,13 @@ public class ContextFacadeImpl implements ContextFacade {
 		}
 	}
 
+	@Override
+	public void deleteAllContexts() {
+		contextDAO.beginTransaction();
+		List<Context> contexts = contextDAO.findAll();
+		contexts.forEach(context -> contextDAO.delete(context.getId(), Context.class));
+		contextDAO.flush();
+		contextDAO.commitAndCloseTransaction();
+	}
+
 }

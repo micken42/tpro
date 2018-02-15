@@ -17,11 +17,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name="\"Group\"")
 @NamedQueries({
     @NamedQuery(name = "Group.findAll",
             query = "SELECT g FROM Group g"),

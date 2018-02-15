@@ -22,10 +22,22 @@ public class UserFacadeImpl implements UserFacade {
 	
 	@Override
 	public void updateAllUsers(List<User> users) {
-		userDAO.beginTransaction();
-		users.forEach(userDAO::update);
-		userDAO.flush();
-		userDAO.commitAndCloseTransaction();
+		try {
+			userDAO.beginTransaction();
+
+			users.forEach(userDAO::update);
+			userDAO.flush();
+
+			userDAO.commit();
+		} catch (Exception e) {
+			EntityTransaction txn = userDAO.getEntityManager().getTransaction();
+			if (txn != null && txn.isActive())
+				userDAO.rollback();
+			throw e;
+			// handle the underlying error
+		} finally {
+			userDAO.closeTransaction();
+		}
 	}
 	
 	@Override
@@ -130,6 +142,23 @@ public class UserFacadeImpl implements UserFacade {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<User> getUsersByGroupName(String name) {
+		userDAO.beginTransaction();
+		List<User> users;
+		try {
+			users = userDAO.getEntityManager()
+					.createNamedQuery("Group.findAllByGroupName")
+					.setParameter("name", name)
+					.getResultList();
+		} catch (NoResultException e) {
+			users = null;
+		}
+		userDAO.commitAndCloseTransaction();
+		return users;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<User> getUsersByPermissionAndContextName(String permission, String context) {
 		userDAO.beginTransaction();
 		List<User> users;
@@ -145,5 +174,13 @@ public class UserFacadeImpl implements UserFacade {
 		userDAO.commitAndCloseTransaction();
 		return users;
 	}
-	
+
+	@Override
+	public void deleteAllUsers() {
+		userDAO.beginTransaction();
+		List<User> users = userDAO.findAll();
+		users.forEach(user -> userDAO.delete(user.getId(), User.class));
+		userDAO.flush();
+		userDAO.commitAndCloseTransaction();
+	}
 }

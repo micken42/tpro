@@ -43,13 +43,8 @@ public class ContextFacadeTest {
 	
 	@After
 	public void clearTestData() {
-		PersistenceHelper.execute("DELETE FROM User_Permission");
-		PersistenceHelper.execute("DELETE FROM Group_Permission");
-		PersistenceHelper.execute("DELETE FROM Group_User");
-		PersistenceHelper.execute("DELETE FROM User");		
-		PersistenceHelper.execute("DELETE FROM `Group`");
-		PersistenceHelper.execute("DELETE FROM Permission");
 		PersistenceHelper.execute("DELETE FROM Context");
+		PersistenceHelper.execute("DELETE FROM Permission");
 	}
 	
 	@Test
@@ -130,6 +125,23 @@ public class ContextFacadeTest {
 		Assert.assertNotEquals(null, contextNew);
 	}
 	
+	@Test 
+	public void renameAllPersistedContexts() {
+		ArrayList<Context> contexts = (ArrayList<Context>) contextFacade.getAllContexts();
+		for(Context context : contexts) {
+			context.setName(context.getName() + context.getId());
+			contextFacade.updateContext(context);
+		}
+		ArrayList <String> names = (ArrayList<String>) contextFacade.getAllNames();
+		boolean groupsAreRenamed = false;
+		for(String name : names) {
+			if (name.equals("tpro1")) 
+				groupsAreRenamed = true;
+		}
+		
+		Assert.assertTrue(groupsAreRenamed);
+	}
+	
 	@Test(expected=PersistenceException.class)
 	public void persistContextWithSameNameTwiceShouldFail() {
 		Context duplicate = new Context("tpro");
@@ -157,6 +169,14 @@ public class ContextFacadeTest {
 		Context context = new Context("unknown");
 		context.setId(9000);
 		contextFacade.deleteContext(context);
+	}
+	
+	@Test
+	public void deleteAllContexts() {
+		contextFacade.deleteAllContexts();
+		boolean noContextsFound = (contextFacade.getAllContexts().size() == 0);
+		
+		Assert.assertTrue(noContextsFound);
 	}
 	
 }

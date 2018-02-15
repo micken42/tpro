@@ -27,11 +27,11 @@ public class UserFacadeTest  {
 	public static JavaArchive createDeployment() {
     	return DeploymentHelper.createDefaultDeployment()
 			.addClasses(GenericDAO.class, UserDAO.class, UserDAOProducer.class)
+			.addClasses(UserFacade.class, UserFacadeImpl.class, DefaultUserFacade.class)
 	    	.addClasses(PermissionDAO.class, PermissionDAOProducer.class)
-			.addClasses(ContextDAO.class, ContextDAOProducer.class)
 			.addClasses(PermissionFacade.class, PermissionFacadeImpl.class, DefaultPermissionFacade.class)
-			.addClasses(ContextFacade.class, ContextFacadeImpl.class, DefaultContextFacade.class)
-			.addClasses(UserFacade.class, UserFacadeImpl.class, DefaultUserFacade.class);
+	    	.addClasses(ContextDAO.class, ContextDAOProducer.class)
+			.addClasses(ContextFacade.class, ContextFacadeImpl.class, DefaultContextFacade.class);
 	}
 	
 	@Inject @DefaultUserFacade
@@ -42,25 +42,32 @@ public class UserFacadeTest  {
 
 	@Before
 	public void initTestData() {
+		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (1, \"admins\")");
+		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (2, \"presidents\")");
+		
 		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"tpro\")");
 		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"admin\", 1)");
+		
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
 				+ "VALUES (1, \"Max\", \"Mustermann\", \"admin\", \"mustermax@tpro.de\", \"password\");");
+		
 		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (1, 1)");
 
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
-				+ "VALUES (3, \"Abraham\", \"Lincoln\", \"abraham\", \"lincoln@tpro.de\", \"password\")");
+				+ "VALUES (2, \"Abraham\", \"Lincoln\", \"abraham\", \"lincoln@tpro.de\", \"password\")");
+
+		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (2, 2)");
 	}
 	
 	@After
 	public void clearTestData() {		
-		PersistenceHelper.execute("DELETE FROM User_Permission");
-		PersistenceHelper.execute("DELETE FROM Group_Permission");
-		PersistenceHelper.execute("DELETE FROM Group_User");
-		PersistenceHelper.execute("DELETE FROM User");		
 		PersistenceHelper.execute("DELETE FROM `Group`");
-		PersistenceHelper.execute("DELETE FROM Permission");
 		PersistenceHelper.execute("DELETE FROM Context");
+		PersistenceHelper.execute("DELETE FROM Permission");
+		PersistenceHelper.execute("DELETE FROM User");		
+		PersistenceHelper.execute("DELETE FROM User_Permission");
+		PersistenceHelper.execute("DELETE FROM Group_User");
 	}
 	
 	@Test
@@ -93,6 +100,32 @@ public class UserFacadeTest  {
 		boolean isTProUser = user.getUsername().equals("admin");
 		
 		Assert.assertTrue(isTProUser);	
+	}
+	
+	@Test 
+	public void getUsersFromGroupAdminsShouldReturnUserAdmin() {
+		ArrayList<User> users =  (ArrayList<User>) userFacade.getUsersByGroupName("admins");
+		
+		boolean wasGettingAdminFromAdminsGroup = false;
+		for (User user : users) {
+			if (user.getUsername().equals("admin"))
+				wasGettingAdminFromAdminsGroup = true;
+		}
+		
+		Assert.assertTrue(wasGettingAdminFromAdminsGroup);	
+	}
+	
+	@Test 
+	public void getGroupsContainingPermissionAdminFromContextTproShouldReturnUserAdmin() {
+		ArrayList<User> users =  (ArrayList<User>) userFacade.getUsersByPermissionAndContextName("admin", "tpro");
+		
+		boolean wasGettingAdminWithAdminPermission = false;
+		for (User user : users) {
+			if (user.getUsername().equals("admin"))
+				wasGettingAdminWithAdminPermission = true;
+		}
+		
+		Assert.assertTrue(wasGettingAdminWithAdminPermission);	
 	}
 	
 	@Test 
@@ -166,6 +199,23 @@ public class UserFacadeTest  {
 		userFacade.updateUser(renamedUser);
 	}
 	
+	@Test 
+	public void renameAllPersistedUsers() {
+		ArrayList<User> users = (ArrayList<User>) userFacade.getAllUsers();
+		for(User user : users) {
+			user.setUsername(user.getUsername() + user.getId());
+			userFacade.updateUser(user);
+		}
+		ArrayList <String> names = (ArrayList<String>) userFacade.getAllUsernames();
+		boolean usersAreRenamed = false;
+		for(String name : names) {
+			if (name.equals("admin1")) 
+				usersAreRenamed = true;
+		}
+		
+		Assert.assertTrue(usersAreRenamed);
+	}
+	
 	@Test
 	public void deleteAnExistingUser() {
 		User user = userFacade.getUserByUsername("abraham");
@@ -180,6 +230,14 @@ public class UserFacadeTest  {
 		User user = new User("unknown", "password");
 		user.setId(9000);
 		userFacade.deleteUser(user);
+	}
+	
+	@Test
+	public void deleteAllUsers() {
+		userFacade.deleteAllUsers();
+		boolean noUsersFound = (userFacade.getAllUsers().size() == 0);
+		
+		Assert.assertTrue(noUsersFound);
 	}
 		
 }

@@ -102,7 +102,7 @@ public class ContextTest {
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNonExistingPermissionFromContextShouldFail() {
+	public void removeNotExistingPermissionFromContextShouldFail() {
 		Context context = new Context("htwBerlin");
 		Permission studentPermission = new Permission("student");
 		studentPermission.setId(1);
