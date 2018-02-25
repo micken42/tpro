@@ -1,188 +1,165 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.htw_berlin.michael_baumert</groupId>
-	<artifactId>tpro</artifactId>
-	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+  <groupId>de.htw_berlin.michael_baumert</groupId>
+  <artifactId>tpro</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-	<name>tpro</name>
-	<url>http://tpro.htw-berlin.de</url>
+  <name>tpro</name>
+  <url>http://tpro.htw-berlin.de</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-	<repositories>
-		<repository>
-			<id>primefaces</id>
-			<url>http://repository.primefaces.org</url>
-		</repository>
-	</repositories>
+  <repositories>
+    <repository>
+      <id>primefaces</id>
+      <url>http://repository.primefaces.org</url>
+    </repository>
+  </repositories>
 
-	<dependencies>
-		<!-- Mojarra -->
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-api</artifactId>
-			<version>2.2.16</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
-			<version>2.2.16</version>
-		</dependency>
+  <dependencies>
+    <!-- Mojarra -->
+    <dependency>
+      <groupId>com.sun.faces</groupId>
+      <artifactId>jsf-api</artifactId>
+      <version>2.2.16</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.faces</groupId>
+      <artifactId>jsf-impl</artifactId>
+      <version>2.2.16</version>
+    </dependency>
 
-		<!-- JavaEE dependencies -->
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<dependency>
-	        <groupId>org.jboss.weld.servlet</groupId>
-	        <artifactId>weld-servlet-core</artifactId>
-	        <version>3.0.3.Final</version>
-	        <scope>runtime</scope>
-	     </dependency>
-		
-		<!-- Hibernate (JPA) -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.2.12.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>5.2.12.Final</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.hibernate</groupId>
-		    <artifactId>hibernate-validator</artifactId>
-		    <version>5.4.1.Final</version>
-		</dependency>
+    <!-- JavaEE dependencies -->
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+          <groupId>org.jboss.weld.servlet</groupId>
+          <artifactId>weld-servlet-core</artifactId>
+          <version>3.0.3.Final</version>
+          <scope>runtime</scope>
+       </dependency>
+    
+    <!-- Hibernate (JPA) -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>5.2.12.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>5.2.12.Final</version>
+    </dependency>
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>5.4.1.Final</version>
+    </dependency>
 
-		<!-- Database dependencies -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>6.0.6</version>
-			<!--scope>runtime</scope-->
-		</dependency>
+    <!-- Database dependencies -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>6.0.6</version>
+      <!--scope>runtime</scope-->
+    </dependency>
 
-		<!-- Lombok (for reducing boilerplate code) -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.16.20</version>
-			<scope>provided</scope>
-		</dependency>
+    <!-- Lombok (for reducing boilerplate code) -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.20</version>
+      <!--scope>provided</scope-->
+    </dependency>
 
-		<!-- PrimeFaces & OmniFaces dependencies -->
-		<dependency>
-			<groupId>org.primefaces</groupId>
-			<artifactId>primefaces</artifactId>
-			<version>6.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.primefaces.themes</groupId>
-			<artifactId>bootstrap</artifactId>
-			<version>1.0.10</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.omnifaces</groupId>
-		    <artifactId>omnifaces</artifactId>
-		    <version>2.6.8</version>
-		</dependency>
+    <!-- PrimeFaces & OmniFaces dependencies -->
+    <dependency>
+      <groupId>org.primefaces</groupId>
+      <artifactId>primefaces</artifactId>
+      <version>6.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.primefaces.themes</groupId>
+      <artifactId>bootstrap</artifactId>
+      <version>1.0.10</version>
+    </dependency>
+    <dependency>
+        <groupId>org.omnifaces</groupId>
+        <artifactId>omnifaces</artifactId>
+        <version>2.6.8</version>
+    </dependency>
 
-		<!-- Testing dependencies -->
-		<dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <version>4.12</version>
-		    <scope>test</scope>
-		</dependency>
-		
-		<!-- Arquillian API -->
-		<dependency>
+    <!-- Testing dependencies -->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <!-- Arquillian API -->
+    <dependency>
             <groupId>org.jboss.arquillian</groupId>
             <artifactId>arquillian-bom</artifactId>
             <version>1.2.1.Final</version>
             <type>pom</type>
-            <scope>import</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
-		    <groupId>org.jboss.arquillian.junit</groupId>
-		    <artifactId>arquillian-junit-container</artifactId>
+        <groupId>org.jboss.arquillian.junit</groupId>
+        <artifactId>arquillian-junit-container</artifactId>
             <version>1.2.1.Final</version>
-		    <scope>test</scope>
-		</dependency>
-		<!-- Arquillian container (Weld EE embedded) -->
-		<dependency>
+        <scope>test</scope>
+    </dependency>
+    <!-- Arquillian container (Weld EE embedded) -->
+    <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
             <version>1.0.0.CR9</version>
             <scope>test</scope>
         </dependency>
 
-		<!-- Logger -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.25</version>
-		</dependency>  
-	</dependencies>
-	
-	<!-- To define multiple containers for arquillian test execution you can use maven profiles (see example below) -->
-	<!-- profiles>
-		<profile>
-	        <id>arquillian-weld-ee-embedded</id>
-	        <dependencies>
-		        <dependency>
-		            <groupId>org.jboss.arquillian.container</groupId>
-		            <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-		            <version>1.0.0.CR9</version>
-		            <scope>test</scope>
-		        </dependency>
-	        </dependencies>
-	    </profile>
-	</profiles-->
+    <!-- Logger -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.25</version>
+    </dependency>   
+  </dependencies>
+  
+  <!-- To define multiple containers for arquillian test execution you can use maven profiles (see example below) -->
+  <!-- profiles>
+    <profile>
+          <id>arquillian-weld-ee-embedded</id>
+          <dependencies>
+            <dependency>
+                <groupId>org.jboss.arquillian.container</groupId>
+                <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                <version>1.0.0.CR9</version>
+                <scope>test</scope>
+            </dependency>
+          </dependencies>
+      </profile>
+  </profiles-->
 
-	<build>
-		<finalName>${artifactId}-${version}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-			    <artifactId>maven-surefire-plugin</artifactId>
-			    <version>2.20.1</version>
-			</plugin>
-			<!-- Could be useful later on -->
-			<!-- plugin>
-	            <artifactId>maven-resources-plugin</artifactId>
-	            <configuration>
-	                <nonFilteredFileExtensions>
-	                    <nonFilteredFileExtension>js</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>css</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>psd</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-	                </nonFilteredFileExtensions>
-	            </configuration>
-	        </plugin-->
-		</plugins>
-	</build>
+  
+  <modules>
+    <module>tpro-plugin-framework</module>
+    <module>tpro-user-management</module>
+    <module>tpro-plugins</module>
+    <module>tpro-app</module>
+  </modules>
 </project>
