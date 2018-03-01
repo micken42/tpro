@@ -36,18 +36,6 @@
 			    <artifactId>maven-surefire-plugin</artifactId>
 			    <version>2.20.1</version>
 			</plugin>
-			<!-- Could be useful later on -->
-			<!-- plugin>
-	            <artifactId>maven-resources-plugin</artifactId>
-	            <configuration>
-	                <nonFilteredFileExtensions>
-	                    <nonFilteredFileExtension>js</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>css</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>psd</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-	                </nonFilteredFileExtensions>
-	            </configuration>
-	        </plugin-->
 		</plugins>
 	</build>
 

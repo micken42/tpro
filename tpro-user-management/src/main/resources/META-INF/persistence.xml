@@ -23,6 +23,7 @@
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			
 			<!-- Import data -->
 			<property name="javax.persistence.sql-load-script-source" value="META-INF/dev-data.sql"/>

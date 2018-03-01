@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"	
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ui="http://java.sun.com/jsf/facelets">	
+<f:view contentType="text/html">  
+  <ui:composition template="/template/basicLayout.xhtml">
+    <ui:define name="additional-head-content">
+        <title>TPro | Admin Dashboard</title>
+        <!-- Custom styles for this view -->
+    	<h:outputStylesheet name="css/plugin-grid.css"/>
+    </ui:define>
+    
+    <ui:define name="content">
+    	<ui:fragment rendered="#{loginMB.loggedInAsAdmin}">
+    		<div class="container">
+		   		<h1>Dienste verwalten</h1>
+				<h2>Alle Dienste</h2>
+				<div class="row pluginGrid">
+        		<ui:repeat var="plugin" value="#{pluginManagementService.getAllPlugins()}">
+					<div class="col-lg-4">
+			          <p:graphicImage class="img-circle" name="#{plugin.thumbnailResource}" width="140" height="140" />
+			          <h2>#{plugin.title} (v#{plugin.version})</h2>
+			          <p>#{plugin.description}</p>
+			          <p>
+			          	<h:form>
+				          	<p:commandButton action="#{loginMB.signUp}" class="btn btn-default btn-lg" value="Dienstanbieter verwalten »" icon="fa fa-fw fa-users" type="button"/>
+			          	</h:form>
+			          </p>
+			        </div><!-- /.col-lg-4 -->
+				</ui:repeat>
+				</div>
+			</div>
+    	</ui:fragment>  
+    </ui:define>
+  </ui:composition> 
+</f:view>
+</html>

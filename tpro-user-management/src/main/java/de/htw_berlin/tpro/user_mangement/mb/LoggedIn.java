@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.user_management;
+package de.htw_berlin.tpro.user_mangement.mb;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

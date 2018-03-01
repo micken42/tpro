@@ -14,7 +14,12 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-
+/**
+ * TODO: prefix of table name should be plugin name
+ * @author baumert
+ *
+ */
+//@Table(name="bookstoreBook")
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Book.findAll",

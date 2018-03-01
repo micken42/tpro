@@ -1,0 +1,13 @@
+
+/* Center align the text within the three columns on the plugin overview page */
+.pluginGrid .col-lg-4 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.pluginGrid h2 {
+  font-weight: normal;
+}
+.pluginGrid .col-lg-4 p {
+  margin-right: 10px;
+  margin-left: 10px;
+}

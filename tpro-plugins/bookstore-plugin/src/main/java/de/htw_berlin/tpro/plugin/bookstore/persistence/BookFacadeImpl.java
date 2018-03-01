@@ -1,13 +1,10 @@
 package de.htw_berlin.tpro.plugin.bookstore.persistence;
 
 import java.util.List;
-import java.util.Properties;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 
 import de.htw_berlin.tpro.plugin.bookstore.model.Book;
 
@@ -19,15 +16,6 @@ public class BookFacadeImpl implements BookFacade {
 
 	@Inject @DefaultBookDAO
 	GenericDAO<Book> bookDAO;
-	
-	// @PostConstruct
-	// private void init() {
-	// 	// Properties props = new Properties();
-	// 	// props.setProperty("javax.persistence.schema-generation.create-script-source", "META-INF/plugins/bookstore/create.sql");
-	// 	// props.setProperty("javax.persistence.schema-generation.drop-script-source", "META-INF/plugins/bookstore/drop.sql");
-	// 	// props.setProperty("javax.persistence.sql-load-script-source", "META-INF/plugins/bookstore/dev-data.sql");
-	// 	// bookDAO.setEntityManagerFactory(Persistence.createEntityManagerFactory("tpro-plugin-database", props));
-	// }
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -39,6 +39,11 @@
   </context-param>
   
   <context-param>
+      <param-name>primefaces.FONT_AWESOME</param-name>
+      <param-value>true</param-value>
+  </context-param>
+  
+  <context-param>
       <param-name>tpro.plugin.location</param-name>
       <param-value>/Users/baumert/var/tpro/plugins</param-value>
   </context-param>

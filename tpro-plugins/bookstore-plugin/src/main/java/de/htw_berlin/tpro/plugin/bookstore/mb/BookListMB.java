@@ -12,7 +12,7 @@ import de.htw_berlin.tpro.plugin.bookstore.model.Book;
 import de.htw_berlin.tpro.plugin.bookstore.persistence.BookFacade;
 import de.htw_berlin.tpro.plugin.bookstore.persistence.DefaultBookFacade;
 import de.htw_berlin.tpro.user_management.model.User;
-import de.htw_berlin.tpro.user_management.LoggedIn;
+import de.htw_berlin.tpro.user_mangement.mb.LoggedIn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,12 +20,12 @@ import lombok.Setter;
 @SessionScoped
 public class BookListMB implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Inject @DefaultBookFacade
 	BookFacade bookFacade;
 
 	@Inject @LoggedIn
-    private User currentUser;
+    private @Getter User currentUser;
 	
 	private @Getter @Setter List<Book> books;
 	

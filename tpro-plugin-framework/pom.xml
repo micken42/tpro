@@ -9,7 +9,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>de.htw_berlin.michael_baumert</groupId>
 	<artifactId>tpro-plugin-framework</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
@@ -19,6 +18,14 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	
+	<dependencies>
+		<dependency>
+		    <groupId>de.htw_berlin.michael_baumert</groupId>
+		    <artifactId>tpro-user-management</artifactId>
+		    <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<finalName>${artifactId}-${version}</finalName>
@@ -36,18 +43,6 @@
 			    <artifactId>maven-surefire-plugin</artifactId>
 			    <version>2.20.1</version>
 			</plugin>
-			<!-- Could be useful later on -->
-			<!-- plugin>
-	            <artifactId>maven-resources-plugin</artifactId>
-	            <configuration>
-	                <nonFilteredFileExtensions>
-	                    <nonFilteredFileExtension>js</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>css</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>psd</nonFilteredFileExtension>
-	                    <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-	                </nonFilteredFileExtensions>
-	            </configuration>
-	        </plugin-->
 		</plugins>
 	</build>
 </project>
