@@ -39,14 +39,14 @@ jobs:
           # fallback to using the latest cache if no exact match is found
             - tpro-core-
 
-      - run: mvn dependency:go-offline -DskipTests 
+      #- run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
           key: tpro-core-{{ checksum "pom.xml" }}
         
-      - run: mvn package dependency:go-offline
+      - run: mvn package
       
       - store_test_results:
           path: target/surefire-reports
