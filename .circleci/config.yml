@@ -27,6 +27,10 @@ jobs:
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
+
+    dependencies:
+      override: 
+        - mvn package
     
     steps:
 
@@ -35,9 +39,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - tpro-core-{{ checksum "pom.xml" }}
+            - tpro-core-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
-          - tpro-core-
+            - tpro-core-
 
       - run: mvn dependency:go-offline
 
@@ -46,7 +50,7 @@ jobs:
             - ~/.m2
           key: tpro-core-{{ checksum "pom.xml" }}
         
-      - run: mvn install
+      - run: mvn package
       
       - store_test_results:
           path: target/surefire-reports
