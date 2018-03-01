@@ -55,7 +55,8 @@ public class LoginMB implements Serializable {
 		try {
 			currentUser = userService.signUp(newUser);
 		} catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR , "Ein Fehler ist bei der Registrierung aufgetreten. Versuchen Sie es mit einem anderen Benutzernamen erneut.");
+			addMessage(FacesMessage.SEVERITY_ERROR , "Ein Fehler ist bei der Registrierung aufgetreten. "
+					+ "Versuchen Sie es mit einem anderen Benutzernamen erneut.");
 		}
 		if (currentUser != null) {
 			return login();
@@ -85,7 +86,7 @@ public class LoginMB implements Serializable {
         return currentUser;
     }
     
-    // TESTS
+    // TODO: Messages in auslagern 
      
     public void addMessage(Severity level, String message) {
     	FacesContext context = FacesContext.getCurrentInstance();
