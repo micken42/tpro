@@ -30,7 +30,7 @@ jobs:
 
     dependencies:
       override: 
-        - mvn package
+        - mvn install -DskipTests 
     
     steps:
 
