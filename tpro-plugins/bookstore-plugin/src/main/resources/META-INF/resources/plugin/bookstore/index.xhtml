@@ -8,35 +8,14 @@
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:ui="http://java.sun.com/jsf/facelets">	
 <f:view contentType="text/html">  
-  <ui:composition template="/template/basicLayout.xhtml">
+  <ui:composition template="/template/tpro-basic-layout.xhtml">
     <ui:define name="additional-head-content">
         <title>TPro | Bookstore Plugin</title>
     </ui:define>
     
     <ui:define name="content">
 	    <div class="container">
-	    
-	    	<div class="row">
-		        <div class="col-md-12">
-		          <h1>Buchverwaltung (Verlag Ansicht)</h1>
-				  <!-- TODO -->
-				  <p:dataTable var="book" value="#{bookListMB.books}">
-				    <p:column headerText="ID">
-				        <h:outputText value="#{book.id}" />
-				    </p:column>
-				 
-				    <p:column headerText="Titel">
-				        <h:outputText value="#{book.title}" />
-				    </p:column>
-				 
-				    <p:column headerText="Autor">
-				        <h:outputText value="#{book.author}" />
-				    </p:column>
-				  </p:dataTable>
-		        </div>
-		      </div>
-		      
-	    	<ui:fragment rendered='#{loginMB.isAuthorized("publisher", "bookstore")}'>
+	    	<ui:fragment rendered='#{userMB.isAuthorized("publisher", "bookstore")}'>
 			      <div class="row">
 			        <div class="col-md-12">
 			          <h1>Buchverwaltung (Verlag Ansicht)</h1>
@@ -57,7 +36,7 @@
 			        </div>
 			      </div>
 	    	</ui:fragment>
-	    	<ui:fragment rendered='#{loginMB.isAuthorized("reader", "bookstore")}'>
+	    	<ui:fragment rendered='#{userMB.isAuthorized("reader", "bookstore")}'>
 			      <div class="row">
 			        <div class="col-md-12">
 			          <h1>Buchverwaltung (Leser Ansicht)</h1>

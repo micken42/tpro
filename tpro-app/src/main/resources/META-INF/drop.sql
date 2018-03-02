@@ -17,4 +17,4 @@ drop table User_Permission;
 
  -- DROP SCRIPT FOR BOOKSTORE PLUGIN
 
-drop table Book;
+drop table BookstoreBook;

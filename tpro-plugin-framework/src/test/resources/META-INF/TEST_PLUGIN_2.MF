@@ -1,0 +1,7 @@
+name: test-plugin-2
+version: 1.2
+title: Test Plugin 2
+description: Ein zweites einfaches Testplugin, welches keiner Beschreibung bedarf, da es nichts tut.
+author: Michael Baumert
+permissions: consumer, provider 
+thumbnail: plugin/test-plugin-2/images/thumbnail.png

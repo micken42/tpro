@@ -132,5 +132,22 @@ public class User implements Serializable {
 		}
 		return null;
 	}
+	
+	public boolean hasPermission(Permission permission) {
+		for (Permission userPermission : permissions) {
+			if (userPermission.getName().equals(permission.getName()) 
+					&& userPermission.getContext().getName().equals(permission.getContext().getName()))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean isMember(Group group) {
+		for (Group usersGroup : groups) {
+			if (usersGroup.getName().equals(group.getName()))
+				return true;
+		}
+		return false;
+	}
 
 }

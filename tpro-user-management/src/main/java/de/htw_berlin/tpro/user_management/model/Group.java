@@ -110,4 +110,21 @@ public class Group implements Serializable {
 		return null;
 	}
 
+	public boolean hasPermission(Permission permission) {
+		for (Permission p : permissions) {
+			if (p.getContext().getName().equals(permission.getContext().getName()) 
+					&& p.getName().equals(permission.getName()))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean hasMember(User user) {
+		for (User groupMember : users) {
+			if (groupMember.getUsername().equals(user.getUsername()))
+				return true;
+		}
+		return false;
+	}
+
 }

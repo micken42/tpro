@@ -8,7 +8,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.htw_berlin.tpro.plugin.bookstore.model.Book;
+import de.htw_berlin.tpro.plugin.bookstore.model.BookstoreBook;
 import de.htw_berlin.tpro.plugin.bookstore.persistence.BookFacade;
 import de.htw_berlin.tpro.plugin.bookstore.persistence.DefaultBookFacade;
 import de.htw_berlin.tpro.user_management.model.User;
@@ -27,7 +27,7 @@ public class BookListMB implements Serializable {
 	@Inject @LoggedIn
     private @Getter User currentUser;
 	
-	private @Getter @Setter List<Book> books;
+	private @Getter @Setter List<BookstoreBook> books;
 	
 	@PostConstruct
     public void init() {

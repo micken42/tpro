@@ -11,7 +11,7 @@ public abstract class GenericDAO<T> implements Serializable {
     
     // TODO: Warum muss die Persistence Unit hier einen anderen Namen haben aber vom Inhalt komplett identisch sein, damit die Entities gemappt werden???
     private EntityManagerFactory emf = 
-    		Persistence.createEntityManagerFactory("tpro-bookstore-database");
+    		Persistence.createEntityManagerFactory("tpro-database");
     private EntityManager em;
  
     private Class<T> entityClass;

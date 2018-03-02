@@ -8,13 +8,13 @@
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:ui="http://java.sun.com/jsf/facelets">	
 <f:view contentType="text/html">  
-  <ui:composition template="/template/basicLayout.xhtml">
+  <ui:composition template="/template/tpro-basic-layout.xhtml">
     <ui:define name="additional-head-content">
         <title>TPro | User Dashboard</title>
     </ui:define>
     
     <ui:define name="content">
-    	<ui:fragment rendered="#{loginMB.loggedIn}">
+    	<ui:fragment rendered="#{userMB.loggedIn}">
     		<div class="container">
 		   		<h1>Benutzer-Dashboard</h1>
 				<p>Als Benutzer können Sie alle Plugins sehen, auf die Sie Zugriff haben und welche Art von Zugriff Sie haben, sprich ob sie Dienstanbieter oder Dienstkonsument sind ...</p>

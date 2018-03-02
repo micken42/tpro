@@ -8,7 +8,7 @@
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:ui="http://java.sun.com/jsf/facelets">	
 <f:view contentType="text/html">  
-  <ui:composition template="template/basicLayout.xhtml">
+  <ui:composition template="template/tpro-basic-layout.xhtml">
     <ui:define name="additional-head-content">
         <title>TPro | Welcome</title>
     </ui:define>
@@ -27,7 +27,7 @@
 	        die Anwendung um verschiendenste Dienste zu erweitern.</p>
 	        </div>    
 	  	  </div>
-	  	  <ui:fragment rendered="#{!loginMB.loggedIn}">
+	  	  <ui:fragment rendered="#{!userMB.loggedIn}">
 	  	    <div class="container">
 		      <div class="row">
 		        <div class="col-md-12">
@@ -65,7 +65,7 @@
 						</div>
 					</div>
 					<div class="form-group col-md-12"> 
-					   <p:commandButton class="btn btn-lg btn-primary form-control" value="Registrieren" action="#{loginMB.signUp}" process="signUpForm" update="signUpForm"/>
+					   <p:commandButton class="btn btn-lg btn-primary form-control" value="Registrieren" action="#{userMB.signUp}" process="signUpForm" update="signUpForm"/>
 					</div>
 				  </h:form>
 		        </div>

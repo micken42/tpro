@@ -228,4 +228,34 @@ public class GroupTest {
 		
 		Assert.assertTrue(permissionDoesNotMatchUsersPermission);
 	}
+	
+	@Test
+	public void hasPermissionShouldBeTrueIfGroupHasTheGivenPermission() {
+		Group group = new Group("studenten");
+		Permission studentPermission = new Permission("student");
+		group.addPermission(studentPermission);
+		Assert.assertTrue(group.hasPermission(studentPermission));
+	}
+	
+	@Test
+	public void hasPermissionShouldBeFalseIfUserHasNotTheGivenPermission() {
+		Group group = new Group("studenten");
+		Permission studentPermission = new Permission("student");
+		Assert.assertTrue(!group.hasPermission(studentPermission));
+	}
+	
+	@Test
+	public void hasMemberShouldBeTrueIfTheGivenUserIsInTheGroup() {
+		Group group = new Group("studenten");
+		User student = new User("aiStudent", "password");
+		group.addUser(student);
+		Assert.assertTrue(group.hasMember(student));
+	}
+	
+	@Test
+	public void hasMemberShouldBeFalseIfTheGivenUserIsNotInTheGroup() {
+		Group group = new Group("studenten");
+		User student = new User("aiStudent", "password");
+		Assert.assertTrue(!group.hasMember(student));
+	}
 }

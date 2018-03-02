@@ -228,4 +228,34 @@ public class UserTest {
 		
 		Assert.assertTrue(permissionDoesNotMatchUsersPermission);
 	}
+	
+	@Test
+	public void hasPermissionShouldBeTrueIfUserHasTheGivenPermission() {
+		User user = new User("aiStudent", "password");
+		Permission studentPermission = new Permission("student");
+		user.addPermission(studentPermission);
+		Assert.assertTrue(user.hasPermission(studentPermission));
+	}
+	
+	@Test
+	public void hasPermissionShouldBeFalseIfUserHasNotTheGivenPermission() {
+		User user = new User("aiStudent", "password");
+		Permission studentPermission = new Permission("student");
+		Assert.assertTrue(!user.hasPermission(studentPermission));
+	}
+	
+	@Test
+	public void isMemberShouldBeTrueIfUserIsMemberOfTheGivenGroup() {
+		User user = new User("aiStudent", "password");
+		Group studentGroup = new Group("student");
+		user.addGroup(studentGroup);
+		Assert.assertTrue(user.isMember(studentGroup));
+	}
+	
+	@Test
+	public void isMemberShouldBeFalseIfUserIsNoMemberOfTheGivenGroup() {
+		User user = new User("aiStudent", "password");
+		Group studentGroup = new Group("studenten");
+		Assert.assertTrue(!user.isMember(studentGroup));
+	}
 }

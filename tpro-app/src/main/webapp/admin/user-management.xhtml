@@ -8,7 +8,7 @@
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:ui="http://java.sun.com/jsf/facelets">	
 <f:view contentType="text/html">  
-  <ui:composition template="/template/basicLayout.xhtml">
+  <ui:composition template="/template/tpro-basic-layout.xhtml">
     <ui:define name="additional-head-content">
         <title>TPro | Admin Dashboard</title>
         <!-- Custom styles for this view -->
@@ -16,11 +16,11 @@
     </ui:define>
     
     <ui:define name="content">
-    	<ui:fragment rendered="#{loginMB.loggedInAsAdmin}">
+    	<ui:fragment rendered="#{userMB.loggedInAsAdmin}">
     		<div class="container">
 		   		<h1>Nutzer verwalten</h1>
 				<h2>Alle Benutzer</h2>
-				<p:dataTable var="user" value="#{userManagementMB.users}">
+				<p:dataTable var="user" value="#{userManager.users}">
 				    <p:column headerText="ID">
 				        <h:outputText value="#{user.id}" />
 				    </p:column>

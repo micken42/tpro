@@ -5,6 +5,13 @@
 	version="2.0">
 	<persistence-unit name="tpro-database" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<!-- Mapping For Entity Classes From User Management -->
+		<class>de.htw_berlin.tpro.user_management.model.User</class>
+		<class>de.htw_berlin.tpro.user_management.model.Group</class>
+		<class>de.htw_berlin.tpro.user_management.model.Permission</class>
+		<class>de.htw_berlin.tpro.user_management.model.Context</class>
+		<!-- Mapping For Entity Classes From All Plugins -->
+		<class>de.htw_berlin.tpro.plugin.bookstore.model.BookstoreBook</class>
 		<properties>
 			<!-- Configuring JDBC properties -->
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro" />
@@ -18,8 +25,8 @@
 			<property name="javax.persistence.schema-generation.drop-source" value="script"/>
 			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/>
 			<property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
-			
-			<property name="hibernate.show_sql" value="true" />
+<!-- 			for debugging in console -->
+<!-- 			<property name="hibernate.show_sql" value="true" /> -->
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
