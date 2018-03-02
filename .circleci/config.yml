@@ -22,7 +22,7 @@ jobs:
         - MYSQL_USER=tpro
         - MYSQL_PASSWORD=tpro
 
-    working_directory: ~/tpro-core
+    working_directory: ~/tpro
 
     environment:
       # Customize the JVM maximum heap limit
@@ -35,21 +35,21 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - tpro-core-{{ checksum "pom.xml" }}
+            - tpro-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
-            - tpro-core-
+            - tpro-
 
       #- run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
-          key: tpro-core-{{ checksum "pom.xml" }}
+          key: tpro-{{ checksum "pom.xml" }}
         
       - run: mvn package
       
       - store_test_results:
-          path: ~/tpro-core
+          path: ~/tpro
       
       - store_artifacts:
           path: tpro-app/target/tpro-app-0.0.1-SNAPSHOT.war
