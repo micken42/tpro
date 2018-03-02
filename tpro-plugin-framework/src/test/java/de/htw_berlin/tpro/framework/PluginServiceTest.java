@@ -5,11 +5,14 @@ import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.htw_berlin.tpro.test_utils.DeploymentHelper;
+import de.htw_berlin.tpro.test_utils.PersistenceHelper;
 
 @RunWith(Arquillian.class)
 public class PluginServiceTest {
@@ -17,80 +20,127 @@ public class PluginServiceTest {
 	@Deployment
 	public static JavaArchive createDeployment() {
     	return DeploymentHelper.createDefaultDeployment()
-    			.addPackage("de.htw_berlin.tpro.framework")
+    			.addClasses(PluginService.class, PluginServiceImpl.class, 
+    					PluginFinder.class, MockPluginFinderImpl.class )
     			.addPackage("de.htw_berlin.tpro.user_management.model")
     			.addPackage("de.htw_berlin.tpro.user_management.persistence")
-    			.addPackage("de.htw_berlin.tpro.user_management.service")
-    	        .addAsResource("META-INF/TEST_PLUGIN_1.MF", "META-INF/PLUGIN_MANIFEST_1.MF")
-    	        .addAsResource("META-INF/TEST_PLUGIN_2.MF", "META-INF/PLUGIN_MANIFEST_2.MF");
+    			.addPackage("de.htw_berlin.tpro.user_management.service");
 	}
 	
 	@Inject @DefaultPluginService
 	PluginService pluginService;
 	
-//	TODO: PluginService Tests !!!
+	@Before
+	public void initTestData() {
+		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (1, \"professors\")");
+		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (2, \"students\")");
+
+		// first example plugin context and permissions
+		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"example-plugin-1\")");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"provider\", 1)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (2, \"consumer\", 1)");
+		// second example plugin context and permissions
+		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (2, \"example-plugin-2\")");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (3, \"provider\", 2)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (4, \"consumer\", 2)");
+
+		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
+				+ "VALUES (1, \"Prof Dr Ferdinand\", \"Lange\", \"professor\", \"lange@tpro.de\", \"password\")");
+		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
+				+ "VALUES (2, \"Max\", \"Mustermännchen\", \"student\", \"mustermaennchen@tpro.de\", \"password\");");
+		
+		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (2, 2)");
+		
+		// professor is provider in example plugin 1 because his group professors has all permissions in plugin context
+		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (1, 2)");
+
+		// student is consumer in example plugin 1 because he has the permission
+		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (2, 2)");
+	}
 	
-//	@Inject @DefaultUserFacade
-//	UserFacade userFacade;
-//	
-//	@Inject @DefaultGroupFacade
-//	GroupFacade groupFacade;
-//	
-//	@Before
-//	public void initTestData() {
-//		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (1, \"admins\")");
-//		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (2, \"presidents\")");
-//		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (3, \"users\")");
-//		
-//		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"tpro\")");
-//		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"admin\", 1)");
-//		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (2, \"user\", 1)");
-//		
-//		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
-//				+ "VALUES (1, \"Max\", \"Mustermann\", \"admin\", \"mustermax@tpro.de\", \"password\");");
-//		
-//		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (1, 1)");
-//
-//		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (1, 1)");
-//		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (2, 2)");
-//		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (3, 2)");
-//
-//		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
-//				+ "VALUES (2, \"Abraham\", \"Lincoln\", \"abraham\", \"lincoln@tpro.de\", \"password\")");
-//
-//		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (1, 1)");
-//		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (1, 2)");
-//		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (2, 2)");
-//		
-//		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
-//				+ "VALUES (3, \"Peter\", \"Hausmann\", \"peter\", \"hausmann@tpro.de\", \"password\");");
-//	}
-//	
-//	@After
-//	public void clearTestData() {		
-//		PersistenceHelper.execute("DELETE FROM `Group`");
-//		PersistenceHelper.execute("DELETE FROM Context");
-//		PersistenceHelper.execute("DELETE FROM Permission");
-//		PersistenceHelper.execute("DELETE FROM User");		
-//		PersistenceHelper.execute("DELETE FROM User_Permission");
-//		PersistenceHelper.execute("DELETE FROM Group_Permission");
-//		PersistenceHelper.execute("DELETE FROM Group_User");
-//	}
+	@After
+	public void clearTestData() {		
+		PersistenceHelper.execute("DELETE FROM `Group`");
+		PersistenceHelper.execute("DELETE FROM Context");
+		PersistenceHelper.execute("DELETE FROM Permission");
+		PersistenceHelper.execute("DELETE FROM User");		
+		PersistenceHelper.execute("DELETE FROM User_Permission");
+		PersistenceHelper.execute("DELETE FROM Group_Permission");
+		PersistenceHelper.execute("DELETE FROM Group_User");
+	}
 
 	@Test
 	public void defaultUserServiceShouldBeInjected() {
 		Assert.assertNotNull(pluginService);
 	}
+
+//	TODO: WHY THE HELL IS EACH METHOD CALL OF pluginFinder CLEARING SOME DB TABLES????
 	
+//	@Test
+//	public void getAllPluginsShouldReturnTwoPlugins() {
+//		List<Plugin> plugins = pluginService.getAllPlugins();
+//		System.out.println(pluginService.getAllPlugins());
+//		boolean twoPluginsReturned = (plugins.size() == 2) ? true : false;
+//		
+//		Assert.assertTrue(twoPluginsReturned);
+//	}
+//
+//	@Test
+//	public void getPluginByNameExamplePlugin1ShouldReturnExamplePlugin1() {
+//		Plugin plugin = pluginService.getPluginByName("example-plugin-1");
+//		Assert.assertNotNull(plugin);
+//	}
+//
+//	@Test
+//	public void getPluginByUnknownNameShouldReturnNoPlugin() {
+//		Plugin plugin = pluginService.getPluginByName("unknown");
+//		Assert.assertNull(plugin);
+//	}
+//
+//	@Test
+//	public void userProfessorShouldBePluginProviderOfExamplePlugin1() {
+//		Assert.assertTrue(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+//	}
+//
+//	@Test
+//	public void getPluginsProvidableByUserStudentShouldReturnNoPlugins() {
+//		List<Plugin> plugins = pluginService.getPluginsProvidableByUserWithUsername("student");
+//		
+//		Assert.assertNull(plugins);
+//	}
+//
+//	@Test
+//	public void getPluginsProvidableByUserProfessorShouldReturnOnePlugin() {
+//		List<String> pluginNames = pluginService.getNamesOfPluginsAcessableByUserWithUsername("professor");
+//		Assert.assertNotNull(pluginNames);
+//		
+//		boolean onePluginReturned = (pluginNames.size() == 1) ? true : false;
+//
+//		Assert.assertTrue(onePluginReturned);
+//	}
+//
+//	@Test
+//	public void getPluginsAccessableByUserStudentShouldReturnOnePluginName() {
+//		List<String> pluginNames = pluginService.getNamesOfPluginsAcessableByUserWithUsername("student");
+//		Assert.assertNotNull(pluginNames);
+//		
+//		boolean onePluginReturned = (pluginNames.size() == 1) ? true : false;
+//
+//		Assert.assertTrue(onePluginReturned);
+//	}
+//
+//	@Test
+//	public void dummy() {
+//		Assert.assertNotNull(pluginService);
+//	}
 }
 
-//List<Plugin> getAllPlugins();
-//
-//Plugin getPluginByName(String pluginName);
 //
 //List<Plugin> getPluginsProvidableByUserWithUsername(String username);
 //
-//List<String> getNamesOfPluginsAcessableByUserWithUsername(String username); // TODO: User hat eine Liste seiner pluginnamen pro session
+//List<String> getNamesOfPluginsAcessableByUserWithUsername(String username); // TODO: User hat eine Liste seiner verfügbaren pluginnamen pro session
 //
 //boolean userIsPluginProvider(String username, String pluginName); 
 //

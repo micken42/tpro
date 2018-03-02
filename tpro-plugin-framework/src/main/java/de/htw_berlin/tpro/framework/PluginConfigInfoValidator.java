@@ -7,9 +7,9 @@ import java.util.StringTokenizer;
 
 public class PluginConfigInfoValidator {
 	// TODO: Beschreibung
-	private static final String NAME_VALUE_REGEX = "^[a-zA-Z-]*$";
+	private static final String NAME_VALUE_REGEX = "^[a-zA-Z0-9-]*$";
 	// TODO: Beschreibung
-	private static final String PERMISSIONS_VALUE_REGEX = "^[a-zA-Z, -]*$";
+	private static final String PERMISSIONS_VALUE_REGEX = "^[a-zA-Z0-9, -]*$";
 	// TODO: All reg expressions
 	
 	public static boolean isValid(Map<String, String> pluginConfigInfo) {

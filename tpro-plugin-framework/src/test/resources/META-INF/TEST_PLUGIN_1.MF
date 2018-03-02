@@ -1,7 +1,0 @@
-name: test-plugin-1
-version: 1.1
-title: Test Plugin 1
-description: Ein einfaches Testplugin, welches keiner Beschreibung bedarf, da es nichts tut.
-author: Michael Baumert
-permissions: consumer, provider 
-thumbnail: plugin/test-plugin-1/images/thumbnail.png

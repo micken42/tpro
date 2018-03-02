@@ -33,12 +33,12 @@ public class PluginServiceImpl implements PluginService
 	@Inject @DefaultPermissionFacade
 	PermissionFacade permissionFacade;
 	
-	@Inject 
+	@Inject @DefaultPluginFinder
 	PluginFinder pluginFinder;
 
 	@PostConstruct
 	void initializePlugins() {
-		this.plugins = pluginFinder.getPlugins();
+		this.plugins = (HashMap<String, Plugin>) pluginFinder.findAndInititalizePlugins();
 	}
 
 	@Override
@@ -61,64 +61,90 @@ public class PluginServiceImpl implements PluginService
 	public boolean userIsPluginProvider(String username, String plugin) {
 		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin);
 		for (Permission permission : pluginPermissions) {
-			if(!userService.userIsAuthorized(username, permission.getName(), permission.getContext().getName()))
+			if(!userService.userIsAuthorized(username, permission.getName(), plugin))
 				return false;
 		}
 		return true;
 	}
+
+	/**
+	 * return true if user with the given username has at least one permission in the given plugin
+	 */
+	@Override
+	public boolean userIsPluginConsumer(String username, String plugin) {
+		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin);
+		for (Permission permission : pluginPermissions) {
+			if(userService.userIsAuthorized(username, permission.getName(), plugin))
+				return true;
+		}
+		return false;
+	}
 	
 	@Override
 	public List<Plugin> getPluginsProvidableByUserWithUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Plugin> plugins = new ArrayList<Plugin>();
+		for (Plugin plugin : getAllPlugins()) {
+			if (userIsPluginProvider(username, plugin.getName()))
+				plugins.add(plugin);
+		}
+		return plugins;
 	}
 
 	@Override
 	public List<String> getNamesOfPluginsAcessableByUserWithUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> pluginNames = new ArrayList<String>();
+		for(Plugin plugin : getAllPlugins()) {
+			if (userIsPluginConsumer(username, plugin.getName()))
+				pluginNames.add(plugin.getName());
+		}
+		return pluginNames;
 	}
 
 	@Override
 	public void assignUserToPluginAsPluginProvider(String plugin, String username) {
-		// TODO Auto-generated method stub
-		
+		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin);
+		for (Permission permission : pluginPermissions) 
+			userService.authorizeUser(username, permission.getName(), plugin);
 	}
 
 	@Override
 	public void assignUsersToPluginAsPluginProviders(String plugin, List<String> usernames) {
-		// TODO Auto-generated method stub
-		
+		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin);
+		for (String username : usernames) 
+			pluginPermissions.forEach(permission -> userService.authorizeUser(username, permission.getName(), plugin));
 	}
 
 	@Override
 	public void assignGroupToPluginAsPluginProviderGroup(String plugin, String groupName) {
-		// TODO Auto-generated method stub
-		
+		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin);
+		for (Permission permission : pluginPermissions)
+			userService.authorizeGroup(groupName, permission.getName(), plugin);
 	}
 
 	@Override
 	public void removePluginProviderFromPlugin(String plugin, String username) {
-		// TODO Auto-generated method stub
-		
+		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin); // TODO: Maybe Get Context Permission userServcie method to remove permissionFacade injection???
+		for (Permission permission : pluginPermissions) 
+			userService.deauthorizeUser(username, permission.getName(), plugin);
 	}
 
 	@Override
 	public void removePluginProvidersFromPlugin(String plugin, List<String> usernames) {
-		// TODO Auto-generated method stub
-		
+		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin); 
+		for (String username : usernames) 
+			pluginPermissions.forEach(permission -> userService.deauthorizeUser(username, permission.getName(), plugin));
 	}
 
 	@Override
 	public void removePluginProviderGroupFromPlugin(String plugin, String groupName) {
-		// TODO Auto-generated method stub
-		
+		List<Permission> pluginPermissions = permissionFacade.getPermissionsByContextName(plugin);
+		for (Permission permission : pluginPermissions)
+			userService.deauthorizeGroup(groupName, permission.getName(), plugin);
 	}
 
 	@Override
 	public void removeAllPluginProvidersFromPlugin(String plugin) {
-		// TODO Auto-generated method stub
-		
+		// TODO Remove all ???
 	}
 	
 }

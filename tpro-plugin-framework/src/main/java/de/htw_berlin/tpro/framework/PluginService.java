@@ -14,6 +14,8 @@ public interface PluginService extends Serializable {
 	List<String> getNamesOfPluginsAcessableByUserWithUsername(String username); // TODO: User hat eine Liste seiner pluginnamen pro session
 	
 	boolean userIsPluginProvider(String username, String pluginName); 
+
+	boolean userIsPluginConsumer(String username, String pluginName); 
 	
 	void assignUserToPluginAsPluginProvider(String pluginName, String username);
 	
