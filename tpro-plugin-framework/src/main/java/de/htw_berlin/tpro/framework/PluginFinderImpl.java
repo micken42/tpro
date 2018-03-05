@@ -20,8 +20,8 @@ import javax.inject.Inject;
 
 import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Permission;
-import de.htw_berlin.tpro.user_management.persistence.ContextFacade;
-import de.htw_berlin.tpro.user_management.persistence.DefaultContextFacade;
+import de.htw_berlin.tpro.user_management.service.DefaultUserService;
+import de.htw_berlin.tpro.user_management.service.UserService;
 import lombok.Getter;
 
 @Dependent
@@ -31,8 +31,8 @@ public class PluginFinderImpl implements PluginFinder {
 
 	private @Getter HashMap<String, Plugin> plugins;
 	
-	@Inject @DefaultContextFacade
-	ContextFacade contextFacade;
+	@Inject @DefaultUserService
+	UserService userService;
 
 	public PluginFinderImpl() {
 		plugins = new HashMap<String, Plugin>();;
@@ -126,12 +126,12 @@ public class PluginFinderImpl implements PluginFinder {
     		pluginContext.addPermission(permission);
     	}
     	
-    	Context persistentContext = contextFacade.getContextByName(pluginContext.getName());
+    	Context persistentContext = userService.getContextByName(pluginContext.getName());
     	if (persistentContext == null) {
-    		contextFacade.saveContext(pluginContext);
+    		userService.saveContext(pluginContext);
     	} else {
     		addMissingPermissionFromNewContextToPeristentContext(pluginContext, persistentContext);
-    		contextFacade.updateContext(persistentContext);
+    		userService.updateContext(persistentContext);
     		pluginContext = persistentContext;
     	}
     	

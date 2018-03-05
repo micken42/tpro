@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
+import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Group;
 import de.htw_berlin.tpro.user_management.model.Permission;
 import de.htw_berlin.tpro.user_management.model.User;
@@ -157,5 +158,25 @@ public class UserServiceImpl implements UserService {
 		if (group.hasPermission(permission))
 			group.removePermission(permission);
 		groupFacade.updateGroup(group);
+	}
+
+	@Override
+	public Context getContextByName(String contextName) {
+		return contextFacade.getContextByName(contextName);
+	}
+
+	@Override
+	public List<Permission> getPermissionsByContextName(String contextName) {
+		return permissionFacade.getPermissionsByContextName(contextName);
+	}
+
+	@Override
+	public void saveContext(Context context) {
+		contextFacade.saveContext(context);
+	}
+
+	@Override
+	public void updateContext(Context context) {
+		contextFacade.updateContext(context);
 	}
 }

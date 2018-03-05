@@ -1,5 +1,8 @@
 package de.htw_berlin.tpro.framework;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -43,6 +46,10 @@ public class PluginServiceTest {
 		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (2, \"example-plugin-2\")");
 		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (3, \"provider\", 2)");
 		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (4, \"consumer\", 2)");
+		// third example plugin context and permissions
+		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (3, \"example-plugin-3\")");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (5, \"provider\", 3)");
+		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (6, \"consumer\", 3)");
 
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
 				+ "VALUES (1, \"Prof Dr Ferdinand\", \"Lange\", \"professor\", \"lange@tpro.de\", \"password\")");
@@ -73,87 +80,116 @@ public class PluginServiceTest {
 
 	@Test
 	public void defaultUserServiceShouldBeInjected() {
-		Assert.assertNotNull(pluginService);
+		Assert.assertNotNull(pluginService.getAllPlugins());
 	}
 
 //	TODO: WHY THE HELL IS EACH METHOD CALL OF pluginFinder CLEARING SOME DB TABLES????
 	
-//	@Test
-//	public void getAllPluginsShouldReturnTwoPlugins() {
-//		List<Plugin> plugins = pluginService.getAllPlugins();
-//		System.out.println(pluginService.getAllPlugins());
-//		boolean twoPluginsReturned = (plugins.size() == 2) ? true : false;
-//		
-//		Assert.assertTrue(twoPluginsReturned);
-//	}
-//
-//	@Test
-//	public void getPluginByNameExamplePlugin1ShouldReturnExamplePlugin1() {
-//		Plugin plugin = pluginService.getPluginByName("example-plugin-1");
-//		Assert.assertNotNull(plugin);
-//	}
-//
-//	@Test
-//	public void getPluginByUnknownNameShouldReturnNoPlugin() {
-//		Plugin plugin = pluginService.getPluginByName("unknown");
-//		Assert.assertNull(plugin);
-//	}
-//
-//	@Test
-//	public void userProfessorShouldBePluginProviderOfExamplePlugin1() {
-//		Assert.assertTrue(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
-//	}
-//
-//	@Test
-//	public void getPluginsProvidableByUserStudentShouldReturnNoPlugins() {
-//		List<Plugin> plugins = pluginService.getPluginsProvidableByUserWithUsername("student");
-//		
-//		Assert.assertNull(plugins);
-//	}
-//
-//	@Test
-//	public void getPluginsProvidableByUserProfessorShouldReturnOnePlugin() {
-//		List<String> pluginNames = pluginService.getNamesOfPluginsAcessableByUserWithUsername("professor");
-//		Assert.assertNotNull(pluginNames);
-//		
-//		boolean onePluginReturned = (pluginNames.size() == 1) ? true : false;
-//
-//		Assert.assertTrue(onePluginReturned);
-//	}
-//
-//	@Test
-//	public void getPluginsAccessableByUserStudentShouldReturnOnePluginName() {
-//		List<String> pluginNames = pluginService.getNamesOfPluginsAcessableByUserWithUsername("student");
-//		Assert.assertNotNull(pluginNames);
-//		
-//		boolean onePluginReturned = (pluginNames.size() == 1) ? true : false;
-//
-//		Assert.assertTrue(onePluginReturned);
-//	}
-//
-//	@Test
-//	public void dummy() {
-//		Assert.assertNotNull(pluginService);
-//	}
-}
+	@Test
+	public void getAllPluginsShouldReturnThreePlugins() {
+		List<Plugin> plugins = pluginService.getAllPlugins();
+		boolean twoPluginsReturned = (plugins.size() == 3) ? true : false;
+		
+		Assert.assertTrue(twoPluginsReturned);
+	}
 
-//
-//List<Plugin> getPluginsProvidableByUserWithUsername(String username);
-//
-//List<String> getNamesOfPluginsAcessableByUserWithUsername(String username); // TODO: User hat eine Liste seiner verfügbaren pluginnamen pro session
-//
-//boolean userIsPluginProvider(String username, String pluginName); 
-//
-//void assignUserToPluginAsPluginProvider(String pluginName, String username);
-//
-//void assignUsersToPluginAsPluginProviders(String pluginName, List<String> usernames);
-//
-//void assignGroupToPluginAsPluginProviderGroup(String pluginName, String groupName);
-//
-//void removePluginProviderFromPlugin(String pluginName, String username);
-//
-//void removePluginProvidersFromPlugin(String pluginName, List<String> usernames);
-//
-//void removePluginProviderGroupFromPlugin(String pluginName, String groupName);
-//
-//void removeAllPluginProvidersFromPlugin(String pluginName);
+	@Test
+	public void getPluginByNameExamplePlugin1ShouldReturnExamplePlugin1() {
+		Plugin plugin = pluginService.getPluginByName("example-plugin-1");
+		Assert.assertNotNull(plugin);
+	}
+
+	@Test
+	public void getPluginByUnknownNameShouldReturnNoPlugin() {
+		Plugin plugin = pluginService.getPluginByName("unknown");
+		Assert.assertNull(plugin);
+	}
+
+	@Test
+	public void userProfessorShouldBePluginProviderOfExamplePlugin1() {
+		Assert.assertTrue(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+	}
+
+	@Test
+	public void getPluginsProvidableByUserStudentShouldReturnNoPlugins() {
+		List<Plugin> plugins = pluginService.getPluginsProvidableByUserWithUsername("student");
+		
+		Assert.assertNull(plugins);
+	}
+
+	@Test
+	public void getPluginsProvidableByUserProfessorShouldReturnOnePlugin() {
+		List<String> pluginNames = pluginService.getNamesOfPluginsAcessableByUserWithUsername("professor");
+		Assert.assertNotNull(pluginNames);
+		
+		boolean onePluginReturned = (pluginNames.size() == 1) ? true : false;
+
+		Assert.assertTrue(onePluginReturned);
+	}
+
+	@Test
+	public void getPluginsAccessableByUserStudentShouldReturnOnePluginName() {
+		List<String> pluginNames = pluginService.getNamesOfPluginsAcessableByUserWithUsername("student");
+		Assert.assertNotNull(pluginNames);
+		
+		boolean onePluginReturned = (pluginNames.size() == 1) ? true : false;
+
+		Assert.assertTrue(onePluginReturned);
+	}
+
+	@Test
+	public void assignUserStudentToExamplePlugin1AsProvider() {
+		Assert.assertFalse(pluginService.userIsPluginProvider("student", "example-plugin-3"));
+		pluginService.assignUserToPluginAsPluginProvider("example-plugin-3", "student");
+		Assert.assertTrue(pluginService.userIsPluginProvider("student", "example-plugin-3"));
+	}
+
+	@Test
+	public void assignUsersStudentAndProfessorToExamplePlugin3AsPluginProviders() {
+		Assert.assertFalse(pluginService.userIsPluginProvider("student", "example-plugin-3"));
+		Assert.assertFalse(pluginService.userIsPluginProvider("professor", "example-plugin-3"));
+		
+		List<String> providers = new ArrayList<String>();
+		providers.add("student");
+		providers.add("professor");
+		
+		pluginService.assignUsersToPluginAsPluginProviders("example-plugin-3", providers);
+		Assert.assertTrue(pluginService.userIsPluginProvider("student", "example-plugin-3"));
+	}
+
+	@Test
+	public void assignGroupStudentsToPluginAsPluginProviderGroup() {
+		Assert.assertFalse(pluginService.userIsPluginProvider("student", "example-plugin-3"));
+		pluginService.assignGroupToPluginAsPluginProviderGroup("example-plugin-3", "students");
+		Assert.assertTrue(pluginService.userIsPluginProvider("student", "example-plugin-3"));
+	}
+	
+	@Test
+	public void removePluginProviderProfessorFromExamplePlugin1() {
+		Assert.assertTrue(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+		pluginService.removePluginProviderFromPlugin("example-plugin-1", "professor");
+		Assert.assertFalse(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+	}
+
+	@Test
+	public void removePluginProvidersProfessorFromExamplePlugin1() {
+		Assert.assertTrue(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+		
+		List<String> providers = new ArrayList<String>();
+		providers.add("professor");
+		
+		pluginService.removePluginProvidersFromPlugin("example-plugin-1", providers);
+		Assert.assertFalse(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+	}
+	
+	@Test
+	public void removePluginProviderGroupProfessorsFromExamplePlugin1() {
+		Assert.assertTrue(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+		pluginService.removePluginProviderGroupFromPlugin("example-plugin-1", "professors");
+		Assert.assertFalse(pluginService.userIsPluginProvider("professor", "example-plugin-1"));
+	}
+	
+//	@Test
+//	public void removeAllPluginProvidersFromPlugin() {}
+	
+}

@@ -5,12 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
 import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Permission;
-import de.htw_berlin.tpro.user_management.persistence.ContextFacade;
-import de.htw_berlin.tpro.user_management.persistence.DefaultContextFacade;
 import lombok.Getter;
 
 @Dependent
@@ -20,35 +17,21 @@ public class MockPluginFinderImpl implements PluginFinder {
 
 	private @Getter HashMap<String, Plugin> plugins;
 	
-	@Inject @DefaultContextFacade
-	ContextFacade contextFacade;
-	
 	@Override
 	public Map<String, Plugin> findAndInititalizePlugins() {
 		plugins = new HashMap<String, Plugin>();
-		createPlugin(getExamplePlugin1ConfigInfo());
-		createPlugin(getExamplePlugin2ConfigInfo());
+		createPlugin(getExamplePluginConfigInfo(1));
+		createPlugin(getExamplePluginConfigInfo(2));
+		createPlugin(getExamplePluginConfigInfo(3));
 		return plugins;
 	}
 	
-	private HashMap<String, String> getExamplePlugin1ConfigInfo() {
+	private HashMap<String, String> getExamplePluginConfigInfo(int number) {
 		HashMap<String, String> configInfo = new HashMap<String, String>();
 		configInfo.put("author", "Michael Baumert"); 
-		configInfo.put("name", "example-plugin-1"); 
+		configInfo.put("name", "example-plugin-" + number); 
 		configInfo.put("version", "1.0"); 
-		configInfo.put("title", "Example Plugin 1"); 
-		configInfo.put("description", "This is an example for a plugin."); 
-		configInfo.put("thumbnail", "path/to/png"); 
-		configInfo.put("permissions", "provider, consumer"); 
-	  	return configInfo;
-	}
-	
-	private HashMap<String, String> getExamplePlugin2ConfigInfo() {
-		HashMap<String, String> configInfo = new HashMap<String, String>();
-		configInfo.put("author", "Michael Baumert"); 
-		configInfo.put("name", "example-plugin-2"); 
-		configInfo.put("version", "2.0"); 
-		configInfo.put("title", "Example Plugin 2"); 
+		configInfo.put("title", "Example Plugin-" + number); 
 		configInfo.put("description", "This is an example for a plugin."); 
 		configInfo.put("thumbnail", "path/to/png"); 
 		configInfo.put("permissions", "provider, consumer"); 
@@ -78,15 +61,6 @@ public class MockPluginFinderImpl implements PluginFinder {
     		pluginContext.addPermission(permission);
     	}
     	
-    	Context persistentContext = contextFacade.getContextByName(pluginContext.getName());
-    	if (persistentContext == null) {
-    		contextFacade.saveContext(pluginContext);
-    	} else {
-    		addMissingPermissionFromNewContextToPeristentContext(pluginContext, persistentContext);
-    		contextFacade.updateContext(persistentContext);
-    		pluginContext = persistentContext;
-    	}
-    	
     	Plugin plugin = new DefaultPlugin(pluginAuthor, 
 						    			  pluginName, 
 						    			  pluginVersion, 
@@ -101,23 +75,5 @@ public class MockPluginFinderImpl implements PluginFinder {
         
         plugins.put(plugin.getName(), plugin);
     }
-    
-    private void addMissingPermissionFromNewContextToPeristentContext(Context pluginContext,
-			Context persistentContext) {
-		for (Permission permission : pluginContext.getPermissions()) {
-			if (!permissionExistsInContext(permission, persistentContext)) {
-				persistentContext.addPermission(permission);
-			}
-		}
-	}
-
-	private boolean permissionExistsInContext(Permission permission, Context persistentContext) {
-		for (Permission existingPermission : persistentContext.getPermissions()) {
-			if (existingPermission.getName().equals(permission.getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
 }

@@ -3,7 +3,9 @@ package de.htw_berlin.tpro.user_management.service;
 import java.io.Serializable;
 import java.util.List;
 
+import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Group;
+import de.htw_berlin.tpro.user_management.model.Permission;
 import de.htw_berlin.tpro.user_management.model.User;
 
 public interface UserService extends Serializable {
@@ -22,8 +24,16 @@ public interface UserService extends Serializable {
 	
 	public void deauthorizeGroup(String groupName, String permissionName, String contextName);
 
-	List<User> getAuthorizedUsers(String permissionName, String contextName);
+	public List<User> getAuthorizedUsers(String permissionName, String contextName);
 	
-	List<Group> getAuthorizedGroups(String permissionName, String contextName);
+	public List<Group> getAuthorizedGroups(String permissionName, String contextName);
+	
+	public Context getContextByName(String contextName);
+	
+	public List<Permission> getPermissionsByContextName(String contextName);
+
+	public void saveContext(Context context);
+	
+	public void updateContext(Context context);
 	
 }
