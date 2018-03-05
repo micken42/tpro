@@ -141,9 +141,10 @@ public class UserServiceImpl implements UserService {
 	public void authorizeGroup(String groupName, String permissionName, String contextName) {
 		Permission permission = permissionFacade.getPermissionByPermissionAndContextName(permissionName, contextName);
 		Group group = groupFacade.getGroupByName(groupName);
-		if (group.hasPermission(permission) || group == null || permission == null)
+		if (group == null || permission == null)
 			return;
-		group.addPermission(permission);
+		if (!group.hasPermission(permission))
+			group.addPermission(permission);
 		groupFacade.updateGroup(group);
 	}
 
