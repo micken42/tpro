@@ -39,8 +39,10 @@ jobs:
           # fallback to using the latest cache if no exact match is found
             - tpro-
 
-      - run: sudo apt install -y mysql-client
-      - run: bash scripts/prepare_tpro_test_dbs_for_ci.sh
+      # - run: sudo apt install -y mysql-client
+      # - run: bash scripts/prepare_tpro_test_dbs_for_ci.sh
+
+      - run: bash scripts/prepare_tpro_test_dbs.sh
 
       - save_cache:
           paths:
