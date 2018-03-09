@@ -18,11 +18,11 @@ import org.junit.runner.RunWith;
 import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.test_utils.PersistenceHelper;
 import de.htw_berlin.tpro.user_management.model.Group;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import de.htw_berlin.tpro.user_management.persistence.DefaultGroupFacade;
-import de.htw_berlin.tpro.user_management.persistence.DefaultPermissionFacade;
+import de.htw_berlin.tpro.user_management.persistence.DefaultRoleFacade;
 import de.htw_berlin.tpro.user_management.persistence.GroupFacade;
-import de.htw_berlin.tpro.user_management.persistence.PermissionFacade;
+import de.htw_berlin.tpro.user_management.persistence.RoleFacade;
 
 @RunWith(Arquillian.class)
 public class GroupFacadeTest  {
@@ -36,8 +36,8 @@ public class GroupFacadeTest  {
 	@Inject @DefaultGroupFacade
 	GroupFacade groupFacade;
 	
-	@Inject @DefaultPermissionFacade
-	PermissionFacade permissionFacade;
+	@Inject @DefaultRoleFacade
+	RoleFacade roleFacade;
 
 	@Before
 	public void initTestData() {
@@ -46,26 +46,26 @@ public class GroupFacadeTest  {
 		
 		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"tpro\")");
 		
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"admin\", 1)");
+		PersistenceHelper.execute("INSERT INTO Role(id, name, context_id) VALUES (1, \"admin\", 1)");
 
-		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO Group_Role (group_id, role_id) VALUES (1, 1)");
 		
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
 				+ "VALUES (1, \"Max\", \"Mustermann\", \"admin\", \"mustermax@tpro.de\", \"password\");");
 
-		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO User_Role (user_id, role_id) VALUES (1, 1)");
 		PersistenceHelper.execute("INSERT INTO Group_User (group_id, user_id) VALUES (1, 1)");
 	}
 	
 	@After
-	public void clearTestData() {		
-		PersistenceHelper.execute("DELETE FROM `Group`");
-		PersistenceHelper.execute("DELETE FROM Context");
-		PersistenceHelper.execute("DELETE FROM Permission");
-		PersistenceHelper.execute("DELETE FROM User");		
-		PersistenceHelper.execute("DELETE FROM User_Permission");
-		PersistenceHelper.execute("DELETE FROM Group_Permission");
+	public void clearTestData() {	
+		PersistenceHelper.execute("DELETE FROM Group_Role");
+		PersistenceHelper.execute("DELETE FROM User_Role");
 		PersistenceHelper.execute("DELETE FROM Group_User");
+		PersistenceHelper.execute("DELETE FROM Role");
+		PersistenceHelper.execute("DELETE FROM Context");
+		PersistenceHelper.execute("DELETE FROM User");		
+		PersistenceHelper.execute("DELETE FROM `Group`");
 	}
 	
 	@Test
@@ -114,16 +114,16 @@ public class GroupFacadeTest  {
 	}
 	
 	@Test 
-	public void getGroupsContainingPermissionAdminFromContextTproShouldReturnAdminsGroup() {
-		ArrayList<Group> groups =  (ArrayList<Group>) groupFacade.getGroupsByPermissionAndContextName("admin", "tpro");
+	public void getGroupsContainingRoleAdminFromContextTproShouldReturnAdminsGroup() {
+		ArrayList<Group> groups =  (ArrayList<Group>) groupFacade.getGroupsByRoleAndContextName("admin", "tpro");
 		
-		boolean adminsGroupHasAdminPermission = false;
+		boolean adminsGroupHasAdminRole = false;
 		for (Group group : groups) {
 			if (group.getName().equals("admins"))
-				adminsGroupHasAdminPermission = true;
+				adminsGroupHasAdminRole = true;
 		}
 		
-		Assert.assertTrue(adminsGroupHasAdminPermission);	
+		Assert.assertTrue(adminsGroupHasAdminRole);	
 	}
 	
 	@Test 
@@ -135,39 +135,39 @@ public class GroupFacadeTest  {
 	}
 	
 	@Test
-	public void groupAdminsShouldHaveAdminPermissionFromTProContext() {
+	public void groupAdminsShouldHaveAdminRoleFromTProContext() {
 		Group group =  groupFacade.getGroupByName("admins");
 		
-		boolean hasAdminPermission = false;
-		for (Permission permission : group.getPermissions()) {
-			if (permission.getName().equals("admin") 
-					&& permission.getContext().getName().equals("tpro"))
-				hasAdminPermission = true;
+		boolean hasAdminRole = false;
+		for (Role role : group.getRoles()) {
+			if (role.getName().equals("admin") 
+					&& role.getContext().getName().equals("tpro"))
+				hasAdminRole = true;
 		}
 
-		Assert.assertTrue(hasAdminPermission);
+		Assert.assertTrue(hasAdminRole);
 	}
 	
 	@Test
-	public void saveNewGroupWithAdminPermissions() {
-		// TODO: Abhängigkeit von permissionFacade lieber aufloesen
-		Permission adminPermission = 
-				permissionFacade.getPermissionByPermissionAndContextName("admin", "tpro");
+	public void saveNewGroupWithAdminRoles() {
+		// TODO: Abhängigkeit von roleFacade lieber aufloesen
+		Role adminRole = 
+				roleFacade.getRoleByRoleAndContextName("admin", "tpro");
 		Group group = new Group("Administratoren");
-		group.addPermission(adminPermission);
+		group.addRole(adminRole);
 		groupFacade.saveGroup(group);
 
 		Group persistedGroup = groupFacade.getGroupByName("Administratoren");
 		boolean newGroupIsPersisted = (persistedGroup != null);
 
-		boolean hasAdminPermission = false;
-		for (Permission permission : group.getPermissions()) {
-			if (permission.getName().equals("admin") 
-					&& permission.getContext().getName().equals("tpro"))
-				hasAdminPermission = true;
+		boolean hasAdminRole = false;
+		for (Role role : group.getRoles()) {
+			if (role.getName().equals("admin") 
+					&& role.getContext().getName().equals("tpro"))
+				hasAdminRole = true;
 		}
 		
-		Assert.assertTrue(newGroupIsPersisted && hasAdminPermission);
+		Assert.assertTrue(newGroupIsPersisted && hasAdminRole);
 	}
 	
 	@Test 
@@ -223,7 +223,7 @@ public class GroupFacadeTest  {
 	}
 	
 	@Test
-	public void deleteAnExistingGroupWithPermissionsAndUsers() {
+	public void deleteAnExistingGroupWithRolesAndUsers() {
 		groupFacade.deleteGroupByName("admins");
 		boolean noGroupFound = (groupFacade.getGroupByName("admins") == null);
 		

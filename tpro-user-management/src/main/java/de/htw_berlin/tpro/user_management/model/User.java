@@ -31,9 +31,9 @@ import lombok.Setter;
     		query = "SELECT u.username FROM User u"),
 	@NamedQuery(name = "Group.findAllByGroupName",
 			query = "SELECT u FROM User u JOIN u.groups g WHERE g.name = :name"),
-    @NamedQuery(name = "User.findAllByPermissionAndContextName",
-    		query = "SELECT u FROM User u JOIN u.permissions p "
-    			  + "WHERE p.name = :permission and p.context.name = :context")})
+    @NamedQuery(name = "User.findAllByRoleAndContextName",
+    		query = "SELECT u FROM User u JOIN u.roles p "
+    			  + "WHERE p.name = :role and p.context.name = :context")})
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -59,55 +59,55 @@ public class User implements Serializable {
 	private @Getter @Setter String password;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name="User_Permission", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="permission_id"))
-	private @Getter @Setter Set<Permission> permissions;
+    @JoinTable(name="User_Role", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="role_id"))
+	private @Getter @Setter Set<Role> roles;
 	
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users")
 	private @Getter @Setter Set<Group> groups;
 
-	public User(String prename, String surname,  String email, String username, String password, Set<Permission> permissions, Set<Group> groups) {
+	public User(String prename, String surname,  String email, String username, String password, Set<Role> roles, Set<Group> groups) {
 		this.prename = prename;
 		this.surname = surname;
 		this.email = email;
 		this.username = username;
 		this.password = password;
-		this.permissions = permissions;
+		this.roles = roles;
 		this.groups = groups;
 	}
 	
 	public User(String prename, String surname, String email, String username, String password) {
-		this(prename, surname, email ,username, password, new HashSet<Permission>(), new HashSet<Group>());
+		this(prename, surname, email ,username, password, new HashSet<Role>(), new HashSet<Group>());
 	}
 	
 	public User(String prename, String surname, String username, String password) {
-		this(prename, surname, username + "@mail.de",username, password, new HashSet<Permission>(), new HashSet<Group>());
+		this(prename, surname, username + "@mail.de",username, password, new HashSet<Role>(), new HashSet<Group>());
 	}
 	
 	public User(String username, String password) {
-		this("", "", username + "@mail.de",username, password, new HashSet<Permission>(), new HashSet<Group>());
+		this("", "", username + "@mail.de",username, password, new HashSet<Role>(), new HashSet<Group>());
 	}
 	
 	public User() {
-		this("", "", "" + "@mail.de", "", "", new HashSet<Permission>(), new HashSet<Group>());
+		this("", "", "" + "@mail.de", "", "", new HashSet<Role>(), new HashSet<Group>());
 	}
 	
-	public void addPermission(Permission permission) {
-		permissions.add(permission);
+	public void addRole(Role role) {
+		roles.add(role);
 	}
 	
-	public void removePermission(Permission permission) throws EntityNotFoundException {
-		Permission userPermission = getMatchingUserPermission(permission);
-		if (userPermission != null) {
-			permissions.remove(userPermission);
+	public void removeRole(Role role) throws EntityNotFoundException {
+		Role userRole = getMatchingUserRole(role);
+		if (userRole != null) {
+			roles.remove(userRole);
 		} else {
 			throw new EntityNotFoundException();
 		}
 	}
 	
-	public Permission getMatchingUserPermission(Permission permission) {
-		for (Permission userPermission : permissions) {
-			if (userPermission.getId()==permission.getId())
-				return userPermission;
+	public Role getMatchingUserRole(Role role) {
+		for (Role userRole : roles) {
+			if (userRole.getId()==role.getId())
+				return userRole;
 		}
 		return null;
 	}
@@ -133,10 +133,10 @@ public class User implements Serializable {
 		return null;
 	}
 	
-	public boolean hasPermission(Permission permission) {
-		for (Permission userPermission : permissions) {
-			if (userPermission.getName().equals(permission.getName()) 
-					&& userPermission.getContext().getName().equals(permission.getContext().getName()))
+	public boolean hasRole(Role role) {
+		for (Role userRole : roles) {
+			if (userRole.getName().equals(role.getName()) 
+					&& userRole.getContext().getName().equals(role.getContext().getName()))
 				return true;
 		}
 		return false;

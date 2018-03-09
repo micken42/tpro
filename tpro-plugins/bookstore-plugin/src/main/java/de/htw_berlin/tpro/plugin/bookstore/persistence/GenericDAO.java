@@ -8,10 +8,9 @@ import javax.persistence.criteria.CriteriaQuery;
  
 public abstract class GenericDAO<T> implements Serializable {
     private static final long serialVersionUID = 1L;
-    
-    // TODO: Warum muss die Persistence Unit hier einen anderen Namen haben aber vom Inhalt komplett identisch sein, damit die Entities gemappt werden???
-    private EntityManagerFactory emf = 
-    		Persistence.createEntityManagerFactory("tpro-database");
+ 
+    private static final EntityManagerFactory emf = 
+    		Persistence.createEntityManagerFactory("bookstore");
     private EntityManager em;
  
     private Class<T> entityClass;
@@ -26,10 +25,6 @@ public abstract class GenericDAO<T> implements Serializable {
  
     public EntityManagerFactory getEntityManagerFactory() {
     	return emf;
-    }
-    
-    public void setEntityManagerFactory(EntityManagerFactory emf) {
-    	this.emf = emf;
     }
     
     public void beginTransaction() {

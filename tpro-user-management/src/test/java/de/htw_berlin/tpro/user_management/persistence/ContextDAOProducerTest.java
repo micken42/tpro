@@ -30,7 +30,7 @@ public class ContextDAOProducerTest {
     GenericDAO<Context> contextDAO;
 
     @Test
-	public void contextDAOProducerShouldProducePermissionDAOInstance() {
+	public void contextDAOProducerShouldProduceRoleDAOInstance() {
 		Assert.assertNotEquals(null, contextDAO);
     }
 

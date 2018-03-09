@@ -41,30 +41,30 @@ public class Context implements Serializable {
 	
 	@OneToMany(mappedBy="context", fetch=FetchType.EAGER, // Could also define a namedEntityGraph
 			cascade=CascadeType.ALL, orphanRemoval=true)
-	private @Getter @Setter Set<Permission> permissions;
+	private @Getter @Setter Set<Role> roles;
 	
-	public Context(String name, Set<Permission> permissions) {
+	public Context(String name, Set<Role> roles) {
 		this.name = name;
-		this.permissions = permissions;
+		this.roles = roles;
 	}
 	
 	public Context(String name) {
-		this(name, new HashSet<Permission>());
+		this(name, new HashSet<Role>());
 	}
 	
 	public Context() {
-		this("", new HashSet<Permission>());
+		this("", new HashSet<Role>());
 	}
 	
-	public void addPermission(Permission permission) {
-		permission.setContext(this);
-		permissions.add(permission);
+	public void addRole(Role role) {
+		role.setContext(this);
+		roles.add(role);
 	}
 	
-	public void removePermission(Permission permission) throws EntityNotFoundException {
-		if (permissions.contains(permission)) {
-			permission.setContext(null);
-			permissions.remove(permission);
+	public void removeRole(Role role) throws EntityNotFoundException {
+		if (roles.contains(role)) {
+			role.setContext(null);
+			roles.remove(role);
 		} else {
 			throw new EntityNotFoundException();
 		}

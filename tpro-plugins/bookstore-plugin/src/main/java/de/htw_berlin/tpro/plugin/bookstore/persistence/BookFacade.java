@@ -3,10 +3,10 @@ package de.htw_berlin.tpro.plugin.bookstore.persistence;
 import java.io.Serializable;
 import java.util.List;
 
-import de.htw_berlin.tpro.plugin.bookstore.model.BookstoreBook;
+import de.htw_berlin.tpro.plugin.bookstore.model.Book;
 
 public interface BookFacade extends Serializable {
 	
-	public List<BookstoreBook> getAllBooks();
+	public List<Book> getAllBooks();
 		
 }

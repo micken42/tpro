@@ -2,24 +2,28 @@ package de.htw_berlin.tpro.user_management.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
+import org.omnifaces.cdi.Startup;
+
 import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Group;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import de.htw_berlin.tpro.user_management.model.User;
 import de.htw_berlin.tpro.user_management.persistence.ContextFacade;
 import de.htw_berlin.tpro.user_management.persistence.DefaultContextFacade;
 import de.htw_berlin.tpro.user_management.persistence.DefaultGroupFacade;
-import de.htw_berlin.tpro.user_management.persistence.DefaultPermissionFacade;
+import de.htw_berlin.tpro.user_management.persistence.DefaultRoleFacade;
 import de.htw_berlin.tpro.user_management.persistence.DefaultUserFacade;
 import de.htw_berlin.tpro.user_management.persistence.GroupFacade;
-import de.htw_berlin.tpro.user_management.persistence.PermissionFacade;
+import de.htw_berlin.tpro.user_management.persistence.RoleFacade;
 import de.htw_berlin.tpro.user_management.persistence.UserFacade;
 
+@Startup
 @ApplicationScoped
 @DefaultUserService 
 public class UserServiceImpl implements UserService {
@@ -29,8 +33,8 @@ public class UserServiceImpl implements UserService {
 	@Inject @DefaultUserFacade
 	UserFacade userFacade;
 
-	@Inject @DefaultPermissionFacade
-	PermissionFacade permissionFacade;
+	@Inject @DefaultRoleFacade
+	RoleFacade roleFacade;
 
 	@Inject @DefaultContextFacade
 	ContextFacade contextFacade;
@@ -53,35 +57,36 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean userIsAuthorized(String username, String permissionName, String contextName) {
-		Permission permission = permissionFacade.getPermissionByPermissionAndContextName(permissionName, contextName);
+	public boolean userIsAuthorized(String username, String roleName, String contextName) {
+		Role role = roleFacade.getRoleByRoleAndContextName(roleName, contextName);
 		User user = userFacade.getUserByUsername(username);
-		if (user == null || permission == null)
+
+		if (user == null || role == null)
 			return false;
 		
-		// Check users permissions
-		if (user.hasPermission(permission)) 
+		// Check users roles
+		if (user.hasRole(role)) 
 			return true;
 		
-		// Check users group permissions
-		List<Group> usersGroups = groupFacade.getGroupsByUsername(username);
+		// Check users group roles
+		Set<Group> usersGroups = user.getGroups();
 		for (Group group : usersGroups) {
-			if (group.hasPermission(permission)) 
+			if (group.hasRole(role)) 
 				return true;
 		}
 		return false;
 	}
 
 	@Override
-	public List<User> getAuthorizedUsers(String permissionName, String contextName) {
+	public List<User> getAuthorizedUsers(String roleName, String contextName) {
 		List<User> authorizedUsers = new ArrayList<User>();
-		// Getting all users with the given permission
-		List<User> usersWithPermission = userFacade.getUsersByPermissionAndContextName(permissionName, contextName);
-		if (usersWithPermission != null)
-			authorizedUsers = usersWithPermission;
-		// Getting all users within groups that have the given permission
-		List<Group> groupsWithPermission = groupFacade.getGroupsByPermissionAndContextName(permissionName, contextName);
-		for (Group group : groupsWithPermission) {
+		// Getting all users with the given role
+		List<User> usersWithRole = userFacade.getUsersByRoleAndContextName(roleName, contextName);
+		if (usersWithRole != null)
+			authorizedUsers = usersWithRole;
+		// Getting all users within groups that have the given role
+		List<Group> groupsWithRole = groupFacade.getGroupsByRoleAndContextName(roleName, contextName);
+		for (Group group : groupsWithRole) {
 			addNewUserFromGroupToUserList(authorizedUsers, group);
 		}
 		return authorizedUsers;
@@ -100,31 +105,32 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void authorizeUser(String username, String permissionName, String contextName) {
-		Permission permission = permissionFacade.getPermissionByPermissionAndContextName(permissionName, contextName);
+	public void authorizeUser(String username, String roleName, String contextName) {
+		Role role = roleFacade.getRoleByRoleAndContextName(roleName, contextName);
 		User user = userFacade.getUserByUsername(username);
-		if (user.hasPermission(permission) || user == null || permission == null)
+		if (user == null || role == null)
 			return;
-		user.addPermission(permission);
+		if (!user.hasRole(role))
+			user.addRole(role);
 		userFacade.updateUser(user);
 	}
 
 	@Override
-	public void deauthorizeUser(String username, String permissionName, String contextName) {
-		Permission permission = permissionFacade.getPermissionByPermissionAndContextName(permissionName, contextName);
+	public void deauthorizeUser(String username, String roleName, String contextName) {
+		Role role = roleFacade.getRoleByRoleAndContextName(roleName, contextName);
 		User user = userFacade.getUserByUsername(username);
-		if (user == null || permission == null)
+		if (user == null || role == null)
 			return;
-		// Search in users groups for the permission and delete them if found
-		deleteUserFromGroupsWithPermission(user, permission);
-		if (user.hasPermission(permission))
-			user.removePermission(permission);
+		// Search in users groups for the role and delete them if found
+		deleteUserFromGroupsWithRole(user, role);
+		if (user.hasRole(role))
+			user.removeRole(role);
 		userFacade.updateUser(user);
 	}
 
-	private void deleteUserFromGroupsWithPermission(User user, Permission permission) {
+	private void deleteUserFromGroupsWithRole(User user, Role role) {
 		for(Group group : user.getGroups()) {
-			if (group.hasPermission(permission)) {
+			if (group.hasRole(role)) {
 				user.removeGroup(group);
 				group.removeUser(user);
 				groupFacade.updateGroup(group);
@@ -133,30 +139,30 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<Group> getAuthorizedGroups(String permissionName, String contextName) {
-		List<Group> authorizedGroups = groupFacade.getGroupsByPermissionAndContextName(permissionName, contextName);
+	public List<Group> getAuthorizedGroups(String roleName, String contextName) {
+		List<Group> authorizedGroups = groupFacade.getGroupsByRoleAndContextName(roleName, contextName);
 		return authorizedGroups;
 	}
 
 	@Override
-	public void authorizeGroup(String groupName, String permissionName, String contextName) {
-		Permission permission = permissionFacade.getPermissionByPermissionAndContextName(permissionName, contextName);
+	public void authorizeGroup(String groupName, String roleName, String contextName) {
+		Role role = roleFacade.getRoleByRoleAndContextName(roleName, contextName);
 		Group group = groupFacade.getGroupByName(groupName);
-		if (group == null || permission == null)
+		if (group == null || role == null)
 			return;
-		if (!group.hasPermission(permission))
-			group.addPermission(permission);
+		if (!group.hasRole(role))
+			group.addRole(role);
 		groupFacade.updateGroup(group);
 	}
 
 	@Override
-	public void deauthorizeGroup(String groupName, String permissionName, String contextName) {
-		Permission permission = permissionFacade.getPermissionByPermissionAndContextName(permissionName, contextName);
+	public void deauthorizeGroup(String groupName, String roleName, String contextName) {
+		Role role = roleFacade.getRoleByRoleAndContextName(roleName, contextName);
 		Group group = groupFacade.getGroupByName(groupName);
-		if (group == null || permission == null)
+		if (group == null || role == null)
 			return;
-		if (group.hasPermission(permission))
-			group.removePermission(permission);
+		if (group.hasRole(role))
+			group.removeRole(role);
 		groupFacade.updateGroup(group);
 	}
 
@@ -166,8 +172,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<Permission> getPermissionsByContextName(String contextName) {
-		return permissionFacade.getPermissionsByContextName(contextName);
+	public List<Role> getRolesByContextName(String contextName) {
+		return roleFacade.getRolesByContextName(contextName);
 	}
 
 	@Override
@@ -178,5 +184,25 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateContext(Context context) {
 		contextFacade.updateContext(context);
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		return userFacade.getAllUsers();
+	}
+
+	@Override
+	public List<Group> getAllGroups() {
+		return groupFacade.getAllGroups();
+	}
+
+	@Override
+	public List<String> getAllUsernames() {
+		return userFacade.getAllUsernames();
+	}
+
+	@Override
+	public List<String> getAllGroupNames() {
+		return groupFacade.getAllNames();
 	}
 }

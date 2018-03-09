@@ -10,7 +10,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
 import de.htw_berlin.tpro.user_management.model.Group;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 
 @Dependent
 @DefaultGroupFacade
@@ -135,13 +135,13 @@ public class GroupFacadeImpl implements GroupFacade {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public  List<Group> getGroupsByPermissionAndContextName(String permission, String context) {
+	public  List<Group> getGroupsByRoleAndContextName(String role, String context) {
 		groupDAO.beginTransaction();
 		List<Group> groups;
 		try {
 			groups = groupDAO.getEntityManager()
-					.createNamedQuery("Group.findAllByPermissionAndContextName")
-					.setParameter("permission", permission)
+					.createNamedQuery("Group.findAllByRoleAndContextName")
+					.setParameter("role", role)
 					.setParameter("context", context)
 					.getResultList();
 		} catch (NoResultException e) {
@@ -156,7 +156,7 @@ public class GroupFacadeImpl implements GroupFacade {
 		Group group = getGroupByName(name);
 		if (group == null) throw new EntityNotFoundException();
 		
-		group.setPermissions(new HashSet<Permission>());
+		group.setRoles(new HashSet<Role>());
 		group.getUsers().forEach(user -> group.removeUser(user));
 		updateGroup(group);
 		

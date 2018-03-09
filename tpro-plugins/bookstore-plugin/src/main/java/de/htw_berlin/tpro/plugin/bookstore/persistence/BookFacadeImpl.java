@@ -6,7 +6,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
-import de.htw_berlin.tpro.plugin.bookstore.model.BookstoreBook;
+import de.htw_berlin.tpro.plugin.bookstore.model.Book;
 
 @Dependent
 @DefaultBookFacade
@@ -15,15 +15,15 @@ public class BookFacadeImpl implements BookFacade {
 	private static final long serialVersionUID = 1L;
 
 	@Inject @DefaultBookDAO
-	GenericDAO<BookstoreBook> bookDAO;
+	GenericDAO<Book> bookDAO;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<BookstoreBook> getAllBooks() {
+	public List<Book> getAllBooks() {
 		bookDAO.beginTransaction();
-		List<BookstoreBook> books;
+		List<Book> books;
 		try {
-			books = (List<BookstoreBook>) bookDAO.getEntityManager().createNamedQuery("BookstoreBook.findAll")
+			books = (List<Book>) bookDAO.getEntityManager().createNamedQuery("Book.findAll")
 					.getResultList();
 		} catch (NoResultException e) {
 			books = null;

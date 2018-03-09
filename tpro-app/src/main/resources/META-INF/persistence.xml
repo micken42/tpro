@@ -3,49 +3,5 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
-	<persistence-unit name="tpro-database" transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		<!-- Mapping For Entity Classes From User Management -->
-		<class>de.htw_berlin.tpro.user_management.model.User</class>
-		<class>de.htw_berlin.tpro.user_management.model.Group</class>
-		<class>de.htw_berlin.tpro.user_management.model.Permission</class>
-		<class>de.htw_berlin.tpro.user_management.model.Context</class>
-		<!-- Mapping For Entity Classes From All Plugins -->
-		<class>de.htw_berlin.tpro.plugin.bookstore.model.BookstoreBook</class>
-		<properties>
-			<!-- Configuring JDBC properties -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro" />
-			<property name="javax.persistence.jdbc.user" value="tpro" />
-			<property name="javax.persistence.jdbc.password" value="tpro" />
-			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			      
-			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-			<property name="javax.persistence.schema-generation.create-source" value="script"/>
-			<property name="javax.persistence.schema-generation.create-script-source" value="META-INF/create.sql"/>
-			<property name="javax.persistence.schema-generation.drop-source" value="script"/>
-			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/>
-			<property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
-<!-- 			for debugging in console -->
-<!-- 			<property name="hibernate.show_sql" value="true" /> -->
-			<property name="hibernate.format_sql" value="true" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
-<!-- 			<property name="hibernate.hbm2ddl.auto" value="create-drop" /> -->
-			
-			<!-- Import data -->
-			<property name="javax.persistence.sql-load-script-source" value="META-INF/dev-data.sql"/>
-			
-			<!-- Configuring Connection Pool -->
-			<property name="hibernate.c3p0.min_size" value="5" />
-			<property name="hibernate.c3p0.max_size" value="20" />
-			<property name="hibernate.c3p0.timeout" value="500" />
-			<property name="hibernate.c3p0.max_statements" value="50" />
-			<property name="hibernate.c3p0.idle_test_period" value="2000" />
-		</properties>
-	</persistence-unit>
+	<persistence-unit name="tpro-app" transaction-type="RESOURCE_LOCAL"></persistence-unit>
 </persistence>
-
-
-<!-- additional properties that may be be useful one day -->
-<!-- <property name="hibernate.archive.autodetection" value="class, hbm*" /> -->
-<!-- <property name="packagesToScan" value="de.htw_berlin.tpro" /> -->

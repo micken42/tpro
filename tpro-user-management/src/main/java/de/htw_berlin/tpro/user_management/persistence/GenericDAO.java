@@ -10,7 +10,7 @@ public abstract class GenericDAO<T> implements Serializable {
     private static final long serialVersionUID = 1L;
  
     private static final EntityManagerFactory emf = 
-    		Persistence.createEntityManagerFactory("tpro-database");
+    		Persistence.createEntityManagerFactory("user-management");
     private EntityManager em;
  
     private Class<T> entityClass;

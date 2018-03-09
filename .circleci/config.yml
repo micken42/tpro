@@ -16,7 +16,7 @@ jobs:
       - image: circleci/mysql:5.7.21
         environment:
         - MYSQL_ALLOW_EMPTY_PASSWORD=true 
-        - MYSQL_DATABASE=tpro_test 
+        - MYSQL_DATABASE=tpro_test_user_management 
         - MYSQL_HOST=127.0.0.1 
         - MYSQL_ROOT_HOST=% 
         - MYSQL_USER=tpro
@@ -39,7 +39,8 @@ jobs:
           # fallback to using the latest cache if no exact match is found
             - tpro-
 
-      #- run: mvn dependency:go-offline
+      - run: sudo apt install -y mysql-client
+      - run: bash scripts/prepare_tpro_test_dbs_for_ci.sh
 
       - save_cache:
           paths:

@@ -21,7 +21,7 @@
 			          <h1>Buchverwaltung (Verlag Ansicht)</h1>
 					  <!-- TODO -->
 					  <p:dataTable var="book" value="#{bookListMB.books}">
-					    <p:column headerText="ID">
+					    <p:column headerText="ID" width="54"> 
 					        <h:outputText value="#{book.id}" />
 					    </p:column>
 					 
@@ -29,7 +29,7 @@
 					        <h:outputText value="#{book.title}" />
 					    </p:column>
 					 
-					    <p:column headerText="Autor">
+					    <p:column headerText="Autor" priority="2">
 					        <h:outputText value="#{book.author}" />
 					    </p:column>
 					  </p:dataTable>
@@ -42,15 +42,11 @@
 			          <h1>Buchverwaltung (Leser Ansicht)</h1>
 					  <!-- TODO -->
 					  <p:dataTable var="book" value="#{bookListMB.books}">
-					    <p:column headerText="ID">
-					        <h:outputText value="#{book.id}" />
-					    </p:column>
-					 
 					    <p:column headerText="Titel">
 					        <h:outputText value="#{book.title}" />
 					    </p:column>
 					 
-					    <p:column headerText="Autor">
+					    <p:column headerText="Autor" priority="2">
 					        <h:outputText value="#{book.author}" />
 					    </p:column>
 					  </p:dataTable>

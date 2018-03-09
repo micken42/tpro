@@ -30,9 +30,9 @@ import lombok.Setter;
             query = "SELECT g FROM Group g WHERE g.name = :name"),
     @NamedQuery(name = "Group.findAllNames",
     		query = "SELECT g.name FROM Group g"),
-    @NamedQuery(name = "Group.findAllByPermissionAndContextName",
-			query = "SELECT g FROM Group g JOIN g.permissions p "
-				  + "WHERE p.name = :permission and p.context.name = :context"),
+    @NamedQuery(name = "Group.findAllByRoleAndContextName",
+			query = "SELECT g FROM Group g JOIN g.roles p "
+				  + "WHERE p.name = :role and p.context.name = :context"),
 	@NamedQuery(name = "Group.findAllByUsername",
 			query = "SELECT g FROM Group g JOIN g.users u WHERE u.username = :username")})
 public class Group implements Serializable {
@@ -47,44 +47,44 @@ public class Group implements Serializable {
 	private @Getter @Setter String name;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name="Group_Permission", joinColumns=@JoinColumn(name="group_id"), inverseJoinColumns=@JoinColumn(name="permission_id"))
-	private @Getter @Setter Set<Permission> permissions;
+    @JoinTable(name="Group_Role", joinColumns=@JoinColumn(name="group_id"), inverseJoinColumns=@JoinColumn(name="role_id"))
+	private @Getter @Setter Set<Role> roles;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="Group_User", joinColumns=@JoinColumn(name="group_id"), inverseJoinColumns=@JoinColumn(name="user_id"))
 	private @Getter @Setter Set<User> users;
 
-	public Group(String name, Set<Permission> permissions, Set<User> users) {
+	public Group(String name, Set<Role> roles, Set<User> users) {
 		this.name = name;
-		this.permissions = permissions;
+		this.roles = roles;
 		this.users = users;
 	}
 	
 	public Group(String name) {
-		this(name, new HashSet<Permission>(), new HashSet<User>());
+		this(name, new HashSet<Role>(), new HashSet<User>());
 	}
 	
 	public Group() {
-		this("",  new HashSet<Permission>(), new HashSet<User>());
+		this("",  new HashSet<Role>(), new HashSet<User>());
 	}
 	
-	public void addPermission(Permission permission) {
-		permissions.add(permission);
+	public void addRole(Role role) {
+		roles.add(role);
 	}
 	
-	public void removePermission(Permission permission) throws EntityNotFoundException {
-		Permission groupPermission = getMatchingGroupPermission(permission);
-		if (groupPermission != null) {
-			permissions.remove(groupPermission);
+	public void removeRole(Role role) throws EntityNotFoundException {
+		Role groupRole = getMatchingGroupRole(role);
+		if (groupRole != null) {
+			roles.remove(groupRole);
 		} else {
 			throw new EntityNotFoundException();
 		}
 	}
 	
-	public Permission getMatchingGroupPermission(Permission permission) {
-		for (Permission groupPermission : permissions) {
-			if (groupPermission.getId()==permission.getId())
-				return groupPermission;
+	public Role getMatchingGroupRole(Role role) {
+		for (Role groupRole : roles) {
+			if (groupRole.getId()==role.getId())
+				return groupRole;
 		}
 		return null;
 	}
@@ -110,10 +110,10 @@ public class Group implements Serializable {
 		return null;
 	}
 
-	public boolean hasPermission(Permission permission) {
-		for (Permission p : permissions) {
-			if (p.getContext().getName().equals(permission.getContext().getName()) 
-					&& p.getName().equals(permission.getName()))
+	public boolean hasRole(Role role) {
+		for (Role p : roles) {
+			if (p.getContext().getName().equals(role.getContext().getName()) 
+					&& p.getName().equals(role.getName()))
 				return true;
 		}
 		return false;

@@ -7,7 +7,7 @@ import javax.persistence.Persistence;
 public class PersistenceHelper {
 
 	public static final EntityManagerFactory emf = 
-    		Persistence.createEntityManagerFactory("tpro-database");
+    		Persistence.createEntityManagerFactory("user-management");
 	
 	public static void execute(String query) {
 		EntityManager em = emf.createEntityManager();

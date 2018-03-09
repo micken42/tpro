@@ -30,7 +30,7 @@ public class GroupDAOProducerTest {
     GenericDAO<Group> groupDAO;
 
     @Test
-	public void groupDAOProducerShouldProducePermissionDAOInstance() {
+	public void groupDAOProducerShouldProduceRoleDAOInstance() {
 		Assert.assertNotEquals(null, groupDAO);
     }
 

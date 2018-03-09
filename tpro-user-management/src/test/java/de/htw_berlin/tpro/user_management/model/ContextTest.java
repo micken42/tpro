@@ -68,49 +68,49 @@ public class ContextTest {
 		AssertAnnotations.assertField(
 				Context.class, "name", Column.class);
 		AssertAnnotations.assertField(
-				Context.class, "permissions", OneToMany.class);
+				Context.class, "roles", OneToMany.class);
 	}
 	
 	@Test
-	public void addPermissionToContext() {
+	public void addRoleToContext() {
 		Context context = new Context("htwBerlin");
-		Permission studentPermission = new Permission("student");
+		Role studentRole = new Role("student");
 	
-		context.addPermission(studentPermission);
-		boolean permissionHasBeenAdded = false;
-		for (Permission permission : context.getPermissions()) {
-			if (permission.getName().equals("student"))
-				permissionHasBeenAdded = true;
+		context.addRole(studentRole);
+		boolean roleHasBeenAdded = false;
+		for (Role role : context.getRoles()) {
+			if (role.getName().equals("student"))
+				roleHasBeenAdded = true;
 		}
 		
-		Assert.assertTrue(permissionHasBeenAdded);
+		Assert.assertTrue(roleHasBeenAdded);
 	}
 	
 	@Test
-	public void removePermissionFromContext() {
+	public void removeRoleFromContext() {
 		Context context = new Context("htwBerlin");
-		Permission studentPermission = new Permission("student");
-		context.addPermission(studentPermission);
-		int initialNumberOfPermissions = context.getPermissions().size();
+		Role studentRole = new Role("student");
+		context.addRole(studentRole);
+		int initialNumberOfRoles = context.getRoles().size();
 		
-		context.removePermission(studentPermission);
-		int actualNumberOfPermissions = context.getPermissions().size();
-		boolean permissionHasBeenDeleted = 
-				(initialNumberOfPermissions > actualNumberOfPermissions) ? true : false;
+		context.removeRole(studentRole);
+		int actualNumberOfRoles = context.getRoles().size();
+		boolean roleHasBeenDeleted = 
+				(initialNumberOfRoles > actualNumberOfRoles) ? true : false;
 		
-		Assert.assertTrue(permissionHasBeenDeleted);
+		Assert.assertTrue(roleHasBeenDeleted);
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNotExistingPermissionFromContextShouldFail() {
+	public void removeNotExistingRoleFromContextShouldFail() {
 		Context context = new Context("htwBerlin");
-		Permission studentPermission = new Permission("student");
-		studentPermission.setId(1);
-		context.addPermission(studentPermission);
+		Role studentRole = new Role("student");
+		studentRole.setId(1);
+		context.addRole(studentRole);
 		
-		Permission permissionToBeDeleted = new Permission("unknown");
-		permissionToBeDeleted.setId(2);
-		context.removePermission(permissionToBeDeleted);
+		Role roleToBeDeleted = new Role("unknown");
+		roleToBeDeleted.setId(2);
+		context.removeRole(roleToBeDeleted);
 	}
 
 }

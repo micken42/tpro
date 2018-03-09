@@ -30,7 +30,7 @@ public class UserDAOProducerTest {
     GenericDAO<User> userDAO;
 
     @Test
-	public void userDAOProducerShouldProducePermissionDAOInstance() {
+	public void userDAOProducerShouldProduceRoleDAOInstance() {
 		Assert.assertNotEquals(null, userDAO);
     }
 

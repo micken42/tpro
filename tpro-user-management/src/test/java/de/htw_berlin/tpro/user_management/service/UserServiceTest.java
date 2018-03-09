@@ -18,7 +18,7 @@ import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.test_utils.PersistenceHelper;
 import de.htw_berlin.tpro.user_management.model.Context;
 import de.htw_berlin.tpro.user_management.model.Group;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import de.htw_berlin.tpro.user_management.model.User;
 import de.htw_berlin.tpro.user_management.persistence.DefaultGroupFacade;
 import de.htw_berlin.tpro.user_management.persistence.DefaultUserFacade;
@@ -52,17 +52,17 @@ public class UserServiceTest {
 		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (3, \"users\")");
 		
 		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"tpro\")");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"admin\", 1)");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (2, \"user\", 1)");
+		PersistenceHelper.execute("INSERT INTO Role(id, name, context_id) VALUES (1, \"admin\", 1)");
+		PersistenceHelper.execute("INSERT INTO Role(id, name, context_id) VALUES (2, \"user\", 1)");
 		
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
 				+ "VALUES (1, \"Max\", \"Mustermann\", \"admin\", \"mustermax@tpro.de\", \"password\");");
 		
-		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO User_Role (user_id, role_id) VALUES (1, 1)");
 
-		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (1, 1)");
-		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (2, 2)");
-		PersistenceHelper.execute("INSERT INTO Group_Permission (group_id, permission_id) VALUES (3, 2)");
+		PersistenceHelper.execute("INSERT INTO Group_Role (group_id, role_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO Group_Role (group_id, role_id) VALUES (2, 2)");
+		PersistenceHelper.execute("INSERT INTO Group_Role (group_id, role_id) VALUES (3, 2)");
 
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
 				+ "VALUES (2, \"Abraham\", \"Lincoln\", \"abraham\", \"lincoln@tpro.de\", \"password\")");
@@ -79,10 +79,10 @@ public class UserServiceTest {
 	public void clearTestData() {		
 		PersistenceHelper.execute("DELETE FROM `Group`");
 		PersistenceHelper.execute("DELETE FROM Context");
-		PersistenceHelper.execute("DELETE FROM Permission");
+		PersistenceHelper.execute("DELETE FROM Role");
 		PersistenceHelper.execute("DELETE FROM User");		
-		PersistenceHelper.execute("DELETE FROM User_Permission");
-		PersistenceHelper.execute("DELETE FROM Group_Permission");
+		PersistenceHelper.execute("DELETE FROM User_Role");
+		PersistenceHelper.execute("DELETE FROM Group_Role");
 		PersistenceHelper.execute("DELETE FROM Group_User");
 	}
 
@@ -120,7 +120,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void userAdminWithAdminPermissionShouldBeAuthorizedAsAdminInContextTpro() {
+	public void userAdminWithAdminRoleShouldBeAuthorizedAsAdminInContextTpro() {
 		Assert.assertTrue(userService.userIsAuthorized("admin", "admin", "tpro"));
 	}
 
@@ -130,12 +130,12 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void asNoMemberOfAdminsGroupAndNoAdminPermissionUserPeterShouldBeAuthorizedAsAdminInContextTpro() {
+	public void asNoMemberOfAdminsGroupAndNoAdminRoleUserPeterShouldBeAuthorizedAsAdminInContextTpro() {
 		Assert.assertTrue(!userService.userIsAuthorized("peter", "admin", "tpro"));
 	}
 
 	@Test
-	public void gettingAuthorizedUsersForAdminPermissionInTproContextShouldReturnTwoUsers() {
+	public void gettingAuthorizedUsersForAdminRoleInTproContextShouldReturnTwoUsers() {
 		List<User> adminUsers = userService.getAuthorizedUsers("admin", "tpro");
 		
 		boolean twoUsersAsResult = false;
@@ -146,7 +146,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void gettingAuthorizedUsersForUnknownPermissionShouldReturnNoUsers() {
+	public void gettingAuthorizedUsersForUnknownRoleShouldReturnNoUsers() {
 		List<User> adminUsers = userService.getAuthorizedUsers("unknown", "tpro");
 		
 		boolean noUsersAsResult = false;
@@ -157,48 +157,48 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void authorizingUserPeterAsAdminShouldAddAdminPermissionToUserPeter() {
+	public void authorizingUserPeterAsAdminShouldAddAdminRoleToUserPeter() {
 		Context tproContext = new Context("tpro");
-		Permission adminPermission = new Permission("admin", tproContext);
+		Role adminRole = new Role("admin", tproContext);
 		
 		userService.authorizeUser("peter", "admin", "tpro");
 		User adminPeter = userFacade.getUserByUsername("peter");
 
-	    Assert.assertTrue(adminPeter.hasPermission(adminPermission));
+	    Assert.assertTrue(adminPeter.hasRole(adminRole));
 	}
 	
 	@Test
-	public void deauthorizingUserPeterAsAdminShouldRemoveAdminPermissionFromUserPeter() {
+	public void deauthorizingUserPeterAsAdminShouldRemoveAdminRoleFromUserPeter() {
 		Context tproContext = new Context("tpro");
-		Permission adminPermission = new Permission("admin", tproContext);
+		Role adminRole = new Role("admin", tproContext);
 		
 		userService.deauthorizeUser("peter", "admin", "tpro");
 		User adminPeter = userFacade.getUserByUsername("peter");
 
-	    Assert.assertTrue(!adminPeter.hasPermission(adminPermission));
+	    Assert.assertTrue(!adminPeter.hasRole(adminRole));
 	}
 	
 	@Test
-	public void deauthorizingUserAdminAsAdminShouldRemoveAdminPermissionFromUserAdminAndRemoveHimFromAdminsGroup() {
+	public void deauthorizingUserAdminAsAdminShouldRemoveAdminRoleFromUserAdminAndRemoveHimFromAdminsGroup() {
 		Context tproContext = new Context("tpro");
-		Permission adminPermission = new Permission("admin", tproContext);
+		Role adminRole = new Role("admin", tproContext);
 		
 		userService.deauthorizeUser("admin", "admin", "tpro");
 		User admin = userFacade.getUserByUsername("admin");
-		boolean isMemberOfGroupWithAdminPermissions = false;
+		boolean isMemberOfGroupWithAdminRoles = false;
 		for(Group group : admin.getGroups()) {
-			if (group.hasPermission(adminPermission)){
-				isMemberOfGroupWithAdminPermissions = true;
+			if (group.hasRole(adminRole)){
+				isMemberOfGroupWithAdminRoles = true;
 			}
 		}
 
-	    Assert.assertTrue(!admin.hasPermission(adminPermission));
-	    Assert.assertTrue(!isMemberOfGroupWithAdminPermissions);
+	    Assert.assertTrue(!admin.hasRole(adminRole));
+	    Assert.assertTrue(!isMemberOfGroupWithAdminRoles);
 	}
 
 
 	@Test
-	public void gettingAuthorizedGroupsForPermissionInTproContextShouldReturnTwoGroups() {
+	public void gettingAuthorizedGroupsForRoleInTproContextShouldReturnTwoGroups() {
 		List<Group> userGroups = userService.getAuthorizedGroups("user", "tpro");
 		
 		boolean twoGroupsAsResult = false;
@@ -209,7 +209,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void gettingAuthorizedGroupsForUnknownPermissionShouldReturnNoGroups() {
+	public void gettingAuthorizedGroupsForUnknownRoleShouldReturnNoGroups() {
 		List<Group> groups = userService.getAuthorizedGroups("unknown", "tpro");
 		
 		boolean noGroupsAsResult = false;
@@ -220,25 +220,25 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void authorizingGroupUsersAsAdminShouldAddAdminPermissionToGroupUsers() {
+	public void authorizingGroupUsersAsAdminShouldAddAdminRoleToGroupUsers() {
 		Context tproContext = new Context("tpro");
-		Permission adminPermission = new Permission("admin", tproContext);
+		Role adminRole = new Role("admin", tproContext);
 		
 		userService.authorizeGroup("users", "admin", "tpro");
 		Group userGroup = groupFacade.getGroupByName("users");
 
-	    Assert.assertTrue(userGroup.hasPermission(adminPermission));
+	    Assert.assertTrue(userGroup.hasRole(adminRole));
 	}
 	
 	@Test
-	public void deauthorizingGroupAdminsAsAdminShouldRemoveAdminPermissionFromGroupAdmins() {
+	public void deauthorizingGroupAdminsAsAdminShouldRemoveAdminRoleFromGroupAdmins() {
 		Context tproContext = new Context("tpro");
-		Permission adminPermission = new Permission("admin", tproContext);
+		Role adminRole = new Role("admin", tproContext);
 		
 		userService.deauthorizeGroup("admins", "admin", "tpro");
 		Group adminsGroup = groupFacade.getGroupByName("admins");
 
-	    Assert.assertTrue(!adminsGroup.hasPermission(adminPermission));
+	    Assert.assertTrue(!adminsGroup.hasRole(adminRole));
 	}
 	
 }

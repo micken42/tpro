@@ -46,11 +46,11 @@
       <version>1.2</version>
     </dependency>
     <dependency>
-          <groupId>org.jboss.weld.servlet</groupId>
-          <artifactId>weld-servlet-core</artifactId>
-          <version>3.0.3.Final</version>
-          <scope>runtime</scope>
-       </dependency>
+      <groupId>org.jboss.weld.servlet</groupId>
+      <artifactId>weld-servlet-core</artifactId>
+      <version>3.0.3.Final</version>
+      <scope>runtime</scope>
+    </dependency>
     
     <!-- Hibernate (JPA) -->
     <dependency>
@@ -85,7 +85,7 @@
       <!--scope>provided</scope-->
     </dependency>
 
-    <!-- PrimeFaces & OmniFaces dependencies -->
+    <!-- PrimeFaces, BootsFaces & OmniFaces dependencies -->
     <dependency>
       <groupId>org.primefaces</groupId>
       <artifactId>primefaces</artifactId>
@@ -112,25 +112,25 @@
     
     <!-- Arquillian API -->
     <dependency>
-            <groupId>org.jboss.arquillian</groupId>
-            <artifactId>arquillian-bom</artifactId>
-            <version>1.2.1.Final</version>
-            <type>pom</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>1.2.1.Final</version>
+        <type>pom</type>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
         <groupId>org.jboss.arquillian.junit</groupId>
         <artifactId>arquillian-junit-container</artifactId>
-            <version>1.2.1.Final</version>
+        <version>1.2.1.Final</version>
         <scope>test</scope>
     </dependency>
     <!-- Arquillian container (Weld EE embedded) -->
     <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-            <version>1.0.0.CR9</version>
-            <scope>test</scope>
-        </dependency>
+        <groupId>org.jboss.arquillian.container</groupId>
+        <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+        <version>1.0.0.CR9</version>
+        <scope>test</scope>
+    </dependency>
 
     <!-- Logger -->
     <dependency>

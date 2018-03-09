@@ -9,7 +9,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import de.htw_berlin.tpro.user_management.model.User;
 
 @Dependent
@@ -135,13 +135,13 @@ public class UserFacadeImpl implements UserFacade {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getUsersByPermissionAndContextName(String permission, String context) {
+	public List<User> getUsersByRoleAndContextName(String role, String context) {
 		userDAO.beginTransaction();
 		List<User> users;
 		try {
 			users = userDAO.getEntityManager()
-					.createNamedQuery("User.findAllByPermissionAndContextName")
-					.setParameter("permission", permission)
+					.createNamedQuery("User.findAllByRoleAndContextName")
+					.setParameter("role", role)
 					.setParameter("context", context)
 					.getResultList();
 		} catch (NoResultException e) {
@@ -156,7 +156,7 @@ public class UserFacadeImpl implements UserFacade {
 		User user = getUserByUsername(username);
 		if (user == null) throw new EntityNotFoundException();
 
-		user.setPermissions(new HashSet<Permission>());
+		user.setRoles(new HashSet<Role>());
 		user.getGroups().forEach(group -> user.removeGroup(group));
 		updateUser(user);
 		

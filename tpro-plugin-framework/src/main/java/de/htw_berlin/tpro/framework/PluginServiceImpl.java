@@ -3,6 +3,7 @@ package de.htw_berlin.tpro.framework;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -11,9 +12,8 @@ import javax.inject.Named;
 
 import org.omnifaces.cdi.Startup;
 
-import de.htw_berlin.tpro.user_management.model.Permission;
-import de.htw_berlin.tpro.user_management.persistence.DefaultPermissionFacade;
-import de.htw_berlin.tpro.user_management.persistence.PermissionFacade;
+import de.htw_berlin.tpro.user_management.model.Role;
+import de.htw_berlin.tpro.user_management.model.User;
 import de.htw_berlin.tpro.user_management.service.DefaultUserService;
 import de.htw_berlin.tpro.user_management.service.UserService;
 
@@ -47,31 +47,38 @@ public class PluginServiceImpl implements PluginService
 	}
 
 	@Override
-	public Plugin getPluginByName(String plugin) {
-		return plugins.get(plugin);
+	public Plugin getPluginByName(String pluginName) {
+		return plugins.get(pluginName);
 	}
 
 	/**
-	 * return true if user with the given username has all permissions in the given plugin
+	 * return true if user with the given username has all roles in the given plugin
 	 */
 	@Override
-	public boolean userIsPluginProvider(String username, String plugin) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin);
-		for (Permission permission : pluginPermissions) {
-			if(!userService.userIsAuthorized(username, permission.getName(), plugin))
+	public boolean userIsPluginProvider(String username, String pluginName) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return false;
+		Set<Role> pluginRoles = plugin.getRoles();
+		for (Role role : pluginRoles) {
+			if(!userService.userIsAuthorized(username, role.getName(), pluginName)) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	/**
-	 * return true if user with the given username has at least one permission in the given plugin
+	 * return true if user with the given username has at least one role in the given plugin
 	 */
 	@Override
-	public boolean userIsPluginConsumer(String username, String plugin) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin);
-		for (Permission permission : pluginPermissions) {
-			if(userService.userIsAuthorized(username, permission.getName(), plugin))
+	public boolean userIsPluginConsumer(String username, String pluginName) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return false;
+		Set<Role> pluginRoles = plugin.getRoles();
+		for (Role role : pluginRoles) {
+			if(userService.userIsAuthorized(username, role.getName(), pluginName))
 				return true;
 		}
 		return false;
@@ -91,63 +98,96 @@ public class PluginServiceImpl implements PluginService
 	}
 
 	@Override
-	public List<String> getNamesOfPluginsAcessableByUserWithUsername(String username) {
+	public List<Plugin> getPluginsAccessableByUserWithUsername(String username) {
 		List<Plugin> allPlugins = getAllPlugins();
 		if (allPlugins == null) 
 			return null;
-		List<String> pluginNames = new ArrayList<String>();
+		List<Plugin> plugins = new ArrayList<Plugin>();
 		for (Plugin plugin : allPlugins) {
 			if (userIsPluginConsumer(username, plugin.getName()))
-				pluginNames.add(plugin.getName());
+				plugins.add(plugin);
 		}
-		return (pluginNames.size() != 0) ? pluginNames : null;
+		return (plugins.size() != 0) ? plugins : null;
 	}
 
 	@Override
-	public void assignUserToPluginAsPluginProvider(String plugin, String username) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin);
-		for (Permission permission : pluginPermissions) 
-			userService.authorizeUser(username, permission.getName(), plugin);
+	public void assignUserToPluginAsPluginProvider(String pluginName, String username) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return;
+		Set<Role> pluginRoles = plugin.getRoles();
+		for (Role role : pluginRoles) 
+			userService.authorizeUser(username, role.getName(), pluginName);
 	}
 
 	@Override
-	public void assignUsersToPluginAsPluginProviders(String plugin, List<String> usernames) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin);
+	public void assignUsersToPluginAsPluginProviders(String pluginName, List<String> usernames) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return;
+		Set<Role> pluginRoles = plugin.getRoles();
 		for (String username : usernames) 
-			pluginPermissions.forEach(permission -> userService.authorizeUser(username, permission.getName(), plugin));
+			pluginRoles.forEach(role -> userService.authorizeUser(username, role.getName(), pluginName));
 	}
 
 	@Override
-	public void assignGroupToPluginAsPluginProviderGroup(String plugin, String groupName) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin);
-		for (Permission permission : pluginPermissions)
-			userService.authorizeGroup(groupName, permission.getName(), plugin);
+	public void assignGroupToPluginAsPluginProviderGroup(String pluginName, String groupName) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return;
+		Set<Role> pluginRoles = plugin.getRoles();
+		for (Role role : pluginRoles)
+			userService.authorizeGroup(groupName, role.getName(), pluginName);
 	}
 
 	@Override
-	public void removePluginProviderFromPlugin(String plugin, String username) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin);
-		for (Permission permission : pluginPermissions) 
-			userService.deauthorizeUser(username, permission.getName(), plugin);
+	public void removeUserFromPlugin(String pluginName, String username) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return;
+		Set<Role> pluginRoles = plugin.getRoles();
+		for (Role role : pluginRoles) 
+			userService.deauthorizeUser(username, role.getName(), pluginName);
 	}
 
 	@Override
-	public void removePluginProvidersFromPlugin(String plugin, List<String> usernames) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin); 
+	public void removeUsersFromPlugin(String pluginName, List<String> usernames) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return;
+		Set<Role> pluginRoles = plugin.getRoles();
 		for (String username : usernames) 
-			pluginPermissions.forEach(permission -> userService.deauthorizeUser(username, permission.getName(), plugin));
+			pluginRoles.forEach(role -> userService.deauthorizeUser(username, role.getName(), pluginName));
 	}
 
 	@Override
-	public void removePluginProviderGroupFromPlugin(String plugin, String groupName) {
-		List<Permission> pluginPermissions = userService.getPermissionsByContextName(plugin);
-		for (Permission permission : pluginPermissions)
-			userService.deauthorizeGroup(groupName, permission.getName(), plugin);
+	public void removeGroupsFromPlugin(String pluginName, String groupName) {
+		Plugin plugin = getPluginByName(pluginName);
+		if (plugin == null)
+			return;
+		Set<Role> pluginRoles = plugin.getRoles();
+		for (Role role : pluginRoles)
+			userService.deauthorizeGroup(groupName, role.getName(), pluginName);
 	}
 
 	@Override
-	public void removeAllPluginProvidersFromPlugin(String plugin) {
-		// TODO Remove all ???
+	public List<User> getAllPluginProvidersByPluginName(String pluginName) {
+		List<User> providers = new ArrayList<User>();
+		for (User user : userService.getAllUsers()) {
+			if (userIsPluginProvider(user.getUsername(), pluginName))
+				providers.add(user);
+		}
+		return (providers.size() != 0) ? providers : null;
+	}
+
+	@Override
+	public List<User> getAllUsersWithAccessToPlugin(String pluginName) {
+		List<User> consumers = new ArrayList<User>();
+		for (User user : userService.getAllUsers()) {
+			if (userIsPluginConsumer(user.getUsername(), pluginName))
+				consumers.add(user);
+		}
+		return (consumers.size() != 0) ? consumers : null;
 	}
 	
 }

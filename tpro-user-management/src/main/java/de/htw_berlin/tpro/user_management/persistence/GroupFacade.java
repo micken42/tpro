@@ -19,7 +19,7 @@ public interface GroupFacade extends Serializable {
 
 	public List<String> getAllNames();
 
-	public List<Group> getGroupsByPermissionAndContextName(String permission, String context);
+	public List<Group> getGroupsByRoleAndContextName(String role, String context);
 	
 	public List<Group> getGroupsByUsername(String username);
 

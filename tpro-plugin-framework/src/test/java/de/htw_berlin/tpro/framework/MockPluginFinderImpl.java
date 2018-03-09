@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.enterprise.context.Dependent;
 
 import de.htw_berlin.tpro.user_management.model.Context;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import lombok.Getter;
 
 @Dependent
@@ -34,7 +34,7 @@ public class MockPluginFinderImpl implements PluginFinder {
 		configInfo.put("title", "Example Plugin-" + number); 
 		configInfo.put("description", "This is an example for a plugin."); 
 		configInfo.put("thumbnail", "path/to/png"); 
-		configInfo.put("permissions", "provider, consumer"); 
+		configInfo.put("roles", "provider, consumer"); 
 	  	return configInfo;
 	}
 
@@ -54,11 +54,11 @@ public class MockPluginFinderImpl implements PluginFinder {
     	String pluginThumbnailResource = pluginConfigInfo.get("thumbnail");
     	
     	Context pluginContext = new Context(pluginName);
-    	List<String> permissionNames = 
-    			PluginConfigInfoValidator.getPermissionNamesFromCommaSeperatedPermissionsValue(pluginConfigInfo.get("permissions"));
-    	for (String permissionName : permissionNames) {
-    		Permission permission = new Permission(permissionName, pluginContext);
-    		pluginContext.addPermission(permission);
+    	List<String> roleNames = 
+    			PluginConfigInfoValidator.getRoleNamesFromCommaSeperatedRolesValue(pluginConfigInfo.get("roles"));
+    	for (String roleName : roleNames) {
+    		Role role = new Role(roleName, pluginContext);
+    		pluginContext.addRole(role);
     	}
     	
     	Plugin plugin = new DefaultPlugin(pluginAuthor, 
@@ -68,7 +68,7 @@ public class MockPluginFinderImpl implements PluginFinder {
 						    			  pluginDescription, 
 						    			  pluginThumbnailResource, 
 						    			  pluginContext,
-						    			  pluginContext.getPermissions()
+						    			  pluginContext.getRoles()
 						    			  );
         System.out.println(" - - - Add Plugin \"" + plugin.getName() + "\" to TPro");
         System.out.println(" - - - - - - - ConfigInfo: " + pluginConfigInfo);

@@ -34,7 +34,7 @@ public class UserTest {
 		NamedQuery findAll = null; 
 		NamedQuery findByUsername = null;
 		NamedQuery findAllUsernames = null;
-		NamedQuery findAllByPermissionAndContextName = null;
+		NamedQuery findAllByRoleAndContextName = null;
 		// initialize each NamedQuery
 		for (NamedQuery query : queries) {
 			switch (query.name()) {
@@ -47,8 +47,8 @@ public class UserTest {
 			case "User.findAllUsernames":
 				findAllUsernames = query;
 				break;
-			case "User.findAllByPermissionAndContextName":
-				findAllByPermissionAndContextName = query;
+			case "User.findAllByRoleAndContextName":
+				findAllByRoleAndContextName = query;
 				break;
 			default:
 				continue;
@@ -63,8 +63,8 @@ public class UserTest {
 			Assert.assertEquals(
 					findAllUsernames.query(), "SELECT u.username FROM User u");
 			Assert.assertEquals(
-					findAllByPermissionAndContextName.query(), "SELECT u FROM User u JOIN u.permissions p "
-		    				                                 + "WHERE p.name = :permission and p.context.name = :context");
+					findAllByRoleAndContextName.query(), "SELECT u FROM User u JOIN u.roles p "
+		    				                                 + "WHERE p.name = :role and p.context.name = :context");
 		} catch (NullPointerException e) {
 			throw new AssertionError(e);
 		}
@@ -85,7 +85,7 @@ public class UserTest {
 		AssertAnnotations.assertField(
 				User.class, "email", Column.class);
 		AssertAnnotations.assertField(
-				User.class, "permissions", ManyToMany.class, JoinTable.class);
+				User.class, "roles", ManyToMany.class, JoinTable.class);
 		AssertAnnotations.assertField(
 				User.class, "groups", ManyToMany.class);
 	}
@@ -161,87 +161,87 @@ public class UserTest {
 	}
 	
 	@Test
-	public void addPermissionToUser() {
+	public void addRoleToUser() {
 		User user = new User("aiStudent", "password");
-		Permission studentPermission = new Permission("student");
+		Role studentRole = new Role("student");
 	
-		user.addPermission(studentPermission);
-		boolean permissionHasBeenAdded = false;
-		for (Permission permission : user.getPermissions()) {
-			if (permission.getName().equals("student"))
-				permissionHasBeenAdded = true;
+		user.addRole(studentRole);
+		boolean roleHasBeenAdded = false;
+		for (Role role : user.getRoles()) {
+			if (role.getName().equals("student"))
+				roleHasBeenAdded = true;
 		}
 		
-		Assert.assertTrue(permissionHasBeenAdded);
+		Assert.assertTrue(roleHasBeenAdded);
 	}
 	
 	@Test
-	public void removePermissionFromUser() {
+	public void removeRoleFromUser() {
 		User user = new User("aiStudent", "password");
-		Permission studentPermission = new Permission("student");
-		user.addPermission(studentPermission);
-		int initialNumberOfPermissions = user.getPermissions().size();
+		Role studentRole = new Role("student");
+		user.addRole(studentRole);
+		int initialNumberOfRoles = user.getRoles().size();
 		
-		user.removePermission(studentPermission);
-		int actualNumberOfPermissions = user.getPermissions().size();
-		boolean permissionHasBeenDeleted = 
-				(initialNumberOfPermissions > actualNumberOfPermissions) ? true : false;
+		user.removeRole(studentRole);
+		int actualNumberOfRoles = user.getRoles().size();
+		boolean roleHasBeenDeleted = 
+				(initialNumberOfRoles > actualNumberOfRoles) ? true : false;
 		
-		Assert.assertTrue(permissionHasBeenDeleted);
+		Assert.assertTrue(roleHasBeenDeleted);
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNotExistingPermissionFromUserShouldFail() {
+	public void removeNotExistingRoleFromUserShouldFail() {
 		User user = new User("aiStudent", "password");
-		Permission studentPermission = new Permission("student");
-		studentPermission.setId(1);
-		user.addPermission(studentPermission);
+		Role studentRole = new Role("student");
+		studentRole.setId(1);
+		user.addRole(studentRole);
 		
-		Permission permissionToBeDeleted = new Permission("unknown");
-		permissionToBeDeleted.setId(2);
-		user.removePermission(permissionToBeDeleted);
+		Role roleToBeDeleted = new Role("unknown");
+		roleToBeDeleted.setId(2);
+		user.removeRole(roleToBeDeleted);
 	}
 
 	@Test
-	public void permissionShouldMatchUsersPermission() {
+	public void roleShouldMatchUsersRole() {
 		User user = new User("aiStudent", "password");
-		Permission studentPermission = new Permission("student");
-		studentPermission.setId(1);
+		Role studentRole = new Role("student");
+		studentRole.setId(1);
 	
-		user.addPermission(studentPermission);
-		boolean permissionMatchesUsersPermission = 
-				(user.getMatchingUserPermission(studentPermission) != null) ? true : false;
+		user.addRole(studentRole);
+		boolean roleMatchesUsersRole = 
+				(user.getMatchingUserRole(studentRole) != null) ? true : false;
 		
-		Assert.assertTrue(permissionMatchesUsersPermission);
+		Assert.assertTrue(roleMatchesUsersRole);
 	}
 	
 	@Test
-	public void notExistingPermissionShouldNotMatchUsersPermission() {
+	public void notExistingRoleShouldNotMatchUsersRole() {
 		User user = new User("aiStudent", "password");
-		Permission studentPermission = new Permission("student");
-		studentPermission.setId(1);
+		Role studentRole = new Role("student");
+		studentRole.setId(1);
 	
-		Permission notExistingPermission = new Permission("unknown");
-		user.addPermission(studentPermission);
-		boolean permissionDoesNotMatchUsersPermission = 
-				(user.getMatchingUserPermission(notExistingPermission) == null) ? true : false;
+		Role notExistingRole = new Role("unknown");
+		user.addRole(studentRole);
+		boolean roleDoesNotMatchUsersRole = 
+				(user.getMatchingUserRole(notExistingRole) == null) ? true : false;
 		
-		Assert.assertTrue(permissionDoesNotMatchUsersPermission);
+		Assert.assertTrue(roleDoesNotMatchUsersRole);
 	}
 	
 	@Test
-	public void hasPermissionShouldBeTrueIfUserHasTheGivenPermission() {
+	public void hasRoleShouldBeTrueIfUserHasTheGivenRole() {
 		User user = new User("aiStudent", "password");
-		Permission studentPermission = new Permission("student");
-		user.addPermission(studentPermission);
-		Assert.assertTrue(user.hasPermission(studentPermission));
+		Role studentRole = new Role("student");
+		user.addRole(studentRole);
+		Assert.assertTrue(user.hasRole(studentRole));
 	}
 	
 	@Test
-	public void hasPermissionShouldBeFalseIfUserHasNotTheGivenPermission() {
+	public void hasRoleShouldBeFalseIfUserHasNotTheGivenRole() {
 		User user = new User("aiStudent", "password");
-		Permission studentPermission = new Permission("student");
-		Assert.assertTrue(!user.hasPermission(studentPermission));
+		Role studentRole = new Role("student");
+		Assert.assertTrue(!user.hasRole(studentRole));
 	}
 	
 	@Test

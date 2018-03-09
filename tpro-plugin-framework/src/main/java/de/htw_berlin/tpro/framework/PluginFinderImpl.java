@@ -19,7 +19,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import de.htw_berlin.tpro.user_management.model.Context;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import de.htw_berlin.tpro.user_management.service.DefaultUserService;
 import de.htw_berlin.tpro.user_management.service.UserService;
 import lombok.Getter;
@@ -119,18 +119,18 @@ public class PluginFinderImpl implements PluginFinder {
     	String pluginThumbnailResource = pluginConfigInfo.get("thumbnail");
     	
     	Context pluginContext = new Context(pluginName);
-    	List<String> permissionNames = 
-    			PluginConfigInfoValidator.getPermissionNamesFromCommaSeperatedPermissionsValue(pluginConfigInfo.get("permissions"));
-    	for (String permissionName : permissionNames) {
-    		Permission permission = new Permission(permissionName, pluginContext);
-    		pluginContext.addPermission(permission);
+    	List<String> roleNames = 
+    			PluginConfigInfoValidator.getRoleNamesFromCommaSeperatedRolesValue(pluginConfigInfo.get("roles"));
+    	for (String roleName : roleNames) {
+    		Role role = new Role(roleName, pluginContext);
+    		pluginContext.addRole(role);
     	}
     	
     	Context persistentContext = userService.getContextByName(pluginContext.getName());
     	if (persistentContext == null) {
     		userService.saveContext(pluginContext);
     	} else {
-    		addMissingPermissionFromNewContextToPeristentContext(pluginContext, persistentContext);
+    		addMissingRoleFromNewContextToPeristentContext(pluginContext, persistentContext);
     		userService.updateContext(persistentContext);
     		pluginContext = persistentContext;
     	}
@@ -142,7 +142,7 @@ public class PluginFinderImpl implements PluginFinder {
 						    			  pluginDescription, 
 						    			  pluginThumbnailResource, 
 						    			  pluginContext,
-						    			  pluginContext.getPermissions()
+						    			  pluginContext.getRoles()
 						    			  );
         System.out.println(" - - - Add Plugin \"" + plugin.getName() + "\" to TPro");
         System.out.println(" - - - - - - - ConfigInfo: " + pluginConfigInfo);
@@ -150,18 +150,18 @@ public class PluginFinderImpl implements PluginFinder {
         plugins.put(plugin.getName(), plugin);
     }
     
-    private void addMissingPermissionFromNewContextToPeristentContext(Context pluginContext,
+    private void addMissingRoleFromNewContextToPeristentContext(Context pluginContext,
 			Context persistentContext) {
-		for (Permission permission : pluginContext.getPermissions()) {
-			if (!permissionExistsInContext(permission, persistentContext)) {
-				persistentContext.addPermission(permission);
+		for (Role role : pluginContext.getRoles()) {
+			if (!roleExistsInContext(role, persistentContext)) {
+				persistentContext.addRole(role);
 			}
 		}
 	}
 
-	private boolean permissionExistsInContext(Permission permission, Context persistentContext) {
-		for (Permission existingPermission : persistentContext.getPermissions()) {
-			if (existingPermission.getName().equals(permission.getName())) {
+	private boolean roleExistsInContext(Role role, Context persistentContext) {
+		for (Role existingRole : persistentContext.getRoles()) {
+			if (existingRole.getName().equals(role.getName())) {
 				return true;
 			}
 		}

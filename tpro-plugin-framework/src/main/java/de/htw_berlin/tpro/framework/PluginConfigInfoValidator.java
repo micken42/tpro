@@ -17,7 +17,7 @@ public class PluginConfigInfoValidator {
 			return false;
 		if (!pluginConfigInfo.get("name").matches(NAME_VALUE_REGEX))
 			return false;
-		if (!pluginConfigInfo.get("permissions").matches(PERMISSIONS_VALUE_REGEX))
+		if (!pluginConfigInfo.get("roles").matches(PERMISSIONS_VALUE_REGEX))
 			return false;
 		return true;
 	}
@@ -28,23 +28,23 @@ public class PluginConfigInfoValidator {
     	String titl = pluginConfigInfo.get("title");
     	String desc = pluginConfigInfo.get("description");
     	String thum = pluginConfigInfo.get("thumbnail");
-    	String perm = pluginConfigInfo.get("permissions");
+    	String perm = pluginConfigInfo.get("roles");
     	if (auth == null || vers == null || titl == null || desc == null 
     			|| thum == null || perm == null)
 			return true;
 		return false;
 	}
 	
-    public static List<String> getPermissionNamesFromCommaSeperatedPermissionsValue(String permissionsValue) {
-    	if (!permissionsValue.matches(PERMISSIONS_VALUE_REGEX))
+    public static List<String> getRoleNamesFromCommaSeperatedRolesValue(String rolesValue) {
+    	if (!rolesValue.matches(PERMISSIONS_VALUE_REGEX))
 			return null;
-    	List<String> permissionNames = new ArrayList<String>();
-    	StringTokenizer tokenizer = new StringTokenizer(permissionsValue, ",");
+    	List<String> roleNames = new ArrayList<String>();
+    	StringTokenizer tokenizer = new StringTokenizer(rolesValue, ",");
         while (tokenizer.hasMoreTokens()) {
             String value = tokenizer.nextToken().trim();
-            permissionNames.add(value);
+            roleNames.add(value);
         }
-        return permissionNames;
+        return roleNames;
     }
 		
 }

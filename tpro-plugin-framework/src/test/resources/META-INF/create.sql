@@ -13,10 +13,10 @@ create table `Group` (
     primary key (id)
 ) engine=InnoDB;
 
-create table Group_Permission (
+create table Group_Role (
     group_id integer not null,
-    permission_id integer not null,
-    primary key (group_id, permission_id)
+    role_id integer not null,
+    primary key (group_id, role_id)
 ) engine=InnoDB;
 
 create table Group_User (
@@ -25,7 +25,7 @@ create table Group_User (
     primary key (group_id, user_id)
 ) engine=InnoDB;
 
-create table Permission (
+create table Role (
     id integer not null auto_increment,
     name varchar(255) not null,
     context_id integer,
@@ -42,10 +42,10 @@ create table User (
     primary key (id)
 ) engine=InnoDB;
 
-create table User_Permission (
+create table User_Role (
    user_id integer not null,
-    permission_id integer not null,
-    primary key (user_id, permission_id)
+    role_id integer not null,
+    primary key (user_id, role_id)
 ) engine=InnoDB;
 
 alter table User 
@@ -59,5 +59,5 @@ alter table Context
 
 alter table `Group` 
    add constraint group_unique_name unique (name);
-
+   
 

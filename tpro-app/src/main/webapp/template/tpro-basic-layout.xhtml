@@ -13,8 +13,6 @@
     <meta name="description" content="Teaching Promoter (TPro)"/>
     <meta name="author" content="Michael Baumert (student at HTW Berlin)"/>
 
-    <title>TPro</title>
-
     <!-- Bootstrap core CSS -->
     <h:outputStylesheet name="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
     <!-- Bootstrap theme -->
@@ -43,31 +41,37 @@
 	        	<!-- Render Navigation Items Only For Logged In Users -->
 	        	<c:if test="#{userMB.loggedIn}">
 		          <ul class="nav navbar-nav">
-		          	  <!-- Admin Navigation Items -->
-		          	  <c:if test="#{userMB.loggedInAsAdmin}">
+		          	<!-- Admin Navigation Items -->
+		          	<c:choose>
+		          	  <c:when test="#{userMB.loggedInAsAdmin}">
 			          	  <li>
-		          			<p:link outcome="/admin/plugin-management" value="Dienste verwalten" />
+		          			<p:link outcome="#{navigation.goToAdminHomePage()}" value="Dienste verwalten" />
 				    	  </li>
 			          	  <li>
-		          			<p:link outcome="/admin/user-management" value="Nutzer verwalten" />
+		          			<p:link outcome="#{navigation.goToUserManagementPage()}" value="Nutzer verwalten" />
 				    	  </li>
-		          	  </c:if>
+		          	  </c:when>
 			    	  <!-- User Navigation Items -->
-		          	  <c:if test="#{!userMB.loggedInAsAdmin}">
+		          	  <c:otherwise>
 			          	  <li>
-		          			<p:link outcome="/user/dashboard" value="Dashboard" />
+		          			<p:link outcome="#{navigation.goToUserHomePage()}" value="Dashboard" />
 				    	  </li>
-				          <li class="dropdown">
-			        		<a class="dropdown-toggle" data-toggle="dropdown" href=""> Dienste <span class="caret"></span></a>
-					        <ul class="dropdown-menu">
-					          	<ui:repeat var="plugin" value="#{pluginService.getAllPlugins()}">
-					          		<li rendered="#{true}"> <!-- TODO: RENDER ONLY IF PERMISSIONS -->
-					          			<p:link outcome="/plugin/#{plugin.name}/index" value="#{plugin.title}" />
+				    	  <c:if test="#{pluginService.getPluginsAccessableByUserWithUsername(userMB.currentUser.username) != null}">
+						      <li class="dropdown">
+						        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Meine Dienste
+						        <span class="caret"></span></a>
+						        <ul class="dropdown-menu">
+						          <ui:repeat var="plugin" value="#{pluginService.getPluginsAccessableByUserWithUsername(userMB.currentUser.username)}">
+					          		<li>
+					          			<p:link outcome="#{navigation.goToPluginPage(plugin.name)}" value="#{plugin.title}" />
 							    	</li>
-					          	</ui:repeat>
-					        </ul>
-					      </li>
-		          	  </c:if>
+						          </ui:repeat>
+						        </ul>
+						      </li>
+			          	  </c:if>
+		          	  </c:otherwise>
+		          	</c:choose>
+		          	
 		          </ul>
 	        	</c:if>
 	          <h:form id="loginForm" class="navbar-form navbar-right" rendered="#{!userMB.loggedIn}">
@@ -78,12 +82,12 @@
 	              <p:password id="password" value="#{credentials.password}" placeholder="Passwort" class="form-control"/>
 	            </div>
 	            <div class="form-group">
-	              <p:commandButton class="btn btn-success form-control" icon="fa fa-fw fa-sign-in" value="Anmelden" ajax="true" action="#{userMB.login}" process="loginForm" rendered="#{!userMB.loggedIn}"/>
+	              <p:commandButton class="btn btn-success form-control" icon="fa fa-fw fa-sign-in" value="Anmelden" action="#{userMB.login}" process="loginForm" rendered="#{!userMB.loggedIn}"/>
 	            </div>
 	          </h:form>
 			  <h:form id="logoutForm" class="navbar-form navbar-right" rendered="#{userMB.loggedIn}">
 	            <div class="form-group">
-				  <p:commandButton class="btn btn-default form-control" icon="fa fa-fw fa-sign-out" value="Abmelden" ajax="true" action="#{userMB.logout}"/>
+				  <p:commandButton class="btn btn-default form-control" icon="fa fa-fw fa-sign-out" value="Abmelden" action="#{userMB.logout}"/>
 			    </div>
 			  </h:form>
 	        </div><!--/.nav-collapse -->

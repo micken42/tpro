@@ -3,6 +3,8 @@ package de.htw_berlin.tpro.framework;
 import java.io.Serializable;
 import java.util.List;
 
+import de.htw_berlin.tpro.user_management.model.User;
+
 public interface PluginService extends Serializable {
 	
 	List<Plugin> getAllPlugins();
@@ -11,7 +13,7 @@ public interface PluginService extends Serializable {
 	
 	List<Plugin> getPluginsProvidableByUserWithUsername(String username);
 
-	List<String> getNamesOfPluginsAcessableByUserWithUsername(String username); // TODO: User hat eine Liste seiner pluginnamen pro session
+	List<Plugin> getPluginsAccessableByUserWithUsername(String username); // TODO: User hat eine Liste seiner pluginnamen pro session
 	
 	boolean userIsPluginProvider(String username, String pluginName); 
 
@@ -23,12 +25,14 @@ public interface PluginService extends Serializable {
 
 	void assignGroupToPluginAsPluginProviderGroup(String pluginName, String groupName);
 	
-	void removePluginProviderFromPlugin(String pluginName, String username);
+	void removeUserFromPlugin(String pluginName, String username);
 	
-	void removePluginProvidersFromPlugin(String pluginName, List<String> usernames);
+	void removeUsersFromPlugin(String pluginName, List<String> usernames);
 	
-	void removePluginProviderGroupFromPlugin(String pluginName, String groupName);
-	
-	void removeAllPluginProvidersFromPlugin(String pluginName);
+	void removeGroupsFromPlugin(String pluginName, String groupName);
+		
+	List<User> getAllPluginProvidersByPluginName(String pluginName);
+
+	List<User> getAllUsersWithAccessToPlugin(String pluginName);
 	
 }

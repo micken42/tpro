@@ -34,7 +34,7 @@ public class GroupTest {
 		NamedQuery findAll = null; 
 		NamedQuery findByName = null;
 		NamedQuery findAllNames = null;
-		NamedQuery findAllByPermissionAndContextName = null;
+		NamedQuery findAllByRoleAndContextName = null;
 		NamedQuery findAllByUsername = null;
 		// initialize each NamedQuery
 		for (NamedQuery query : queries) {
@@ -48,8 +48,8 @@ public class GroupTest {
 			case "Group.findAllNames":
 				findAllNames = query;
 				break;
-			case "Group.findAllByPermissionAndContextName":
-				findAllByPermissionAndContextName = query;
+			case "Group.findAllByRoleAndContextName":
+				findAllByRoleAndContextName = query;
 				break;
 			case "Group.findAllByUsername":
 				findAllByUsername = query;
@@ -67,8 +67,8 @@ public class GroupTest {
 			Assert.assertEquals(
 					findAllNames.query(), "SELECT g.name FROM Group g");
 			Assert.assertEquals(
-					findAllByPermissionAndContextName.query(), "SELECT g FROM Group g JOIN g.permissions p "
-		    				                                 + "WHERE p.name = :permission and p.context.name = :context");
+					findAllByRoleAndContextName.query(), "SELECT g FROM Group g JOIN g.roles p "
+		    				                                 + "WHERE p.name = :role and p.context.name = :context");
 			Assert.assertEquals(
 					findAllByUsername.query(), "SELECT g FROM Group g JOIN g.users u WHERE u.username = :username");
 		} catch (NullPointerException e) {
@@ -83,7 +83,7 @@ public class GroupTest {
 		AssertAnnotations.assertField(
 				Group.class, "name", Column.class);
 		AssertAnnotations.assertField(
-				Group.class, "permissions", ManyToMany.class, JoinTable.class);
+				Group.class, "roles", ManyToMany.class, JoinTable.class);
 		AssertAnnotations.assertField(
 				Group.class, "users", ManyToMany.class, JoinTable.class);
 	}
@@ -161,87 +161,87 @@ public class GroupTest {
 	}
 	
 	@Test
-	public void addPermissionToGroup() {
+	public void addRoleToGroup() {
 		Group group = new Group("fb4");
-		Permission studentPermission = new Permission("student");
+		Role studentRole = new Role("student");
 	
-		group.addPermission(studentPermission);
-		boolean permissionHasBeenAdded = false;
-		for (Permission permission : group.getPermissions()) {
-			if (permission.getName().equals("student"))
-				permissionHasBeenAdded = true;
+		group.addRole(studentRole);
+		boolean roleHasBeenAdded = false;
+		for (Role role : group.getRoles()) {
+			if (role.getName().equals("student"))
+				roleHasBeenAdded = true;
 		}
 		
-		Assert.assertTrue(permissionHasBeenAdded);
+		Assert.assertTrue(roleHasBeenAdded);
 	}
 	
 	@Test
-	public void removePermissionFromGroup() {
+	public void removeRoleFromGroup() {
 		Group group = new Group("fb4");
-		Permission studentPermission = new Permission("student");
-		group.addPermission(studentPermission);
-		int initialNumberOfPermissions = group.getPermissions().size();
+		Role studentRole = new Role("student");
+		group.addRole(studentRole);
+		int initialNumberOfRoles = group.getRoles().size();
 		
-		group.removePermission(studentPermission);
-		int actualNumberOfPermissions = group.getPermissions().size();
-		boolean permissionHasBeenDeleted = 
-				(initialNumberOfPermissions > actualNumberOfPermissions) ? true : false;
+		group.removeRole(studentRole);
+		int actualNumberOfRoles = group.getRoles().size();
+		boolean roleHasBeenDeleted = 
+				(initialNumberOfRoles > actualNumberOfRoles) ? true : false;
 		
-		Assert.assertTrue(permissionHasBeenDeleted);
+		Assert.assertTrue(roleHasBeenDeleted);
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNotExistingPermissionFromGroupShouldFail() {
+	public void removeNotExistingRoleFromGroupShouldFail() {
 		Group group = new Group("fb4");
-		Permission studentPermission = new Permission("student");
-		studentPermission.setId(1);
-		group.addPermission(studentPermission);
+		Role studentRole = new Role("student");
+		studentRole.setId(1);
+		group.addRole(studentRole);
 		
-		Permission permissionToBeDeleted = new Permission("unknown");
-		permissionToBeDeleted.setId(2);
-		group.removePermission(permissionToBeDeleted);
+		Role roleToBeDeleted = new Role("unknown");
+		roleToBeDeleted.setId(2);
+		group.removeRole(roleToBeDeleted);
 	}
 
 	@Test
-	public void permissionShouldMatchGroupsPermission() {
+	public void roleShouldMatchGroupsRole() {
 		Group group = new Group("fb4");
-		Permission studentPermission = new Permission("student");
-		studentPermission.setId(1);
+		Role studentRole = new Role("student");
+		studentRole.setId(1);
 	
-		group.addPermission(studentPermission);
-		boolean permissionMatchesUsersPermission = 
-				(group.getMatchingGroupPermission(studentPermission) != null) ? true : false;
+		group.addRole(studentRole);
+		boolean roleMatchesUsersRole = 
+				(group.getMatchingGroupRole(studentRole) != null) ? true : false;
 		
-		Assert.assertTrue(permissionMatchesUsersPermission);
+		Assert.assertTrue(roleMatchesUsersRole);
 	}
 	
 	@Test
-	public void notExistingPermissionShouldNotMatchGroupsPermission() {
+	public void notExistingRoleShouldNotMatchGroupsRole() {
 		Group group = new Group("fb4");
-		Permission studentPermission = new Permission("student");
-		studentPermission.setId(1);
+		Role studentRole = new Role("student");
+		studentRole.setId(1);
 	
-		Permission notExistingPermission = new Permission("unknown");
-		group.addPermission(studentPermission);
-		boolean permissionDoesNotMatchUsersPermission = 
-				(group.getMatchingGroupPermission(notExistingPermission) == null) ? true : false;
+		Role notExistingRole = new Role("unknown");
+		group.addRole(studentRole);
+		boolean roleDoesNotMatchUsersRole = 
+				(group.getMatchingGroupRole(notExistingRole) == null) ? true : false;
 		
-		Assert.assertTrue(permissionDoesNotMatchUsersPermission);
+		Assert.assertTrue(roleDoesNotMatchUsersRole);
 	}
 	
 	@Test
-	public void hasPermissionShouldBeTrueIfGroupHasTheGivenPermission() {
+	public void hasRoleShouldBeTrueIfGroupHasTheGivenRole() {
 		Group group = new Group("studenten");
-		Permission studentPermission = new Permission("student");
-		group.addPermission(studentPermission);
-		Assert.assertTrue(group.hasPermission(studentPermission));
+		Role studentRole = new Role("student");
+		group.addRole(studentRole);
+		Assert.assertTrue(group.hasRole(studentRole));
 	}
 	
 	@Test
-	public void hasPermissionShouldBeFalseIfUserHasNotTheGivenPermission() {
+	public void hasRoleShouldBeFalseIfUserHasNotTheGivenRole() {
 		Group group = new Group("studenten");
-		Permission studentPermission = new Permission("student");
-		Assert.assertTrue(!group.hasPermission(studentPermission));
+		Role studentRole = new Role("student");
+		Assert.assertTrue(!group.hasRole(studentRole));
 	}
 	
 	@Test

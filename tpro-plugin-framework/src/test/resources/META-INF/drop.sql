@@ -5,12 +5,12 @@ drop table Context;
 
 drop table `Group`;
 
-drop table Group_Permission;
+drop table Group_Role;
 
 drop table Group_User;
 
-drop table Permission;
+drop table Role;
 
 drop table User;
 
-drop table User_Permission;
+drop table User_Role;

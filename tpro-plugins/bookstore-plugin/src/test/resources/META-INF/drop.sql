@@ -2,4 +2,4 @@
 
  -- DROP SCRIPT FOR BOOKSTORE PLUGIN
 
-drop table BookstoreBook;
+drop table Book;

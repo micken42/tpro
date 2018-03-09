@@ -17,11 +17,11 @@ import org.junit.runner.RunWith;
 
 import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.test_utils.PersistenceHelper;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import de.htw_berlin.tpro.user_management.model.User;
-import de.htw_berlin.tpro.user_management.persistence.DefaultPermissionFacade;
+import de.htw_berlin.tpro.user_management.persistence.DefaultRoleFacade;
 import de.htw_berlin.tpro.user_management.persistence.DefaultUserFacade;
-import de.htw_berlin.tpro.user_management.persistence.PermissionFacade;
+import de.htw_berlin.tpro.user_management.persistence.RoleFacade;
 import de.htw_berlin.tpro.user_management.persistence.UserFacade;
 
 @RunWith(Arquillian.class)
@@ -36,8 +36,8 @@ public class UserFacadeTest  {
 	@Inject @DefaultUserFacade
 	UserFacade userFacade;
 	
-	@Inject @DefaultPermissionFacade
-	PermissionFacade permissionFacade;
+	@Inject @DefaultRoleFacade
+	RoleFacade roleFacade;
 
 	@Before
 	public void initTestData() {
@@ -45,12 +45,12 @@ public class UserFacadeTest  {
 		PersistenceHelper.execute("INSERT INTO `Group` (id, name) VALUES (2, \"presidents\")");
 		
 		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"tpro\")");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"admin\", 1)");
+		PersistenceHelper.execute("INSERT INTO Role(id, name, context_id) VALUES (1, \"admin\", 1)");
 		
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
 				+ "VALUES (1, \"Max\", \"Mustermann\", \"admin\", \"mustermax@tpro.de\", \"password\");");
 		
-		PersistenceHelper.execute("INSERT INTO User_Permission (user_id, permission_id) VALUES (1, 1)");
+		PersistenceHelper.execute("INSERT INTO User_Role (user_id, role_id) VALUES (1, 1)");
 
 		PersistenceHelper.execute("INSERT INTO User (id, prename, surname, username, email, password) "
 				+ "VALUES (2, \"Abraham\", \"Lincoln\", \"abraham\", \"lincoln@tpro.de\", \"password\")");
@@ -60,13 +60,14 @@ public class UserFacadeTest  {
 	}
 	
 	@After
-	public void clearTestData() {		
-		PersistenceHelper.execute("DELETE FROM `Group`");
-		PersistenceHelper.execute("DELETE FROM Context");
-		PersistenceHelper.execute("DELETE FROM Permission");
-		PersistenceHelper.execute("DELETE FROM User");		
-		PersistenceHelper.execute("DELETE FROM User_Permission");
+	public void clearTestData() {	
+		PersistenceHelper.execute("DELETE FROM Group_Role");
+		PersistenceHelper.execute("DELETE FROM User_Role");
 		PersistenceHelper.execute("DELETE FROM Group_User");
+		PersistenceHelper.execute("DELETE FROM Role");
+		PersistenceHelper.execute("DELETE FROM Context");
+		PersistenceHelper.execute("DELETE FROM User");		
+		PersistenceHelper.execute("DELETE FROM `Group`");
 	}
 	
 	@Test
@@ -115,16 +116,16 @@ public class UserFacadeTest  {
 	}
 	
 	@Test 
-	public void getGroupsContainingPermissionAdminFromContextTproShouldReturnUserAdmin() {
-		ArrayList<User> users =  (ArrayList<User>) userFacade.getUsersByPermissionAndContextName("admin", "tpro");
+	public void getGroupsContainingRoleAdminFromContextTproShouldReturnUserAdmin() {
+		ArrayList<User> users =  (ArrayList<User>) userFacade.getUsersByRoleAndContextName("admin", "tpro");
 		
-		boolean wasGettingAdminWithAdminPermission = false;
+		boolean wasGettingAdminWithAdminRole = false;
 		for (User user : users) {
 			if (user.getUsername().equals("admin"))
-				wasGettingAdminWithAdminPermission = true;
+				wasGettingAdminWithAdminRole = true;
 		}
 		
-		Assert.assertTrue(wasGettingAdminWithAdminPermission);	
+		Assert.assertTrue(wasGettingAdminWithAdminRole);	
 	}
 	
 	@Test 
@@ -136,39 +137,39 @@ public class UserFacadeTest  {
 	}
 	
 	@Test
-	public void userAdminShouldHaveAdminPermissionFromTProContext() {
+	public void userAdminShouldHaveAdminRoleFromTProContext() {
 		User user =  userFacade.getUserByUsername("admin");
 		
-		boolean hasAdminPermission = false;
-		for (Permission permission : user.getPermissions()) {
-			if (permission.getName().equals("admin") 
-					&& permission.getContext().getName().equals("tpro"))
-				hasAdminPermission = true;
+		boolean hasAdminRole = false;
+		for (Role role : user.getRoles()) {
+			if (role.getName().equals("admin") 
+					&& role.getContext().getName().equals("tpro"))
+				hasAdminRole = true;
 		}
 
-		Assert.assertTrue(hasAdminPermission);
+		Assert.assertTrue(hasAdminRole);
 	}
 	
 	@Test
-	public void saveNewUserWithAdminPermissions() {
-		// TODO: Abhängigkeit von permissionFacade lieber aufloesen
-		Permission studentPermission = 
-				permissionFacade.getPermissionByPermissionAndContextName("admin", "tpro");
+	public void saveNewUserWithAdminRoles() {
+		// TODO: Abhängigkeit von roleFacade lieber aufloesen
+		Role studentRole = 
+				roleFacade.getRoleByRoleAndContextName("admin", "tpro");
 		User user = new User("Tim", "Administrator", "newAdmin", "password");
-		user.addPermission(studentPermission);
+		user.addRole(studentRole);
 		userFacade.saveUser(user);
 
 		User persistedUser = userFacade.getUserByUsername("newAdmin");
 		boolean newUserIsPersisted = (persistedUser != null);
 
-		boolean hasAdminPermission = false;
-		for (Permission permission : user.getPermissions()) {
-			if (permission.getName().equals("admin") 
-					&& permission.getContext().getName().equals("tpro"))
-				hasAdminPermission = true;
+		boolean hasAdminRole = false;
+		for (Role role : user.getRoles()) {
+			if (role.getName().equals("admin") 
+					&& role.getContext().getName().equals("tpro"))
+				hasAdminRole = true;
 		}
 		
-		Assert.assertTrue(newUserIsPersisted && hasAdminPermission);
+		Assert.assertTrue(newUserIsPersisted && hasAdminRole);
 	}
 	
 	@Test 

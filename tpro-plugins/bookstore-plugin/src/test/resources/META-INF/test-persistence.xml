@@ -3,12 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
-	<persistence-unit name="tpro-database" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="bookstore" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		<class>de.htw_berlin.tpro.plugin.bookstore.model.BookstoreBook</class>
+		<!-- Mapping For Entity Classes From Bookstore Plugin -->
+		<class>de.htw_berlin.tpro.plugin.bookstore.model.Book</class>
 		<properties>
 			<!-- Configuring JDBC properties -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_test" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_test_plugin_bookstore" />
 			<property name="javax.persistence.jdbc.user" value="tpro" />
 			<property name="javax.persistence.jdbc.password" value="tpro" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
@@ -20,10 +21,12 @@
 			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/>
 			<property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
 			
-<!-- 			<property name="hibernate.show_sql" value="true" /> -->
-<!-- 			<property name="hibernate.format_sql" value="true" /> -->
+			<property name="hibernate.show_sql" value="true" />
+ 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
+			
+			<!-- Import data -->
+			<property name="javax.persistence.sql-load-script-source" value="META-INF/test-data.sql"/>
 			
 			<!-- Configuring Connection Pool -->
 			<property name="hibernate.c3p0.min_size" value="5" />

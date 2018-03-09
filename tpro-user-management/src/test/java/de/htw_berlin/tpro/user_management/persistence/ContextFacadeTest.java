@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.test_utils.PersistenceHelper;
 import de.htw_berlin.tpro.user_management.model.Context;
-import de.htw_berlin.tpro.user_management.model.Permission;
+import de.htw_berlin.tpro.user_management.model.Role;
 import de.htw_berlin.tpro.user_management.persistence.ContextDAO;
 import de.htw_berlin.tpro.user_management.persistence.ContextDAOProducer;
 import de.htw_berlin.tpro.user_management.persistence.ContextFacade;
@@ -43,14 +43,14 @@ public class ContextFacadeTest {
 	public void initTestData() {
 		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (1, \"tpro\")");
 		PersistenceHelper.execute("INSERT INTO Context (id, name) VALUES (2, \"plugin\")");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (1, \"admin\", 1)");
-		PersistenceHelper.execute("INSERT INTO Permission(id, name, context_id) VALUES (2, \"user\", 1)");
+		PersistenceHelper.execute("INSERT INTO Role(id, name, context_id) VALUES (1, \"admin\", 1)");
+		PersistenceHelper.execute("INSERT INTO Role(id, name, context_id) VALUES (2, \"user\", 1)");
 	}
 	
 	@After
 	public void clearTestData() {
 		PersistenceHelper.execute("DELETE FROM Context");
-		PersistenceHelper.execute("DELETE FROM Permission");
+		PersistenceHelper.execute("DELETE FROM Role");
 	}
 	
 	@Test
@@ -95,26 +95,26 @@ public class ContextFacadeTest {
 	}
 	
 	@Test
-	public void tproContextShouldContainTwoPermissions() {
+	public void tproContextShouldContainTwoRoles() {
 		Context context =  contextFacade.getContextByName("tpro");
 		
-		boolean tproContextHasTwoPermissions = context.getPermissions().size() == 2;
+		boolean tproContextHasTwoRoles = context.getRoles().size() == 2;
 		
-		Assert.assertTrue(tproContextHasTwoPermissions);
+		Assert.assertTrue(tproContextHasTwoRoles);
 	}
 	
 	@Test
-	public void saveNewContextWithANewPermissionShouldPersistBothPermissionAndContext() {
+	public void saveNewContextWithANewRoleShouldPersistBothRoleAndContext() {
 		Context context = new Context("newContext");
-		context.addPermission(new Permission("newPermission"));
+		context.addRole(new Role("newRole"));
 		contextFacade.saveContext(context);
 
 		Context persistedContext = contextFacade.getContextByName("newContext");
 		boolean newContextIsPersisted = persistedContext != null;
-		boolean newContextHasOnePermission = (newContextIsPersisted) 
-				? (persistedContext.getPermissions().size() == 1) : false;
+		boolean newContextHasOneRole = (newContextIsPersisted) 
+				? (persistedContext.getRoles().size() == 1) : false;
 		
-		Assert.assertTrue(newContextIsPersisted && newContextHasOnePermission);
+		Assert.assertTrue(newContextIsPersisted && newContextHasOneRole);
 	}
 	
 	@Test 
