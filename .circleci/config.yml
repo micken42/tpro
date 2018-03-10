@@ -15,12 +15,14 @@ jobs:
       # - image: circleci/postgres:9.4
       - image: circleci/mysql:5.7.21
         environment:
-        - MYSQL_ALLOW_EMPTY_PASSWORD=true 
-        - MYSQL_DATABASE=tpro_test_user_management 
-        - MYSQL_HOST=127.0.0.1 
-        - MYSQL_ROOT_HOST=% 
-        - MYSQL_USER=tpro
-        - MYSQL_PASSWORD=tpro
+          - MYSQL_ALLOW_EMPTY_PASSWORD=true 
+          - MYSQL_DATABASE=tpro_test_user_management 
+          - MYSQL_HOST=127.0.0.1 
+          - MYSQL_ROOT_HOST=% 
+          - MYSQL_USER=tpro
+          - MYSQL_PASSWORD=tpro
+        volumes:
+          -  
 
     working_directory: ~/tpro
 
@@ -39,17 +41,17 @@ jobs:
           # fallback to using the latest cache if no exact match is found
             - tpro-
 
+      # If tests should be executed in different test dbs then you need to setup a mysql
+      # client to connect to the mysql server within the docker container i.e. like below
       # - run: sudo apt install -y mysql-client
       # - run: bash scripts/prepare_tpro_test_dbs_for_ci.sh
-
-      - run: bash scripts/prepare_tpro_test_dbs.sh
 
       - save_cache:
           paths:
             - ~/.m2
           key: tpro-{{ checksum "pom.xml" }}
         
-      - run: mvn package
+      - run: mvn package -DskipTests # remove -DskipTests when mysql client can execute db init scripts in mysql container
       
       - store_test_results:
           path: ~/tpro
