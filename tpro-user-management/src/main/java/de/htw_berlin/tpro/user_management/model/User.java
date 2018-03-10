@@ -116,21 +116,10 @@ public class User implements Serializable {
 		groups.add(group);
 	}
 	
-	public void removeGroup(Group group) throws EntityNotFoundException {
-		Group userGroup = getMatchingGroup(group);
-		if (userGroup != null) {
-			groups.remove(userGroup);
-		} else {
+	public void removeGroup(Group group) {
+		if (!groups.contains(group))
 			throw new EntityNotFoundException();
-		}
-	}
-	
-	public Group getMatchingGroup(Group group) {
-		for (Group userGroup : groups) {
-			if (userGroup.getId()==group.getId())
-				return userGroup;
-		}
-		return null;
+		groups.remove(group);
 	}
 	
 	public boolean hasRole(Role role) {
@@ -148,6 +137,11 @@ public class User implements Serializable {
 				return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return username + " (" + email + ")";
 	}
 
 }

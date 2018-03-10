@@ -119,7 +119,7 @@ public class GroupTest {
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
-	public void removeNotExistingUserFromGroupShouldFail() {
+	public void removeNotExistingUserFromGroupShould() {
 		Group group = new Group("fb4");
 		User studentUser = new User("aiStudent", "password");
 		studentUser.setId(1);
@@ -128,36 +128,6 @@ public class GroupTest {
 		User userToBeDeleted = new User("unknown", "password");
 		userToBeDeleted.setId(2);
 		group.removeUser(userToBeDeleted);
-	}
-	
-	@Test
-	public void existingUserShouldMatchGroupsUser() {
-		Group group = new Group("fb4");
-		User studentUser = new User("aiStudent", "password");
-		studentUser.setId(1);
-	
-		group.addUser(studentUser);
-		boolean userMatchesGroupsUser = 
-				(group.getMatchingUser(studentUser) != null) ? true : false;
-		
-		Assert.assertTrue(userMatchesGroupsUser);
-	}
-	
-	
-	
-	@Test
-	public void notExistingUserShouldNotMatchGroupsUser() {
-		Group group = new Group("fb4");
-		User studentUser = new User("aiStudent", "password");
-		studentUser.setId(1);
-	
-		User notExistingUser = new User("unknown", "password");
-		notExistingUser.setId(2);
-		group.addUser(studentUser);
-		boolean userDoesNotMatchGroupsUser = 
-				(group.getMatchingUser(notExistingUser) == null) ? true : false;
-		
-		Assert.assertTrue(userDoesNotMatchGroupsUser);
 	}
 	
 	@Test

@@ -205,4 +205,24 @@ public class UserServiceImpl implements UserService {
 	public List<String> getAllGroupNames() {
 		return groupFacade.getAllNames();
 	}
+
+	@Override
+	public void saveGroup(Group group) {
+		groupFacade.saveGroup(group);
+	}
+
+	@Override
+	public Object getGroupByName(String groupName) {
+		return groupFacade.getGroupByName(groupName);
+	}
+
+	@Override
+	public void deleteGroupByName(String groupName) {
+		groupFacade.deleteGroupByName(groupName);
+	}
+
+	@Override
+	public void deleteUserByUsername(String username) {
+		userFacade.deleteUserByUsername(username);
+	}
 }

@@ -3,77 +3,96 @@
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"	
-	xmlns:p="http://primefaces.org/ui" 
-	xmlns:ui="http://java.sun.com/jsf/facelets">	
-<f:view contentType="text/html">  
-  <ui:composition template="template/tpro-basic-layout.xhtml">
-    <ui:define name="additional-head-content">
-        <title>TPro | Welcome</title>
-    </ui:define>
-    
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <ui:define name="content">
-	    <div class="jumbotron">
-	       <div class="container">
-	        <h1>Teaching Promoter (TPro)</h1>
-	        <p>Eine modulare responsive Webanwendung zur unterstüzung innovativer Hochschullehre.</p> 
-	        <p>Die Idee ist es Lehrenden und Studierenden der HTW Berlin eine Web-Anwendung zur Verfügung 
-	        zu stellen, welche durch ihre unterschiedlichen Dienste, die sie bereitstellt, dabei hilft 
-	        die Lehre an der Hochschule "besser" gestalten zu können. Dabei soll außer- dem ein besonders 
-	        großer Wert auf die Erweiterbarkeit der Anwendung gelegt werden, sodass Studierende in den 
-	        kommenden Semestern die Möglichkeit haben im Rahmen von Projekt-, Bachelor- oder Masterarbeiten 
-	        die Anwendung um verschiendenste Dienste zu erweitern.</p>
-	        </div>    
-	  	  </div>
-	  	  <ui:fragment rendered="#{!userMB.loggedIn}">
-	  	    <div class="container">
-		      <div class="row">
-		        <div class="col-md-12">
-		        <h1>Registrieren</h1>
-				<h:form id="signUpForm" class="row">
-				    <div class="form-row">
-					  <div class="form-group col-md-6">
-					    <p:outputLabel for="prename" value="Vorname:"/>
-					    <p:inputText id="prename" class="form-control" value="#{credentials.prename}" placeholder="Vorname" required="true"/>
-					  </div>
-					  <div class="form-group col-md-6">
-					    <p:outputLabel for="surname" value="Nachname:"/>
-					    <p:inputText id="surname" class="form-control" value="#{credentials.surname}" placeholder="Nachname" required="true"/>
-					  </div>
-					</div>
-				    <div class="form-row">
-						<div class="form-group col-md-6">
-						  <p:outputLabel for="username" value="Benutzername:"/>
-						    <p:inputText id="username" class="form-control" value="#{credentials.username}" placeholder="Benutzername" required="true"/>
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view contentType="text/html">
+	<ui:composition template="template/tpro-basic-layout.xhtml">
+		<ui:define name="additional-head-content">
+			<title>TPro | Welcome</title>
+		</ui:define>
+
+		<!-- Main jumbotron for a primary marketing message or call to action -->
+		<ui:define name="content">
+			<div class="jumbotron">
+				<div class="container">
+					<h1>Teaching Promoter (TPro)</h1>
+					<p>Eine modulare responsive Webanwendung zur unterstüzung
+						innovativer Hochschullehre.</p>
+					<p>Die Idee ist es Lehrenden und Studierenden der HTW Berlin
+						eine Web-Anwendung zur Verfügung zu stellen, welche durch ihre
+						unterschiedlichen Dienste, die sie bereitstellt, dabei hilft die
+						Lehre an der Hochschule "besser" gestalten zu können. Dabei soll
+						außer- dem ein besonders großer Wert auf die Erweiterbarkeit der
+						Anwendung gelegt werden, sodass Studierende in den kommenden
+						Semestern die Möglichkeit haben im Rahmen von Projekt-, Bachelor-
+						oder Masterarbeiten die Anwendung um verschiendenste Dienste zu
+						erweitern.</p>
+				</div>
+			</div>
+			<ui:fragment rendered="#{!userMB.loggedIn}">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<h1>Registrieren</h1>
+							<h:form id="signUpForm" class="row">
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<p:outputLabel for="prename" value="Vorname:" />
+										<p:inputText id="prename" class="form-control"
+											value="#{credentials.prename}" placeholder="Vorname"
+											required="true" />
+									</div>
+									<div class="form-group col-md-6">
+										<p:outputLabel for="surname" value="Nachname:" />
+										<p:inputText id="surname" class="form-control"
+											value="#{credentials.surname}" placeholder="Nachname"
+											required="true" />
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<p:outputLabel for="username" value="Benutzername:" />
+										<p:inputText id="username" class="form-control"
+											value="#{credentials.username}" placeholder="Benutzername"
+											required="true" />
+									</div>
+									<div class="form-group col-md-6">
+										<p:outputLabel for="email" value="Email-Adresse:" />
+										<p:inputText type="email" id="email" class="form-control"
+											value="#{credentials.email}" placeholder="Email-Adresse"
+											required="true" />
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<p:outputLabel for="password" value="Passwort:" />
+										<p:password id="password" class="form-control"
+											match="confirm-password" value="#{credentials.password}"
+											placeholder="Passwort" required="true" />
+									</div>
+
+									<div class="form-group col-md-6">
+										<p:outputLabel for="confirm-password"
+											value="Passwort wiederholen:" />
+										<p:password id="confirm-password" class="form-control"
+											value="#{credentials.password}"
+											placeholder="Passwort wiederholen" required="true" />
+									</div>
+								</div>
+								<div class="form-group col-md-12">
+									<p:commandButton class="btn btn-lg btn-primary form-control"
+										value="Registrieren" action="#{userMB.signUp}"
+										process="signUpForm" update="signUpForm" />
+								</div>
+							</h:form>
 						</div>
-						<div class="form-group col-md-6">
-						  <p:outputLabel for="email" value="Email-Adresse:"/>
-						    <p:inputText type="email" id="email" class="form-control" value="#{credentials.email}" placeholder="Email-Adresse" required="true"/>
-						</div>
 					</div>
-				    <div class="form-row">
-						<div class="form-group col-md-6">
-						  <p:outputLabel for="password" value="Passwort:"/>
-						    <p:password id="password" class="form-control" match="confirm-password" value="#{credentials.password}" placeholder="Passwort" required="true"/>
-						</div>
-						
-						<div class="form-group col-md-6">
-						  <p:outputLabel for="confirm-password" value="Passwort wiederholen:"/>
-						    <p:password id="confirm-password" class="form-control" value="#{credentials.password}" placeholder="Passwort wiederholen" required="true"/>
-						</div>
-					</div>
-					<div class="form-group col-md-12"> 
-					   <p:commandButton class="btn btn-lg btn-primary form-control" value="Registrieren" action="#{userMB.signUp}" process="signUpForm" update="signUpForm"/>
-					</div>
-				  </h:form>
-		        </div>
-		      </div>
-	  	    </div>
-	  	  </ui:fragment>
-	  	  
-    </ui:define>  
-  </ui:composition> 
+				</div>
+			</ui:fragment>
+
+		</ui:define>
+	</ui:composition>
 </f:view>
 </html>

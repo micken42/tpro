@@ -11,6 +11,7 @@ import javax.persistence.NoResultException;
 
 import de.htw_berlin.tpro.user_management.model.Group;
 import de.htw_berlin.tpro.user_management.model.Role;
+import de.htw_berlin.tpro.user_management.model.User;
 
 @Dependent
 @DefaultGroupFacade
@@ -20,6 +21,9 @@ public class GroupFacadeImpl implements GroupFacade {
 	
 	@Inject @DefaultGroupDAO
 	GenericDAO<Group> groupDAO;
+	
+	@Inject @DefaultUserDAO
+	GenericDAO<User> userDAO;
 	
 	@Override
 	public void updateAllGroups(List<Group> groups) {
@@ -157,7 +161,6 @@ public class GroupFacadeImpl implements GroupFacade {
 		if (group == null) throw new EntityNotFoundException();
 		
 		group.setRoles(new HashSet<Role>());
-		group.getUsers().forEach(user -> group.removeUser(user));
 		updateGroup(group);
 		
 		Integer id = group.getId();
@@ -175,6 +178,25 @@ public class GroupFacadeImpl implements GroupFacade {
 			// handle the underlying error
 		} finally {
 			groupDAO.closeTransaction();
+		}
+	}
+	
+	public void updateUser(User user) {
+		try {
+			userDAO.beginTransaction();
+			
+			userDAO.update(user);
+			
+			userDAO.commit();
+		} catch (Exception e) {
+			EntityTransaction txn = userDAO.getEntityManager().getTransaction();
+			if (txn != null && txn.isActive())
+				userDAO.rollback();
+			
+			throw e;
+			// handle the underlying error
+		} finally {
+			userDAO.closeTransaction();
 		}
 	}
 

@@ -42,10 +42,8 @@ public class UserMB implements Serializable {
 	}
     
 	public String signUp() {
-		User newUser = new User(credentials.getUsername(), credentials.getPassword());
-		newUser.setPrename(credentials.getPrename());
-		newUser.setSurname(credentials.getSurname());
-		newUser.setEmail(credentials.getEmail());
+		User newUser = new User(credentials.getPrename(), credentials.getSurname(), credentials.getEmail(), 
+								credentials.getUsername(), credentials.getPassword());
 		try {
 			currentUser = userService.signUp(newUser);
 		} catch (Exception e) {

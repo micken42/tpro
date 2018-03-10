@@ -43,5 +43,13 @@ public interface UserService extends Serializable {
 	public List<String> getAllUsernames();
 
 	public List<String> getAllGroupNames();
+
+	public void saveGroup(Group group);
+
+	public Object getGroupByName(String groupName);
+
+	public void deleteGroupByName(String groupName);
+
+	public void deleteUserByUsername(String username);
 	
 }

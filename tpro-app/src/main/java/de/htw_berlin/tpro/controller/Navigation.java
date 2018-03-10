@@ -15,7 +15,7 @@ public class Navigation implements Serializable {
     } 
    
     public String goToProviderManagementPage(String pluginName) {
-		return "/admin/plugin-provider-managment?faces-redirect=true&pluginName=" + pluginName;
+		return "/admin/plugin-provider-management?faces-redirect=true&pluginName=" + pluginName;
     }
    
 	public String goToManagePluginProvidersPage(String pluginName) {
@@ -36,5 +36,9 @@ public class Navigation implements Serializable {
 	
 	public String goToUserManagementPage() {
 		return "/admin/user-management?faces-redirect=true";
+	}
+	
+	public String goToGroupManagementPage() {
+		return "/admin/group-management?faces-redirect=true";
 	}
 } 

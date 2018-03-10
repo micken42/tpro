@@ -3,88 +3,98 @@
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"	
-	xmlns:p="http://primefaces.org/ui" 
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">	
-<f:view contentType="text/html">  
-  <ui:composition template="/template/tpro-basic-layout.xhtml">
-  	
-    <ui:define name="additional-head-content">
-        <title>TPro | Dienstanbieter verwalten </title>
-    </ui:define>
-    
-    <ui:define name="content">
-    	<ui:fragment rendered="#{userMB.loggedInAsAdmin}">
-    		<div class="container">
-		   		<h1>#{pluginProviderManagement.currentPlugin.title}</h1>
-				<h2>Dienstanbieter hinzufügen</h2>
-				<h:form id="addProviderForm" class="row">
-				    <div class="form-row">
-					  <div class="form-group col-md-6">
-						<h:outputLabel for="users" value="Benutzer auswählen: " />
-				        <p:selectCheckboxMenu id="users" value="#{pluginProviderManagement.selectedUsers}" label="Benutzer auswählen" multiple="true"
-				                              filter="true" filterMatchMode="startsWith" style="width: 100%;">
-				          <f:selectItems value="#{pluginProviderManagement.users}" />
-				        </p:selectCheckboxMenu>
-					  </div>
-					  <div class="form-group col-md-6">
-					    <h:outputLabel for="groups" value="Benutzergruppen auswählen:" />
-					    <p:selectCheckboxMenu id="groups" value="#{pluginProviderManagement.selectedGroups}" label="Benutzergruppen auswählen" multiple="true"
-					                          filter="true" filterMatchMode="startsWith"  style="width: 100%;">
-					        <f:selectItems value="#{pluginProviderManagement.groups}" />
-					    </p:selectCheckboxMenu>
-					  </div>
-					</div>
-					<div class="form-group col-md-12"> 
-					   <p:commandButton class="btn btn-lg btn-primary" value="Auswahl hinzufügen" icon="fa fa-fw fa-user-plus"
-					               action='#{pluginManagement.addUsersAndGroupsAsPluginProviders()}'> 
-		                   <f:param name="pluginName" value="#{pluginProviderManagement.currentPlugin.name}"/>
-		                   <f:setPropertyActionListener target="#{pluginManagement.currentPlugin}" name="currentPlugin" value="#{pluginProviderManagement.currentPlugin}"/>
-		                   <f:setPropertyActionListener target="#{pluginManagement.selectedUsers}" name="slectedUsers" value="#{pluginProviderManagement.selectedUsers}"/>
-		                   <f:setPropertyActionListener target="#{pluginManagement.selectedGroups}" name="slectedGroups" value="#{pluginProviderManagement.selectedGroups}"/>
-		               </p:commandButton>
-					</div>
-		    	</h:form>		
-			   	<h2>Alle Dienstanbieter</h2>
-				<h:form>
-	        		<p:dataTable var="provider" value="#{pluginProviderManagement.currentPluginProviders}" filteredValue="#{pluginProviderManagement.currentFilteredPluginProviders}" 
-	        					 widgetVar="providerTable" emptyMessage="Es konnten keine Dienstanbieter gefunden werden">
-	        					 
-<!-- 	        			<f:facet name="header"> -->
-<!-- 				            <p:outputPanel> -->
-<!-- 				                <h:outputText value="Alle Dienstanbieter durchsuchen:" /> -->
-<!-- 				                <p:inputText id="globalFilter" onkeyup="PF('providerTable').filter()" style="width:150px" placeholder="Suchbegriff"/> -->
-<!-- 				            </p:outputPanel> -->
-<!-- 				        </f:facet> -->
-					    
-					    <p:column headerText="Benutzername">
-					        <h:outputText value="#{provider.username}" />
-					    </p:column>
-					    <p:column headerText="Email-Adresse" priority="2">
-					        <h:outputText value="#{provider.email}" />
-					    </p:column>
-					    <p:column headerText="Vorname" priority="3">
-					        <h:outputText value="#{provider.prename}" />
-					    </p:column>
-					    <p:column headerText="Nachname" priority="3">
-					        <h:outputText value="#{provider.surname}" />
-					    </p:column>
-					    
-					    <p:column width="57">
-		                    <p:commandButton icon="fa fa-fw fa-trash" title="Diesen Dienstanbieter löschen"
-					               action='#{pluginManagement.removeUserAsPluginProvider()}'> 
-			                   <f:param name="pluginName" value="#{pluginProviderManagement.currentPlugin.name}"/>
-			                   <f:setPropertyActionListener target="#{pluginManagement.currentPlugin}" name="currentPlugin" value="#{pluginProviderManagement.currentPlugin}"/>
-			                   <f:setPropertyActionListener target="#{pluginManagement.selectedProvider}" name="selectedProvider" value="#{provider}"/>
-			               </p:commandButton>
-		                </p:column>
-					</p:dataTable>
-				</h:form>
-			</div>
-    	</ui:fragment>  
-    </ui:define>
-  </ui:composition> 
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<f:view contentType="text/html">
+	<ui:composition template="/template/tpro-basic-layout.xhtml">
+
+		<ui:define name="additional-head-content">
+			<title>TPro | Dienstanbieter verwalten</title>
+		</ui:define>
+
+		<ui:define name="content">
+			<ui:fragment rendered="#{userMB.loggedInAsAdmin}">
+				<div class="container">
+					<h1>#{pluginProviderManagement.currentPlugin.title}</h1>
+					<h2>Dienstanbieter hinzufügen</h2>
+					<h:form id="addProviderForm">
+						<div class="row">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<h:outputLabel for="users" value="Benutzer auswählen:" />
+									<p:selectCheckboxMenu id="users"
+										value="#{pluginProviderManagement.selectedUsers}"
+										label="Benutzer auswählen" multiple="true" filter="true"
+										filterMatchMode="contains" style="width: 100%;"
+										converter="omnifaces.SelectItemsConverter">
+										<f:selectItems value="#{pluginProviderManagement.users}" />
+									</p:selectCheckboxMenu>
+								</div>
+								<div class="form-group col-md-6">
+									<h:outputLabel for="groups" value="Benutzergruppen auswählen:" />
+									<p:selectCheckboxMenu id="groups"
+										value="#{pluginProviderManagement.selectedGroups}"
+										label="Benutzergruppen auswählen" multiple="true"
+										filter="true" filterMatchMode="startsWith"
+										style="width: 100%;"
+										converter="omnifaces.SelectItemsConverter">
+										<f:selectItems value="#{pluginProviderManagement.groups}" />
+									</p:selectCheckboxMenu>
+								</div>
+							</div>
+							<div class="form-group col-md-12">
+								<p:commandButton class="btn btn-lg btn-primary"
+									value="Auswahl hinzufügen" icon="fa fa-fw fa-user-plus"
+									action='#{pluginProviderManagement.addUsersAndGroupsAsPluginProviders()}'>
+									<f:param name="pluginName"
+										value="#{pluginProviderManagement.currentPlugin.name}" />
+								</p:commandButton>
+							</div>
+						</div>
+						<h2>Alle Dienstanbieter</h2>
+						<p:dataTable id="providerTable" var="provider"
+							value="#{pluginProviderManagement.currentPluginProviders}"
+							filteredValue="#{pluginProviderManagement.currentFilteredPluginProviders}"
+							widgetVar="providerTable"
+							emptyMessage="Es konnten keine Dienstanbieter gefunden werden">
+
+							<!-- 	        			<f:facet name="header"> -->
+							<!-- 				            <p:outputPanel> -->
+							<!-- 				                <h:outputText value="Alle Dienstanbieter durchsuchen:" /> -->
+							<!-- 				                <p:inputText id="globalFilter" onkeyup="PF('providerTable').filter()" style="width:150px" placeholder="Suchbegriff"/> -->
+							<!-- 				            </p:outputPanel> -->
+							<!-- 				        </f:facet> -->
+
+							<p:column headerText="Benutzername">
+								<h:outputText value="#{provider.username}" />
+							</p:column>
+							<p:column headerText="Email-Adresse" priority="2">
+								<h:outputText value="#{provider.email}" />
+							</p:column>
+							<p:column headerText="Vorname" priority="3">
+								<h:outputText value="#{provider.prename}" />
+							</p:column>
+							<p:column headerText="Nachname" priority="3">
+								<h:outputText value="#{provider.surname}" />
+							</p:column>
+
+							<p:column width="57">
+								<p:commandButton icon="fa fa-fw fa-trash"
+									title="Diesen Dienstanbieter löschen"
+									action="#{pluginProviderManagement.removeUserAsPluginProvider(provider)}"
+									disabled="#{provider.username.equals(userMB.currentUser.username)}">
+									<f:param name="pluginName"
+										value="#{pluginProviderManagement.currentPlugin.name}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</div>
+			</ui:fragment>
+		</ui:define>
+	</ui:composition>
 </f:view>
 </html>

@@ -94,20 +94,9 @@ public class Group implements Serializable {
 	}
 	
 	public void removeUser(User user) throws EntityNotFoundException {
-		User groupUser = getMatchingUser(user);
-		if (groupUser != null) {
-			users.remove(groupUser);
-		} else {
+		if (!users.contains(user)) 
 			throw new EntityNotFoundException();
-		}
-	}
-	
-	public User getMatchingUser(User user) {
-		for (User groupUser : users) {
-			if (groupUser.getId()==user.getId())
-				return groupUser;
-		}
-		return null;
+		users.remove(user);
 	}
 
 	public boolean hasRole(Role role) {
@@ -127,4 +116,9 @@ public class Group implements Serializable {
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 }

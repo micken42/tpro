@@ -133,34 +133,6 @@ public class UserTest {
 	}
 	
 	@Test
-	public void existingGroupShouldMatchUsersGroup() {
-		User user = new User("aiStudent", "password");
-		Group fb4Group = new Group("fb4");
-		fb4Group.setId(1);
-	
-		user.addGroup(fb4Group);
-		boolean groupMatchesUsersGroups = 
-				(user.getMatchingGroup(fb4Group) != null) ? true : false;
-		
-		Assert.assertTrue(groupMatchesUsersGroups);
-	}
-	
-	@Test
-	public void notExistingGroupShouldNotMatchUsersGroup() {
-		User user = new User("aiStudent", "password");
-		Group fb4Group = new Group("fb4");
-		fb4Group.setId(1);
-	
-		Group notExistingGroup = new Group("unknown");
-		notExistingGroup.setId(2);
-		user.addGroup(fb4Group);
-		boolean groupDoesNotMatchUsersGroups = 
-				(user.getMatchingGroup(notExistingGroup) == null) ? true : false;
-		
-		Assert.assertTrue(groupDoesNotMatchUsersGroups);
-	}
-	
-	@Test
 	public void addRoleToUser() {
 		User user = new User("aiStudent", "password");
 		Role studentRole = new Role("student");

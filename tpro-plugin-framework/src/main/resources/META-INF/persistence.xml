@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+	<persistence-unit name="user-management" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<!-- Mapping For Entity Classes From User Management -->
+		<class>de.htw_berlin.tpro.user_management.model.User</class>
+		<class>de.htw_berlin.tpro.user_management.model.Group</class>
+		<class>de.htw_berlin.tpro.user_management.model.Role</class>
+		<class>de.htw_berlin.tpro.user_management.model.Context</class>
+		<properties>
+			<!-- Configuring JDBC properties -->
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_test_user_management" />
+			<property name="javax.persistence.jdbc.user" value="tpro" />
+			<property name="javax.persistence.jdbc.password" value="tpro" />
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			      
+			<!-- A SHELL SCRIPT DOING EXACT THE SAME THING CAN BE FOUND IN $TPRO_HOME/scripts/test -->
+			<!-- Description:  -->      
+			<!-- <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/> -->
+ 			<!-- <property name="javax.persistence.schema-generation.create-source" value="script"/> -->
+ 			<!-- <property name="javax.persistence.schema-generation.create-script-source" value="META-INF/create.sql"/> -->
+ 			<!-- <property name="javax.persistence.schema-generation.drop-source" value="script"/> -->
+ 			<!-- <property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/> -->
+ 			<!-- <property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" /> -->
+
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			
+			<!-- for debugging in console -->
+			<!-- <property name="hibernate.show_sql" value="true" /> -->
+			<!-- <property name="hibernate.format_sql" value="true" /> -->
+			
+			<!-- Import data -->
+			<!-- <property name="javax.persistence.sql-load-script-source" value="META-INF/test-data.sql"/> -->
+			
+			<!-- Configuring Connection Pool -->
+			<property name="hibernate.c3p0.min_size" value="5" />
+			<property name="hibernate.c3p0.max_size" value="20" />
+			<property name="hibernate.c3p0.timeout" value="500" />
+			<property name="hibernate.c3p0.max_statements" value="50" />
+			<property name="hibernate.c3p0.idle_test_period" value="2000" />
+		</properties>
+	</persistence-unit>
+</persistence>

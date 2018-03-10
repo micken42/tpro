@@ -3,58 +3,60 @@
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"	
-	xmlns:p="http://primefaces.org/ui" 
-	xmlns:ui="http://java.sun.com/jsf/facelets">	
-<f:view contentType="text/html">  
-  <ui:composition template="/template/tpro-basic-layout.xhtml">
-    <ui:define name="additional-head-content">
-        <title>TPro | Bookstore Plugin</title>
-    </ui:define>
-    
-    <ui:define name="content">
-	    <div class="container">
-	    	<ui:fragment rendered='#{userMB.isAuthorized("publisher", "bookstore")}'>
-			      <div class="row">
-			        <div class="col-md-12">
-			          <h1>Buchverwaltung (Verlag Ansicht)</h1>
-					  <!-- TODO -->
-					  <p:dataTable var="book" value="#{bookListMB.books}">
-					    <p:column headerText="ID" width="54"> 
-					        <h:outputText value="#{book.id}" />
-					    </p:column>
-					 
-					    <p:column headerText="Titel">
-					        <h:outputText value="#{book.title}" />
-					    </p:column>
-					 
-					    <p:column headerText="Autor" priority="2">
-					        <h:outputText value="#{book.author}" />
-					    </p:column>
-					  </p:dataTable>
-			        </div>
-			      </div>
-	    	</ui:fragment>
-	    	<ui:fragment rendered='#{userMB.isAuthorized("reader", "bookstore")}'>
-			      <div class="row">
-			        <div class="col-md-12">
-			          <h1>Buchverwaltung (Leser Ansicht)</h1>
-					  <!-- TODO -->
-					  <p:dataTable var="book" value="#{bookListMB.books}">
-					    <p:column headerText="Titel">
-					        <h:outputText value="#{book.title}" />
-					    </p:column>
-					 
-					    <p:column headerText="Autor" priority="2">
-					        <h:outputText value="#{book.author}" />
-					    </p:column>
-					  </p:dataTable>
-			        </div>
-			      </div>
-	    	</ui:fragment>
-	    </div>
-	  </ui:define> 
-  </ui:composition> 
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view contentType="text/html">
+	<ui:composition template="/template/tpro-basic-layout.xhtml">
+		<ui:define name="additional-head-content">
+			<title>TPro | Bookstore Plugin</title>
+		</ui:define>
+
+		<ui:define name="content">
+			<div class="container">
+				<ui:fragment
+					rendered='#{userMB.isAuthorized("publisher", "bookstore")}'>
+					<div class="row">
+						<div class="col-md-12">
+							<h1>Buchverwaltung (Verlag Ansicht)</h1>
+							<!-- TODO -->
+							<p:dataTable var="book" value="#{bookListMB.books}">
+								<p:column headerText="ID" width="54">
+									<h:outputText value="#{book.id}" />
+								</p:column>
+
+								<p:column headerText="Titel">
+									<h:outputText value="#{book.title}" />
+								</p:column>
+
+								<p:column headerText="Autor" priority="2">
+									<h:outputText value="#{book.author}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</ui:fragment>
+				<ui:fragment
+					rendered='#{userMB.isAuthorized("reader", "bookstore")}'>
+					<div class="row">
+						<div class="col-md-12">
+							<h1>Buchverwaltung (Leser Ansicht)</h1>
+							<!-- TODO -->
+							<p:dataTable var="book" value="#{bookListMB.books}">
+								<p:column headerText="Titel">
+									<h:outputText value="#{book.title}" />
+								</p:column>
+
+								<p:column headerText="Autor" priority="2">
+									<h:outputText value="#{book.author}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</ui:fragment>
+			</div>
+		</ui:define>
+	</ui:composition>
 </f:view>
 </html>

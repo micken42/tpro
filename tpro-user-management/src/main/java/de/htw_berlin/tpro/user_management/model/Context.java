@@ -70,4 +70,9 @@ public class Context implements Serializable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 }
