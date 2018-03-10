@@ -21,8 +21,9 @@
 			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/>
 			<property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
 			
-			<property name="hibernate.show_sql" value="true" />
- 			<property name="hibernate.format_sql" value="true" />
+			<!-- for debugging in console -->
+			<!-- <property name="hibernate.show_sql" value="true" /> -->
+			<!-- <property name="hibernate.format_sql" value="true" /> -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			
 			<!-- Import data -->
