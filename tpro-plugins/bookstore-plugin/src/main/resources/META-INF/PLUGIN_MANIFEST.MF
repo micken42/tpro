@@ -1,7 +1,7 @@
 name: bookstore
 version: 1.0
 title: Buchverwaltung
-description: Ein einfaches Buchverwaltungssystem. Stellt eine Übersicht bereit, auf der Bücher aus einer Datenbank in tabellarischer Form angezeigt werden.
+description: Ein einfaches Buchverwaltungssystem. Stellt eine Uebersicht bereit, auf der Buecher aus einer Datenbank in tabellarischer Form angezeigt werden.
 author: Michael Baumert
 roles: publisher, reader
 thumbnail: plugin/bookstore/images/bookstore-thumbnail.png
