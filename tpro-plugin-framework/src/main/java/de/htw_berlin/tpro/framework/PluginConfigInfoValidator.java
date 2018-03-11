@@ -6,18 +6,24 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 public class PluginConfigInfoValidator {
-	// TODO: Beschreibung
+	/**
+	 * Der Name des Plugins darf Groß- und Kleinbuchstaben,
+	 * Ziffern und Bindestriche in beliebiger Reihenfolge enthalten.
+	 */
 	private static final String NAME_VALUE_REGEX = "^[a-zA-Z0-9-]*$";
-	// TODO: Beschreibung
-	private static final String PERMISSIONS_VALUE_REGEX = "^[a-zA-Z0-9, -]*$";
-	// TODO: All reg expressions
+	/**
+	 * Der Name des Plugins darf Groß- und Kleinbuchstaben, Leerzeichen, Kommata
+	 * Ziffern und Bindestriche in beliebiger Reihenfolge enthalten.
+	 */
+	private static final String ROLES_VALUE_REGEX = "^[a-zA-Z0-9, -]*$";
+	// TODO: More reg expressions
 	
 	public static boolean isValid(Map<String, String> pluginConfigInfo) {
 		if (keyIsMissing(pluginConfigInfo))
 			return false;
 		if (!pluginConfigInfo.get("name").matches(NAME_VALUE_REGEX))
 			return false;
-		if (!pluginConfigInfo.get("roles").matches(PERMISSIONS_VALUE_REGEX))
+		if (!pluginConfigInfo.get("roles").matches(ROLES_VALUE_REGEX))
 			return false;
 		return true;
 	}
@@ -36,7 +42,7 @@ public class PluginConfigInfoValidator {
 	}
 	
     public static List<String> getRoleNamesFromCommaSeperatedRolesValue(String rolesValue) {
-    	if (!rolesValue.matches(PERMISSIONS_VALUE_REGEX))
+    	if (!rolesValue.matches(ROLES_VALUE_REGEX))
 			return null;
     	List<String> roleNames = new ArrayList<String>();
     	StringTokenizer tokenizer = new StringTokenizer(rolesValue, ",");

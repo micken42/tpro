@@ -150,7 +150,7 @@ public class GroupFacadeTest  {
 	
 	@Test
 	public void saveNewGroupWithAdminRoles() {
-		// TODO: Abhängigkeit von roleFacade lieber aufloesen
+		// TODO: Abhängigkeit von roleFacade lieber aufloesen, stattdessen roleDAO verwenden
 		Role adminRole = 
 				roleFacade.getRoleByRoleAndContextName("admin", "tpro");
 		Group group = new Group("Administratoren");

@@ -152,7 +152,7 @@ public class UserFacadeTest  {
 	
 	@Test
 	public void saveNewUserWithAdminRoles() {
-		// TODO: Abhängigkeit von roleFacade lieber aufloesen
+		// TODO: Abhängigkeit von roleFacade lieber aufloesen und roleDAO verwenden stattdessen
 		Role studentRole = 
 				roleFacade.getRoleByRoleAndContextName("admin", "tpro");
 		User user = new User("Tim", "Administrator", "newAdmin", "password");

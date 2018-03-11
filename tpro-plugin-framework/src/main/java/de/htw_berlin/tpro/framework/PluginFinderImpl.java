@@ -38,6 +38,12 @@ public class PluginFinderImpl implements PluginFinder {
 		plugins = new HashMap<String, Plugin>();;
 	}
 	
+	/**
+	 * In allen JAR Datein, die sich im CLASSPATH befinden wird, nach JARs gesucht,
+	 * die eine META-INF/PLUGIN_MANIFEST* Datei enthalten.  
+	 * Ist eine enthalten, wird die Plugin Konfigurationsdatei gelesen und versucht 
+	 * ein Plugin anhand dieser zu erstellen.
+	 */
 	@Override
 	public Map<String, Plugin> findAndInititalizePlugins() {
 		plugins = new HashMap<String, Plugin>();
@@ -50,25 +56,21 @@ public class PluginFinderImpl implements PluginFinder {
 					JarEntry entry;
 					while ((entry = jarIn.getNextJarEntry()) != null) {
 						if (entry.getName().startsWith("META-INF/PLUGIN_MANIFEST")) {
-							try {
-								readJarEntry(url, entry);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							createPlugin(getPluginConfigInfo(url, entry));
 						}
 					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-
 			}
 		}
 		return plugins;
 	}
 	
-	private void readJarEntry(URL url, JarEntry entry) throws IOException {
+	/**
+	 * MANIFEST parsing und Rückgabe einer HashMap mit den Manifest Werten in Form von Key Value Pairs
+	 */
+	private Map<String, String> getPluginConfigInfo(URL url, JarEntry entry) throws IOException {
 		JarFile jarFile = new JarFile(url.getPath());
 		InputStream input = jarFile.getInputStream(entry);
 		InputStreamReader isr = new InputStreamReader(input);
@@ -76,7 +78,6 @@ public class PluginFinderImpl implements PluginFinder {
 		HashMap<String,String> result = new HashMap<String, String>();
 		String line;
 		while ((line = reader.readLine()) != null) {
-			//System.out.println(line);
 			StringTokenizer st = new StringTokenizer(line, ":");
             if(st.hasMoreTokens())
             {
@@ -88,24 +89,25 @@ public class PluginFinderImpl implements PluginFinder {
                 }
             }
 		}
-		try {
-			// TODO: Besserer Aufruf des Plugin Erstellungsmechanismuses!!!
-			createPlugin(result);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		reader.close();
 		jarFile.close();
+		return result;
 	}
 	
+	/**
+	 * Initialisiert ein Plugin mit Hilfe der Übergebenen Map, falls diese vom PluginConfigInfoValidator als valide erkannt wird.
+	 * Ist die Config valide, wird das Plugin initialisiert, dessen Rollen in der Benutzerverwaltung eingefügt und dieses mit 
+	 * seinem Namen in der plugins Map gespeichert. Das Einfügen der Rollen in der Benutzerverwaltung geschieht in einem neuen 
+	 * Kontext (oder einem Existierenden), der den Namen des Plugins trägt. Wenn gleichnamiges Plugin bereits existiert wird kein
+	 * neues Plugin initialisiert und gespeichert.
+	 */
 	@Override
-	public void createPlugin(Map<String,String> pluginConfigInfo)  // TODO: Throw specific exceptions when key is missing?!
+	public void createPlugin(Map<String,String> pluginConfigInfo)  // TODO: Throw specific exceptions when pluginConfigInfo is invalid?
     {
     	if (!PluginConfigInfoValidator.isValid(pluginConfigInfo)) 
     		return;
-    		/* TODO: Exceoptions or not?? 
-    		 	throw new FrameworkException("Plugin Configuration is invalid. Check if META-INF/MANIFEST.MF in plugin exists "
+    		/* TODO: Exceptions or not?? 
+    		 	throw new FrameworkException("Plugin Configuration is invalid. Check if META-INF/PLUGIN_MANIFEST.MF in plugin exists "
     				+ "and is well formed.");*/
     	if (plugins.get(pluginConfigInfo.get("name")) != null)
     		return;

@@ -54,7 +54,6 @@ public class User implements Serializable {
 	@Column(unique=true, nullable=false)
 	private @Getter @Setter String email;
 	
-	// TODO: Passwort sicher speichern + SSL enablen
 	@NotNull
 	private @Getter @Setter String password;
 	

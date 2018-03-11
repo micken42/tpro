@@ -56,6 +56,12 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
+	/**
+	 * Ein Benutzer gilt nur dann als authorisiert, wenn er die Rolle (identifizierbar 
+	 * über den gegebenen Rollennamen (roleName) in Kombination mit dem übergebenen
+	 * Kontextnamen (contextName)) besitzt oder Mitglied einer Gruppe ist, die die 
+	 * Rolle hat.
+	 */
 	@Override
 	public boolean userIsAuthorized(String username, String roleName, String contextName) {
 		Role role = roleFacade.getRoleByRoleAndContextName(roleName, contextName);
