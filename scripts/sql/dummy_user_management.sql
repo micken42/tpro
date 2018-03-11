@@ -19,9 +19,9 @@ INSERT INTO User (id, prename, surname, username, email, password) VALUES (6, "P
 
 INSERT INTO User_Role (user_id, role_id) VALUES (1, 1);
 
-INSERT INTO `Group` (id, name) VALUES (1, "Professoren");
+INSERT INTO `Group` (id, name) VALUES (1, "Lehrende");
 
-INSERT INTO `Group` (id, name) VALUES (2, "Studenten");
+INSERT INTO `Group` (id, name) VALUES (2, "Studierende");
 
 INSERT INTO Group_User (group_id, user_id) VALUES (1, 2);
 
