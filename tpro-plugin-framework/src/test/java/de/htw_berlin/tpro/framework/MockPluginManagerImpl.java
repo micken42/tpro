@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
 import de.htw_berlin.tpro.user_management.model.Context;
@@ -12,18 +13,17 @@ import lombok.Getter;
 
 @Dependent
 @DefaultPluginManager
-public class MockPluginFinderImpl implements PluginManager {
+public class MockPluginManagerImpl implements PluginManager {
 	private static final long serialVersionUID = 1L;
 
 	private @Getter HashMap<String, Plugin> plugins;
 	
-	@Override
-	public Map<String, Plugin> findAndInititalizePlugins() {
+	@PostConstruct
+	public void findAndInititalizePlugins() {
 		plugins = new HashMap<String, Plugin>();
 		createPlugin(getExamplePluginConfigInfo(1));
 		createPlugin(getExamplePluginConfigInfo(2));
 		createPlugin(getExamplePluginConfigInfo(3));
-		return plugins;
 	}
 	
 	private HashMap<String, String> getExamplePluginConfigInfo(int number) {
@@ -75,5 +75,15 @@ public class MockPluginFinderImpl implements PluginManager {
         
         plugins.put(plugin.getName(), plugin);
     }
+
+	@Override
+	public Map<String, Plugin> getAllPlugins() {
+		return plugins;
+	}
+
+	@Override
+	public Plugin getPluginByName(String pluginName) {
+		return plugins.get(pluginName);
+	}
 	
 }
