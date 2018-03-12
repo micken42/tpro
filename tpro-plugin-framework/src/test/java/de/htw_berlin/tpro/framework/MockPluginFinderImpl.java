@@ -11,8 +11,8 @@ import de.htw_berlin.tpro.user_management.model.Role;
 import lombok.Getter;
 
 @Dependent
-@DefaultPluginFinder
-public class MockPluginFinderImpl implements PluginFinder {
+@DefaultPluginManager
+public class MockPluginFinderImpl implements PluginManager {
 	private static final long serialVersionUID = 1L;
 
 	private @Getter HashMap<String, Plugin> plugins;

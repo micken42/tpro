@@ -25,7 +25,7 @@ public class PluginServiceTest {
 	public static JavaArchive createDeployment() {
     	return DeploymentHelper.createDefaultDeployment()
     			.addClasses(PluginService.class, PluginServiceImpl.class, 
-    					PluginFinder.class, MockPluginFinderImpl.class )
+    					PluginManager.class, MockPluginFinderImpl.class )
     			.addPackage("de.htw_berlin.tpro.user_management.model")
     			.addPackage("de.htw_berlin.tpro.user_management.persistence")
     			.addPackage("de.htw_berlin.tpro.user_management.service");

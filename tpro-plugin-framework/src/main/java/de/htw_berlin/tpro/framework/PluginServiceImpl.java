@@ -1,11 +1,9 @@
 package de.htw_berlin.tpro.framework;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,31 +22,24 @@ import de.htw_berlin.tpro.user_management.service.UserService;
 public class PluginServiceImpl implements PluginService
 {
 	private static final long serialVersionUID = 1L;
-
-	private HashMap<String, Plugin> plugins;
 	
 	@Inject @DefaultUserService
 	UserService userService; 
 	
-	@Inject @DefaultPluginFinder
-	PluginFinder pluginFinder;
-
-	@PostConstruct
-	void initializePlugins() {
-		plugins = (HashMap<String, Plugin>) pluginFinder.findAndInititalizePlugins();
-	}
+	@Inject @DefaultPluginManager
+	PluginManager pluginManager;
 
 	@Override
 	public List<Plugin> getAllPlugins() {
 		List<Plugin> result = new ArrayList<Plugin>();
-		for (Object plugin : plugins.values().toArray()) 
+		for (Object plugin : pluginManager.getAllPlugins().values().toArray()) 
 			result.add((Plugin) plugin);
 		return result;
 	}
 
 	@Override
 	public Plugin getPluginByName(String pluginName) {
-		return plugins.get(pluginName);
+		return pluginManager.getPluginByName(pluginName);
 	}
 
 	/**

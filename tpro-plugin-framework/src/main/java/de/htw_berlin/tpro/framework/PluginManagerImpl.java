@@ -15,6 +15,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -25,8 +26,8 @@ import de.htw_berlin.tpro.user_management.service.UserService;
 import lombok.Getter;
 
 @Dependent
-@DefaultPluginFinder
-public class PluginFinderImpl implements PluginFinder {
+@DefaultPluginManager
+public class PluginManagerImpl implements PluginManager {
 	private static final long serialVersionUID = 1L;
 
 	private @Getter HashMap<String, Plugin> plugins;
@@ -34,7 +35,7 @@ public class PluginFinderImpl implements PluginFinder {
 	@Inject @DefaultUserService
 	UserService userService;
 
-	public PluginFinderImpl() {
+	public PluginManagerImpl() {
 		plugins = new HashMap<String, Plugin>();;
 	}
 	
@@ -44,8 +45,8 @@ public class PluginFinderImpl implements PluginFinder {
 	 * Ist eine enthalten, wird die Plugin Konfigurationsdatei gelesen und versucht 
 	 * ein Plugin anhand dieser zu erstellen.
 	 */
-	@Override
-	public Map<String, Plugin> findAndInititalizePlugins() {
+	@PostConstruct
+	public void findAndInititalizePlugins() {
 		plugins = new HashMap<String, Plugin>();
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		URL[] urls = ((URLClassLoader) cl).getURLs();
@@ -64,7 +65,6 @@ public class PluginFinderImpl implements PluginFinder {
 				}
 			}
 		}
-		return plugins;
 	}
 	
 	/**
@@ -168,6 +168,16 @@ public class PluginFinderImpl implements PluginFinder {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Map<String, Plugin> getAllPlugins() {
+		return plugins;
+	}
+
+	@Override
+	public Plugin getPluginByName(String pluginName) {
+		return plugins.get(pluginName);
 	}
 	
 }

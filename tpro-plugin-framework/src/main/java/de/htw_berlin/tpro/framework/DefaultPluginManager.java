@@ -13,4 +13,4 @@ import javax.inject.Qualifier;
 @Retention(RUNTIME)
 @Target({ TYPE, FIELD, METHOD })
 @Qualifier
-public @interface DefaultPluginFinder {}
+public @interface DefaultPluginManager {}
