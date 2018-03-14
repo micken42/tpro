@@ -51,7 +51,7 @@ jobs:
             - ~/.m2
           key: tpro-{{ checksum "pom.xml" }}
         
-      - run: mvn package -DskipTests # remove -DskipTests when mysql client can execute db init scripts in mysql container
+      - run: mvn install -DskipTests # remove -DskipTests when mysql client can execute db init scripts in mysql container
       
       - store_test_results:
           path: ~/tpro
