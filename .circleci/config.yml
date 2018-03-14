@@ -16,13 +16,13 @@ jobs:
       - image: circleci/mysql:5.7.21
         environment:
         - MYSQL_ALLOW_EMPTY_PASSWORD=true 
-        - MYSQL_DATABASE=tpro_test 
+        - MYSQL_DATABASE=tpro_test_user_management 
         - MYSQL_HOST=127.0.0.1 
         - MYSQL_ROOT_HOST=% 
         - MYSQL_USER=tpro
         - MYSQL_PASSWORD=tpro
 
-    working_directory: ~/tpro-core
+    working_directory: ~/tpro
 
     environment:
       # Customize the JVM maximum heap limit
@@ -35,16 +35,21 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - tpro-core-{{ checksum "pom.xml" }}
+            - tpro-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
-            - tpro-core-
+            - tpro-
 
+      # If tests should be executed in different test dbs then you need to setup a mysql
+      # client to connect to the mysql server within the docker container i.e. like below
+      # - run: sudo apt install -y mysql-client
+      # - run: bash scripts/prepare_tpro_test_dbs_for_ci.sh
+      
       #- run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
-          key: tpro-core-{{ checksum "pom.xml" }}
+          key: tpro-{{ checksum "pom.xml" }}
         
       - run: mvn package
       
@@ -52,4 +57,4 @@ jobs:
           path: target/surefire-reports
       
       - store_artifacts:
-          path: tpro-app/target/tpro-app-0.0.1-SNAPSHOT.war
+          path: tpro-app/target/*.war
