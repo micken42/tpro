@@ -43,8 +43,8 @@ jobs:
       # client to connect to the mysql server within the docker container i.e. like below
       # - run: sudo apt install -y mysql-client
       # - run: bash scripts/prepare_tpro_test_dbs_for_ci.sh
-      
-      #- run: mvn dependency:go-offline
+
+      #- run: mvn dependency:go-offline % should work but does not work
 
       - save_cache:
           paths:
