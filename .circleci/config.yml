@@ -41,8 +41,6 @@ jobs:
           # fallback to using the latest cache if no exact match is found
             - tpro-
 
-      - run: mvn dependency:go-offline -DskipTests # remove -DskipTests when mysql client can execute db init scripts in mysql container
-
       # If tests should be executed in different test dbs then you need to setup a mysql
       # client to connect to the mysql server within the docker container i.e. like below
       # - run: sudo apt install -y mysql-client
@@ -53,7 +51,7 @@ jobs:
             - ~/.m2
           key: tpro-{{ checksum "pom.xml" }}
         
-      - run: mvn package -DskipTests # remove -DskipTests when mysql client can execute db init scripts in mysql container
+      - run: mvn package 
       
       - store_test_results:
           path: ~/tpro
