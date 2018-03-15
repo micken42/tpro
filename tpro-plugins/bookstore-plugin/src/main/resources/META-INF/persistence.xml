@@ -9,7 +9,7 @@
 		<class>de.htw_berlin.tpro.plugin.bookstore.model.Book</class>
 		<properties>
 			<!-- Configuring JDBC properties -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_plugin_bookstore?autoReconnect=true" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_plugin_bookstore?autoReconnectForPools=true" />
 			<property name="javax.persistence.jdbc.user" value="tpro" />
 			<property name="javax.persistence.jdbc.password" value="tpro" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
@@ -24,9 +24,9 @@
 			<!-- Configuring Connection Pool -->
 			<property name="hibernate.c3p0.min_size" value="5" />
 			<property name="hibernate.c3p0.max_size" value="20" />
-			<property name="hibernate.c3p0.timeout" value="500" />
+			<property name="hibernate.c3p0.timeout" value="5" />
 			<property name="hibernate.c3p0.max_statements" value="50" />
-			<property name="hibernate.c3p0.idle_test_period" value="2000" />
+			<property name="hibernate.c3p0.idle_test_period" value="500" />
 		</properties>
 	</persistence-unit>
 </persistence>

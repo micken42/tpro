@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,7 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Named
-@RequestScoped
+@SessionScoped
 public class BookListMB implements Serializable {
 	private static final long serialVersionUID = 1L;
 
