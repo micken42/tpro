@@ -33,7 +33,7 @@ public class BookFacadeTest {
 
 	@Before
 	public void initTestData() {
-		PersistenceHelper.execute("INSERT INTO Book (id, title, author)VALUES (6, \"6th Book\", \"Unbekannt\")");
+		PersistenceHelper.execute("INSERT INTO Book (id, title, author) VALUES (6, \"6th Book\", \"Unbekannt\")");
 		PersistenceHelper.execute("INSERT INTO Book (id, title, author) VALUES (7, \"7th Book\", \"Unbekannt\")");
 	}
 	

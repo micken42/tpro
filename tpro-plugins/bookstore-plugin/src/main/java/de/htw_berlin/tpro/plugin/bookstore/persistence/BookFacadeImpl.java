@@ -32,5 +32,4 @@ public class BookFacadeImpl implements BookFacade {
 		return books;
 	}
 
-
 }

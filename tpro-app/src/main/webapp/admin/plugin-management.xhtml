@@ -19,29 +19,41 @@
 		<ui:define name="content">
 			<ui:fragment rendered="#{userMB.loggedInAsAdmin}">
 				<div class="container">
-					<h1>Dienste verwalten</h1>
-					<h2>Alle Dienste</h2>
-					<div class="row pluginGrid">
-						<c:forEach var="plugin" items="#{pluginService.getAllPlugins()}">
+				<h1>Dienste verwalten</h1>
+				<h2>Alle Dienste</h2>
+				<div class="row pluginGrid">
+				<c:set var="allPlugins"
+					value="#{userMB.getPlugins()}" />
+				<c:choose>
+					<c:when test="#{allPlugins != null}">
+						<c:forEach var="plugin" items="#{allPlugins}">
 							<h:form>
 								<div class="col-lg-4">
-									<p:graphicImage class="img-circle"
-										name="#{plugin.thumbnailResource}" width="140" height="140" />
-									<h2>#{plugin.title} (v#{plugin.version})</h2>
-									<p>#{plugin.description}</p>
-									<p>
-										<p:commandButton
-											action="#{navigation.goToManagePluginProvidersPage(plugin.name)}"
-											class="btn btn-success btn-lg"
-											value="Dienstanbieter verwalten »" icon="fa fa-fw fa-users"
-											includeViewParams="true">
-											<f:param name="pluginName" value="#{plugin.name}" />
-										</p:commandButton>
-									</p>
+								<p:graphicImage class="img-circle"
+									name="#{plugin.thumbnailResource}" width="140" height="140" />
+								<h2>#{plugin.title} (v#{plugin.version})</h2>
+								<p>#{plugin.description}</p>
+								<p>
+								<p:commandButton
+									action="#{navigation.goToManagePluginProvidersPage(plugin.name)}"
+									class="btn btn-success btn-lg"
+									value="Dienstanbieter verwalten »" icon="fa fa-fw fa-users"
+									includeViewParams="true">
+									<f:param name="pluginName" value="#{plugin.name}" />
+								</p:commandButton>
+								</p>
 								</div>
 							</h:form>
 						</c:forEach>
-					</div>
+					</c:when>
+					<c:otherwise>
+						<div class="col-md-12">
+						<p>Keine Dienste verfügbar. TPro wurde ohne Plugins
+						installiert.</p>
+						</div>
+					</c:otherwise>
+				</c:choose>
+				</div>
 				</div>
 			</ui:fragment>
 		</ui:define>

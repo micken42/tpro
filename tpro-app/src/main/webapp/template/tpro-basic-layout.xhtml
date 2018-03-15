@@ -59,18 +59,18 @@
 							<c:otherwise>
 								<li><p:link outcome="#{navigation.goToUserHomePage()}"
 										value="Dashboard" /></li>
-								<c:if
-									test="#{pluginService.getPluginsAccessableByUserWithUsername(userMB.currentUser.username) != null}">
+								<c:set var="userPlugins" value="#{userMB.getPlugins()}" />
+								<c:if test="#{userPlugins != null}">
 									<li class="dropdown"><a class="dropdown-toggle"
 										data-toggle="dropdown" href="#">Meine Dienste <span
 											class="caret"></span></a>
 										<ul class="dropdown-menu">
-											<ui:repeat var="plugin"
-												value="#{pluginService.getPluginsAccessableByUserWithUsername(userMB.currentUser.username)}">
+											<c:forEach var="plugin"
+												items="#{userPlugins}">
 												<li><p:link
 														outcome="#{navigation.goToPluginPage(plugin.name)}"
 														value="#{plugin.title}" /></li>
-											</ui:repeat>
+											</c:forEach>
 										</ul></li>
 								</c:if>
 							</c:otherwise>

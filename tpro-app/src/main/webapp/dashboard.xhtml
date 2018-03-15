@@ -23,7 +23,7 @@
 					<h2>Meine Dienste</h2>
 					<div class="row pluginGrid">
 						<c:set var="userPlugins"
-							value="${pluginService.getPluginsAccessableByUserWithUsername(userMB.currentUser.username)}" />
+							value="${userMB.getPlugins()}" />
 						<c:choose>
 							<c:when test="#{userPlugins != null}">
 								<c:forEach var="plugin" items="#{userPlugins}">
@@ -35,7 +35,7 @@
 										<h:form>
 											<c:choose>
 												<c:when
-													test="#{pluginService.userIsPluginProvider(userMB.currentUser.username, plugin.name)}">
+													test="#{userMB.canBeProvided(plugin)}">
 													<p>
 														<p:commandButton
 															action="#{navigation.goToSharePluginPage(plugin.name)}"
