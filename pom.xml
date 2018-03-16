@@ -8,7 +8,6 @@
   <packaging>pom</packaging>
 
   <name>tpro</name>
-  <url>http://tpro.htw-berlin.de</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -155,7 +154,6 @@
       </profile>
   </profiles-->
 
-  
   <modules>
     <module>tpro-plugin-framework</module>
     <module>tpro-user-management</module>

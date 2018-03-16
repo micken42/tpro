@@ -13,7 +13,6 @@
   <packaging>pom</packaging>
 
   <name>tpro-plugins</name>
-  <url>http://tpro.htw-berlin.de</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,6 +27,6 @@
   </dependencies>
 
   <modules>
-    <module>bookstore-plugin</module>
+    <module>tpro-plugin-bookstore</module>
   </modules>
 </project>
