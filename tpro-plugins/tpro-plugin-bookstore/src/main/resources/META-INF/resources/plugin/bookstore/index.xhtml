@@ -6,7 +6,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <f:view contentType="text/html">
 	<ui:composition template="/template/tpro-basic-layout.xhtml">
 		<ui:define name="additional-head-content">
@@ -15,8 +16,7 @@
 
 		<ui:define name="content">
 			<div class="container">
-				<ui:fragment
-					rendered='#{userMB.isAuthorized("publisher", "bookstore")}'>
+				<c:if test='#{userMB.isAuthorized("publisher", "bookstore")}'>
 					<div class="row">
 						<div class="col-md-12">
 							<h1>Buchverwaltung (Verlag Ansicht)</h1>
@@ -36,9 +36,8 @@
 							</p:dataTable>
 						</div>
 					</div>
-				</ui:fragment>
-				<ui:fragment
-					rendered='#{userMB.isAuthorized("reader", "bookstore")}'>
+				</c:if>
+				<c:if test='#{userMB.isAuthorized("reader", "bookstore")}'>
 					<div class="row">
 						<div class="col-md-12">
 							<h1>Buchverwaltung (Leser Ansicht)</h1>
@@ -54,7 +53,7 @@
 							</p:dataTable>
 						</div>
 					</div>
-				</ui:fragment>
+				</c:if>
 			</div>
 		</ui:define>
 	</ui:composition>

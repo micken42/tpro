@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<f:view contentType="text/html">
+	<ui:composition template="/template/tpro-basic-layout.xhtml">
+		<ui:define name="additional-head-content">
+			<title>TPro | PLUGIN_NAME Plugin</title>
+		</ui:define>
+
+		<ui:define name="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<c:choose>
+							<c:when test='#{!userMB.loggedIn}'>
+								<h1>#{helloUserMB.getHelloUserMessage()}</h1>
+							</c:when>
+							<!-- So wuerde ein Test aussehen, wenn geprueft werden soll, ob ein Benutzer -->
+							<!-- z.B. die Rolle "kellner" im aktuellen Plugin besitzt:  -->
+							<!--     test=#{userMB.isAuthorized("kellner", "PLUGIN_NAME")} -->
+							<!-- Wenn alle c:when tests im gleichen c:choose Element fehlschlagen wird -->
+							<!-- otherwise durchlaufen. -->
+							<c:otherwise>
+								<h1>Hallo, Welt!</h1>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</f:view>
+</html>

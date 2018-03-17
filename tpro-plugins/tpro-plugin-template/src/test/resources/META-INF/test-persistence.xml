@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+	<!-- DER NAME DER PERSISTENCE UNIT WIRD SPAETER ZUR ERSTELLUNG EINER EntityManager Factory verwendet -->
+	<persistence-unit name="NAME_DER_PERSISTENCE_UNIT" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<!-- Mapping For Entity Classes From Bookstore Plugin -->
+		<class>de.htw_berlin.tpro.plugin.bookstore.model.Book</class>
+		<properties>
+			<!-- Configuring JDBC properties -->
+			<!-- WAEHLEN SIE DEN NAMEN DER BENOETIGTEN DATENBANK UND STELLEN SIE SICHER, -->
+			<!-- DASS DIESE AUCH EXISTIERT, BZW. LEGEN SIE SIE VORHER AN. -->
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/NAME_DER_TEST_DB" />
+			<property name="javax.persistence.jdbc.user" value="tpro" />
+			<property name="javax.persistence.jdbc.password" value="tpro" />
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			      
+			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+			<property name="javax.persistence.schema-generation.create-source" value="script"/>
+			<property name="javax.persistence.schema-generation.create-script-source" value="META-INF/create.sql"/>
+			<property name="javax.persistence.schema-generation.drop-source" value="script"/>
+			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql"/>
+			<property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
+			
+			<!-- for debugging in console -->
+			<!-- <property name="hibernate.show_sql" value="true" /> -->
+			<!-- <property name="hibernate.format_sql" value="true" /> -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			
+			<!-- Import data -->
+			<property name="javax.persistence.sql-load-script-source" value="META-INF/test-data.sql"/>
+			
+			<!-- Configuring Connection Pool -->
+			<property name="hibernate.c3p0.min_size" value="5" />
+			<property name="hibernate.c3p0.max_size" value="20" />
+			<property name="hibernate.c3p0.timeout" value="500" />
+			<property name="hibernate.c3p0.max_statements" value="50" />
+			<property name="hibernate.c3p0.idle_test_period" value="2000" />
+		</properties>
+	</persistence-unit>
+</persistence>
