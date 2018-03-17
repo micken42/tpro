@@ -1,0 +1,7 @@
+name: hello-user
+version: 0.0.1
+title: Hallo, Benutzer!
+description: Der "Hallo, Benutzer!"-Dienst, begrüßt Sie mit einem persönlichen Begrüßungstext, wenn Sie ihn aufrufen und merkt sich alle Besucher.
+author: Michael Baumert
+roles: student, dozent
+thumbnail: plugin/hello-user/images/thumbnail.jpg

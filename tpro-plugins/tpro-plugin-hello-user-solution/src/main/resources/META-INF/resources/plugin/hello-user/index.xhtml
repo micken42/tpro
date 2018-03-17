@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<f:view contentType="text/html">
+	<ui:composition template="/template/tpro-basic-layout.xhtml">
+		<ui:define name="additional-head-content">
+			<title>TPro | Hallo, Benutzer!</title>
+		</ui:define>
+
+		<ui:define name="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<c:choose>
+							<c:when test='#{userMB.loggedIn}'>
+								<h1>#{helloUserMB.getHelloUserMessage()}</h1>
+							</c:when>
+							<c:otherwise>
+								<h1>Hallo, Welt!</h1>
+							</c:otherwise>
+						</c:choose>
+						<!-- Ein Ansatz zur Rechteprüfung könnte auch der Folgende ohne zusätzliche Bean sein. -->
+						<!-- Außerdem kommt hier die userMB zum Einsatz die Methoden bereitstellt, die die Prü- -->
+						<!-- fung der Rechte auf den aktuell angemeldeten übernimmt, daher entfällt anders als bei -->
+						<!-- der Nutzung des PluginService oder des UserService die Angabe des Benutzernamen. -->
+						<!-- c:choose>
+							<c:when test='#{userMB.canBeProvided("hello-user")}'>
+								<h1>Hallo, Dienstanbieter(in) #{userMB.currentUser.prename} #{userMB.currentUser.surname}</h1>
+							</c:when>
+							<c:when test='#{userMB.isAuthorized("dozent", "hello-user")}'>
+								<h1>Hallo, Dozent(in) #{userMB.currentUser.prename} #{userMB.currentUser.surname}</h1>
+							</c:when>
+							<c:when test='#{userMB.isAuthorized("student", "hello-user")}'>
+								<h1>Hallo, Student(in) #{userMB.currentUser.prename} #{userMB.currentUser.surname}</h1>
+							</c:when>
+							<c:otherwise>
+								<h1>Hallo, Welt!</h1>
+							</c:otherwise>
+						</c:choose-->
+						<c:if test='#{userMB.canBeProvided("hello-user")}'>
+							<div class="row">
+								<div class="col-md-12">
+									<h1>Besucherübersicht</h1>
+									<h2>Alle Besucher</h2>
+									<p:dataTable var="visitor" value="#{helloUserMB.visitors}">
+										<p:column headerText="Vollständiger Name">
+											<h:outputText value="#{visitor.fullname}" />
+										</p:column>
+		
+										<p:column headerText="Rolle" priority="2">
+											<h:outputText value="#{visitor.role}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</c:if>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</f:view>
+</html>

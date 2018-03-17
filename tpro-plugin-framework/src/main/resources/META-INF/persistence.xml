@@ -12,7 +12,7 @@
 		<class>de.htw_berlin.tpro.user_management.model.Context</class>
 		<properties>
 			<!-- Configuring JDBC properties -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_test_user_management?autoReconnectForPools=true" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_test_user_management" />
 			<property name="javax.persistence.jdbc.user" value="tpro" />
 			<property name="javax.persistence.jdbc.password" value="tpro" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

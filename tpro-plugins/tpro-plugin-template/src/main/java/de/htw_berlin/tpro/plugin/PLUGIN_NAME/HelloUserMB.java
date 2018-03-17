@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.plugin.bookstore.mb;
+package de.htw_berlin.tpro.plugin.PLUGIN_NAME;
 
 import java.io.Serializable;
 
@@ -26,7 +26,9 @@ public class HelloUserMB implements Serializable {
 	 * der den Benutzer direkt anspricht. Andernfalls wird "Hallo, Welt!" returnt
 	 */
 	public String getHelloUserMessage() {
+		String msg = "";
 		if (currentUser != null)
-			return "Hallo, " + currentUser.getPrename() + " " + currentUser.getSurname() + "!";
+			msg = "Hallo, " + currentUser.getPrename() + " " + currentUser.getSurname() + "!";
+		return msg;
 	}
 }

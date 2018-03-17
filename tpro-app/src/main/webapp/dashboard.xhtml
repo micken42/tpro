@@ -35,7 +35,7 @@
 										<h:form>
 											<c:choose>
 												<c:when
-													test="#{userMB.canBeProvided(plugin)}">
+													test="#{userMB.canBeProvided(plugin.name)}">
 													<p>
 														<p:commandButton
 															action="#{navigation.goToSharePluginPage(plugin.name)}"

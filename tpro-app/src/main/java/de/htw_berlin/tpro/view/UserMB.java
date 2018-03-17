@@ -1,7 +1,6 @@
 package de.htw_berlin.tpro.view;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -37,27 +36,17 @@ public class UserMB implements Serializable {
 	PluginService pluginService;
 
     private User currentUser;
-    private boolean isAdmin = false;
-    private List<Plugin> allUserPlugins = new ArrayList<Plugin>(); 
-    private List<Plugin> providableUserPlugins = new ArrayList<Plugin>(); ;
+    private boolean isAdmin = false;;
     
 	public String login() {
 		currentUser = userService.login(credentials.getUsername(), credentials.getPassword());
 		if (currentUser != null) {
-			initCurrentUser();
+			isAdmin = userService.userIsAuthorized(currentUser.getUsername(), "admin", "tpro");
 			message.addMessage(FacesMessage.SEVERITY_INFO, "Anmeldung erfolgreich! Willkommen bei TPro :)");
 			return isAdmin ? navigation.goToAdminHomePage() : navigation.goToUserHomePage();
 		}
 		message.addMessage(FacesMessage.SEVERITY_ERROR, "Anmeldung fehgeschlagen! Versuchen Sie es erneut ;)");
 		return null;
-	}
-	
-	public void initCurrentUser() {
-		isAdmin = userService.userIsAuthorized(currentUser.getUsername(), "admin", "tpro");
-		allUserPlugins = isAdmin ?  pluginService.getAllPlugins() 
-				: pluginService.getPluginsAccessableByUserWithUsername(currentUser.getUsername());
-		providableUserPlugins = isAdmin ?  new ArrayList<Plugin>()
-				: pluginService.getPluginsProvidableByUserWithUsername(currentUser.getUsername());
 	}
     
 	public String signUp() {
@@ -94,29 +83,22 @@ public class UserMB implements Serializable {
     }
     
     public List<Plugin> getPlugins() {
-    	return allUserPlugins;
+    	if (isAdmin) 
+    		return pluginService.getAllPlugins();
+    	return (currentUser != null) ? pluginService.getPluginsAccessableByUserWithUsername(currentUser.getUsername()) : null;
     }
     
     public List<Plugin> getProvidablePlugins() {
-    	return providableUserPlugins;
+    	return (currentUser != null) ? pluginService.getPluginsProvidableByUserWithUsername(currentUser.getUsername()) : null;
     }
     
-    public boolean canBeProvided(Plugin plugin) {
-    	return (providableUserPlugins != null) ? providableUserPlugins.contains(plugin) : false;
+    public boolean canBeProvided(String pluginName) {
+    	return (currentUser != null) ? pluginService.userIsPluginProvider(currentUser.getUsername(), pluginName) : false;
     }
     
     @Produces @LoggedIn 
     public User getCurrentUser() {
         return currentUser;
     }
-
-//  /**
-//   * Nuetzlich, falls Plugins zur Laufzeit hinzugefügt werden, während eine Session geoeffnet ist
-//   */
-//  public List<Plugin> getRefreshedPlugins() {
-//  	allUserPlugins = isAdmin ? pluginService.getAllPlugins() 
-//				: pluginService.getPluginsAccessableByUserWithUsername(currentUser.getUsername());
-//  	return allUserPlugins;
-//  }
 
 }

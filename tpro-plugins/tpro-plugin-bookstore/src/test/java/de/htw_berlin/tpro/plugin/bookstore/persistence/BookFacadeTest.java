@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import de.htw_berlin.tpro.plugin.bookstore.model.Book;
 import de.htw_berlin.tpro.test_utils.DeploymentHelper;
 import de.htw_berlin.tpro.test_utils.PersistenceHelper;
-import de.htw_berlin.tpro.user_management.persistence.GenericDAO;
 
 @RunWith(Arquillian.class)
 public class BookFacadeTest {

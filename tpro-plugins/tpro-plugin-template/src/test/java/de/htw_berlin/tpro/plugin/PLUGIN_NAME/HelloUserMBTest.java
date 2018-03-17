@@ -1,4 +1,4 @@
-package de.htw_berlin.tpro.plugin.PLUGIN_NAME.mb;
+package de.htw_berlin.tpro.plugin.PLUGIN_NAME;
 
 import javax.inject.Inject;
 
@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.htw_berlin.tpro.plugin.PLUGIN_NAME.HelloUserMB;
+
 @RunWith(Arquillian.class)
 public class HelloUserMBTest {
 	
@@ -21,7 +23,10 @@ public class HelloUserMBTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-            .addPackage("de.htw_berlin.tpro.plugin.PLUGIN_NAME.mb")
+            .addClass(HelloUserMB.class)
+            .addPackage("de.htw_berlin.tpro.user_management.mb")
+            .addPackage("de.htw_berlin.tpro.user_management.model")
+            .addPackage("de.htw_berlin.tpro.user_management.persistence")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

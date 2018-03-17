@@ -2,15 +2,15 @@
 # mit dem selben Namen bereits existiert. Ansonsten muss darauf geachtet werden, dass 
 # diese beiden Plugins nicht beide zu TPro hinzugefuegt werden, denn dann wird nur das
 # Plugin installiert, was vom tpro-plugin-framework Modul als erstes gefunden wurde.
-name: plugin-name
+name: PLUGIN_NAME
 
 # Geben Sie hier die Version des Plugins an. Semantic Versioning waere ein sehr zu em-
-# phelender Ansatz auf welche Art und Weise sowie in welcher Form die Nummerierung der 
+# pfehlender Ansatz auf welche Art und Weise sowie in welcher Form die Nummerierung der 
 # Plugin Version erfolgen kann. 
 version: 0.0.1
 
 # Hierbei handelt es sich um den Anzeigenamen des Plugins, sprich unter welchem Namen das 
-# Plugin auf der Weboberfläche angezeigt wird.
+# Plugin auf der Weboberflaeche angezeigt wird.
 title: Titel Des Plugins
 
 # Ein einfacher Beschreibungstext zum Plugin. Fassen Sie sich moeglichst kurz. 
@@ -25,9 +25,9 @@ author: Ihr Name
 # fuer Benutzer oder Benutzergruppen, die eine oder mehrere der hier aufgezaehlten Rol-
 # len besitzen, einschraenken. Die Aufzaehlung kann mit Kommata seperiert beliebig lang 
 # weitergefuehrt werden. Alle angegebenen Rollen werden dem Kontext hinzugefuegt, sofern
-# keine Duplikate dabei sind.
+# keine Duplikate dabei sind. ACHTUNG! Es muss mindestens eine Rolle angegeben werden!
 roles: RolleA, RolleB
 
 # Der Pfad zum Logo des Plugins, das auf der Weboberflaeche fuer dieses PLugin angezeigt 
 # werden soll
-thumbnail: plugin/PLUGIN_NAME/images/bookstore-thumbnail.png
+thumbnail: plugin/PLUGIN_NAME/images/thumbnail.png

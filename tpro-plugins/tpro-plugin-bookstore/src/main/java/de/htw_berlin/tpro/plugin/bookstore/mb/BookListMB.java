@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,7 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Named
-@SessionScoped
+@RequestScoped
 public class BookListMB implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -31,6 +33,13 @@ public class BookListMB implements Serializable {
 	
 	@PostConstruct
     public void init() {
-		books = bookFacade.getAllBooks();
+		try {
+			books = bookFacade.getAllBooks();
+		} catch (Exception e) {
+			FacesContext context = FacesContext.getCurrentInstance();
+	    	FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Laden Sie die Seite erneut! Ein unbekannter Fehler ist aufgetreten :(",  null);
+	        context.addMessage(null, msg);
+	    	context.getExternalContext().getFlash().setKeepMessages(true);
+		}
     }
 }

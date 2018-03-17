@@ -9,7 +9,7 @@
 		<class>de.htw_berlin.tpro.plugin.bookstore.model.Book</class>
 		<properties>
 			<!-- Configuring JDBC properties -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_plugin_bookstore?autoReconnectForPools=true" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_plugin_bookstore" />
 			<property name="javax.persistence.jdbc.user" value="tpro" />
 			<property name="javax.persistence.jdbc.password" value="tpro" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

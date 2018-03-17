@@ -19,7 +19,7 @@
 		<ui:define name="content">
 			<ui:fragment rendered="#{userMB.loggedIn}">
 				<c:if
-					test="#{userMB.canBeProvided(pluginConsumerManagement.currentPlugin)}">
+					test="#{userMB.canBeProvided(pluginConsumerManagement.currentPlugin.name)}">
 					<div class="container">
 						<h1>#{pluginConsumerManagement.currentPlugin.title}</h1>
 						<h2>Dienstkonsumenten hinzufügen</h2>
