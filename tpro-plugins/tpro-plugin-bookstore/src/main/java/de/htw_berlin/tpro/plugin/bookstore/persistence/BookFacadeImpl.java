@@ -2,13 +2,13 @@ package de.htw_berlin.tpro.plugin.bookstore.persistence;
 
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 import de.htw_berlin.tpro.plugin.bookstore.model.Book;
 
-@Dependent
+@ApplicationScoped
 @DefaultBookFacade
 public class BookFacadeImpl implements BookFacade {
 

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.PersistenceException;
 
 import org.omnifaces.cdi.Startup;
@@ -23,6 +24,7 @@ import de.htw_berlin.tpro.user_management.persistence.GroupFacade;
 import de.htw_berlin.tpro.user_management.persistence.RoleFacade;
 import de.htw_berlin.tpro.user_management.persistence.UserFacade;
 
+@Named("userService")
 @Startup
 @ApplicationScoped
 @DefaultUserService 

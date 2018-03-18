@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -33,13 +31,6 @@ public class BookListMB implements Serializable {
 	
 	@PostConstruct
     public void init() {
-		try {
-			books = bookFacade.getAllBooks();
-		} catch (Exception e) {
-			FacesContext context = FacesContext.getCurrentInstance();
-	    	FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Laden Sie die Seite erneut! Ein unbekannter Fehler ist aufgetreten :(",  null);
-	        context.addMessage(null, msg);
-	    	context.getExternalContext().getFlash().setKeepMessages(true);
-		}
+		books = bookFacade.getAllBooks();
     }
 }

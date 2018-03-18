@@ -12,7 +12,7 @@
 			<!-- Configuring JDBC properties -->
 			<!-- WAEHLEN SIE DEN NAMEN DER BENOETIGTEN DATENBANK UND STELLEN SIE SICHER, -->
 			<!-- DASS DIESE AUCH EXISTIERT, BZW. LEGEN SIE SIE VORHER AN. -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_plugin_hello_user" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/tpro_plugin_hello_user?autoReconnect=true" />
 			<property name="javax.persistence.jdbc.user" value="tpro" />
 			<property name="javax.persistence.jdbc.password" value="tpro" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

@@ -29,17 +29,6 @@ public class BookFacadeTest {
 	
 	@Inject @DefaultBookFacade
 	BookFacade bookFacade;
-
-	@Before
-	public void initTestData() {
-		PersistenceHelper.execute("INSERT INTO Book (id, title, author) VALUES (6, \"6th Book\", \"Unbekannt\")");
-		PersistenceHelper.execute("INSERT INTO Book (id, title, author) VALUES (7, \"7th Book\", \"Unbekannt\")");
-	}
-	
-	@After
-	public void clearTestData() {
-		PersistenceHelper.execute("DELETE FROM Book");
-	}
 	
 	@Test
 	public void defaultBookFacadeShouldBeInjected() {
@@ -47,10 +36,10 @@ public class BookFacadeTest {
 	}
 	
 	@Test 
-	public void getAllBooksShouldReturn7Books() {
+	public void getAllBooksShouldReturn5Books() {
 		List<Book> books = bookFacade.getAllBooks();
-		
-		boolean sevenBooksReturned = (books.size() == 7);
+
+		boolean sevenBooksReturned = (books.size() == 5);
 		
 		Assert.assertTrue(sevenBooksReturned);	
 	}

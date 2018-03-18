@@ -2,14 +2,14 @@ package de.htw_berlin.tpro.plugin.hello_user.persistence;
 
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
 import de.htw_berlin.tpro.plugin.hello_user.model.Visitor;
 
-@Dependent
+@ApplicationScoped
 @DefaultVisitorFacade
 public class VisitorFacadeImpl implements VisitorFacade {
 
